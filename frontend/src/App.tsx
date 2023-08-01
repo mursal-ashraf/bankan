@@ -1,9 +1,7 @@
+import AppRouter from './Router';
+
 function App() {
-  return (
-    <body>
-      <h1>This is BanKan</h1>
-    </body>
-  );
+  return <AppRouter />;
 }
 
 export default App;
