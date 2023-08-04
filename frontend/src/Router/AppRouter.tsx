@@ -22,5 +22,5 @@ export const AppRoutes: RouteObject[] = [
   { path: Routes.Board, element: <Board /> },
 ];
 
-export const router = createBrowserRouter(AppRoutes);
+const router = createBrowserRouter(AppRoutes);
 export const AppRouter = () => <RouterProvider {...{ router }} />;
