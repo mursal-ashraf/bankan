@@ -1,8 +1,15 @@
+import { useMemo } from 'react';
+import AppRouter from './Router';
+import { AppContext } from './contexts';
+import getSupabaseClient from './utils/supabase';
+
 function App() {
+  const client = useMemo(() => getSupabaseClient(), []);
+
   return (
-    <body>
-      <h1>This is BanKan</h1>
-    </body>
+    <AppContext.Provider value={{ client }}>
+      <AppRouter />
+    </AppContext.Provider>
   );
 }
 
