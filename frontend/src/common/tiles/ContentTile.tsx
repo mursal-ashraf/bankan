@@ -7,6 +7,8 @@ const colourLookup: { [key: string]: string } = {
 type TileColour = "yellow" | "blue" | "white";
 
 export const Tile = styled.div<{ colour?: TileColour; height?: number }>`
+  display: flex;
+  justify-content: center;
   padding: 1rem 2rem;
 
   ${(props) =>
