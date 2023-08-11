@@ -1,6 +1,8 @@
-import { Tile } from "@/common/tiles/ContentTile";
+import { Tile } from "@/common/ContentTile";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { CornerIcon, Repeater } from "@/common/Repeater";
 
 interface BoardCardProps {
   project: string;
@@ -64,14 +66,31 @@ const BoardCardElement: React.FC<BoardCardProps> = ({
 }) => {
   return (
     <div className="flex w-full my-3 justify-center">
-      <div className="rounded-lg shadow-md bg-slate-300 p-6 w-11/12">
-        <h2 className="text-xl font-semibold mb-2">{project}</h2>
-        <p className="text-gray-700">{description}</p>
-        <p className="text-gray-500 mt-2">Last Modified: {lastModified}</p>
+      <div className="relative w-11/12">
+        <CornerIcon colour="orange">
+          <DeleteIcon />
+        </CornerIcon>
+        <div className="relative rounded-lg shadow-md bg-slate-300 p-6">
+          <h2 className="text-xl font-semibold mb-2">{project}</h2>
+          <p className="text-gray-700">{description}</p>
+          <p className="text-gray-500 mt-2">Last Modified: {lastModified}</p>
+        </div>
       </div>
     </div>
   );
 };
+
+const abc: React.FC<BoardCardProps> = ({
+  project,
+  description,
+  lastModified,
+}) => (
+  <div className="relative rounded-lg shadow-md bg-slate-300 p-6">
+    <h2 className="text-xl font-semibold mb-2">{project}</h2>
+    <p className="text-gray-700">{description}</p>
+    <p className="text-gray-500 mt-2">Last Modified: {lastModified}</p>
+  </div>
+);
 
 const BoardContainer: React.FC = () => {
   return (
@@ -81,9 +100,11 @@ const BoardContainer: React.FC = () => {
       </div>
 
       <div className="flex flex-col w-full my-3 overflow-y-auto">
-        {boardCards.map((boardCard, index) => (
-          <BoardCardElement key={index} {...boardCard} />
-        ))}
+        <Repeater
+          Component={abc}
+          feedList={boardCards}
+          IconRight={{ icon: <DeleteIcon />, colour: "orange" }}
+        />
       </div>
 
       <div className="flex my-5 w-1/3 h-20">

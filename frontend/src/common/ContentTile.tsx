@@ -1,12 +1,13 @@
 import styled, { css } from "styled-components";
 
-const colourLookup: { [key: string]: string } = {
+export const colourLookup: { [key: string]: string } = {
   yellow: "#ffcd29",
+  orange: "#f5754f",
 };
 
-type TileColour = "yellow" | "blue" | "white";
+export type GeneralColour = "yellow" | "blue" | "white" | "orange";
 
-export const Tile = styled.div<{ colour?: TileColour; height?: number }>`
+export const Tile = styled.div<{ colour?: GeneralColour; height?: number }>`
   display: flex;
   justify-content: center;
   padding: 1rem 2rem;
