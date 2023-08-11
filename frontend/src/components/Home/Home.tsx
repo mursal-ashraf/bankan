@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import boardImage from './Boards.jpeg';
 import { Button, Grid, List, ListItem, Stack, Typography } from '@mui/material';
 import Footer from '../common';
+import { AuthModal } from '../common/AuthModal/AuthModal';
 
 export const Home: React.FC = () => {
+  const [open, setOpen] = useState<boolean>(false);
+
   return (
     <Stack spacing={2}>
       <Grid container style={{ backgroundColor: '#FFCD29' }}>
@@ -14,7 +17,12 @@ export const Home: React.FC = () => {
             the pieces of a puzzle, and make your team's projects a cohesive
             success every time.
           </Typography>
-          <Button style={{ backgroundColor: 'white' }}>Login/Signup</Button>
+          <Button
+            style={{ backgroundColor: 'white' }}
+            onClick={() => setOpen(true)}
+          >
+            Login/Signup
+          </Button>
         </Grid>
         <Grid xs={8} item>
           <img src={boardImage} />
@@ -48,6 +56,7 @@ export const Home: React.FC = () => {
         </Grid>
       </Grid>
       <Footer />
+      {open && <AuthModal onClose={() => setOpen(false)} onSubmit={() => {}} />}
     </Stack>
   );
 };
