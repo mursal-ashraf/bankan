@@ -56,7 +56,14 @@ export const Home: React.FC = () => {
         </Grid>
       </Grid>
       <Footer />
-      {open && <AuthModal onClose={() => setOpen(false)} onSubmit={() => {}} />}
+      {open && (
+        <AuthModal
+          onClose={() => setOpen(false)}
+          onSubmit={() => {
+            window.location.reload();
+          }}
+        />
+      )}
     </Stack>
   );
 };

@@ -28,17 +28,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const modalConfig = isSignUp ? signUpConfig : loginConfig;
-  const [performAuth, { isLoading, error }] = isSignUp
-    ? useSignUp()
-    : useLogin();
+
+  const [signUp, { isLoading: isSignUpLoading, error: signUpError }] =
+    useSignUp();
+  const [login, { isLoading: isLoginLoading, error: loginError }] = useLogin();
+
+  const isLoading = isSignUpLoading || isLoginLoading;
+  const error = signUpError || loginError;
+  const performAuth = isSignUp ? signUp : login;
 
   const onPrimaryButtonClick = useCallback<() => Promise<void>>(async () => {
     await performAuth({
       email,
       password,
     });
-    !!error && onSubmit();
-  }, [error]);
+    !error && onSubmit();
+  }, [error, onSubmit, email, password, performAuth]);
 
   if (isLoading) return <LoadingModal />;
 
