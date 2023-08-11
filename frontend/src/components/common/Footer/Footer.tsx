@@ -8,7 +8,7 @@ export const Footer: React.FC = () => (
     alignItems="center"
     spacing={2}
     component="footer"
-    style={{ borderTop: 'double' }}
+    style={{ borderTop: 'double', maxWidth: '100%' }}
   >
     <Grid item>
       <Button color="inherit">Terms of Use</Button>
