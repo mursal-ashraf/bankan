@@ -20,7 +20,6 @@ export const Profile: React.FC = () => {
     };
 
     const handleUploadClick = () => {
-        console.log("Upload button clicked!");
         setOpen(false);
     };
 
