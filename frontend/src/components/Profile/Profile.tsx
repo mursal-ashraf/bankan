@@ -14,87 +14,94 @@ export const Profile: React.FC = () => {
 
     const [open, setOpen] = useState(false);
 
-    const handleEditClick = () => {
-        console.log("Edit button clicked!");
-    };
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        console.log("Information edited");
     };
 
     const handleUploadClick = () => {
         console.log("Upload button clicked!");
-        // Add image upload logic here if needed.
         setOpen(false);
     };
 
     return (
         <div className="absolute inset-0 h-screen w-screen flex items-center justify-center" style={{ backgroundColor: '#FFCD29' }}>
             <div className="bg-white p-8 rounded-lg shadow-md w-4/5 h-4/5">
-                <div className="animate-pulse flex h-full">
-                    <div className="relative w-1/4 h-1/4 flex flex-col items-center">
-                        <div className="w-2/5 h-4/5 rounded-full bg-gray-300 flex items-center justify-center">
-                            <AccountCircle style={{ fontSize: '100%', position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', width: '80%', height: '80%' }}/>
+                <div className="flex h-full">
+                    <div className="relative w-1/3 h-1/3 flex flex-col items-center justify-center">
+                        <div className="w-40 h-40 rounded-full bg-gray-300 flex items-center justify-center">
+                            <AccountCircle style={{ width: 160, height: 160}}/>
                         </div>
+                        <div className="pt-4"></div>
                         <Button 
-                            style={{top:"10%", width:"35%"}}
                             variant="contained" 
                             color="primary" 
-                            className="w-3/5 mt-2"
+                            className="mt-6 text-xl"
+                            style={{padding: '8px 24px'}}
                             onClick={() => setOpen(true)}>
                             Edit
                         </Button>
                     </div>
-                    <div className="ml-6 flex flex-col justify-between w-3/4 space-y-4">
+                    <div className="relative ml-12 flex flex-col w-3/5 space-y-2">
+                        <label className="text-2xl font-bold text-black">Name</label>
                         <TextField 
                             name="name"
                             value={formData.name}
                             onChange={handleInputChange}
                             label="Name"
-                            variant="standard"
+                            variant="filled"
                             fullWidth
+                            InputProps={{style: {fontSize: 30, height: '3rem'}}}
                         />
+                        <label className="text-2xl font-bold text-black">Email</label>
                         <TextField 
                             name="email"
                             value={formData.email}
                             onChange={handleInputChange}
                             label="Email"
-                            variant="standard"
+                            variant="filled"
                             fullWidth
-                        />
+                            InputProps={{style: {fontSize: 30, height: '3rem'}}}
+                                                    />
+                        <label className="text-2xl font-bold text-black">Phone Number</label>
                         <TextField 
                             name="phone"
                             value={formData.phone}
                             onChange={handleInputChange}
-                            label="Phone"
-                            variant="standard"
+                            label="Phone Number"
+                            variant="filled"
                             fullWidth
-                        />
+                            InputProps={{style: {fontSize: 30, height: '3rem'}}}
+                                                    />
+                        <label className="text-2xl font-bold text-black">Address</label>
                         <TextField 
                             name="address"
                             value={formData.address}
                             onChange={handleInputChange}
                             label="Address"
-                            variant="standard"
+                            variant="filled"
                             fullWidth
+                            InputProps={{style: {fontSize: 30, height: '3rem'}}}
                         />
+                        <label className="text-2xl font-bold text-black">Company</label>
                         <TextField 
                             name="company"
                             value={formData.company}
                             onChange={handleInputChange}
                             label="Company"
-                            variant="standard"
+                            variant="filled"
                             fullWidth
+                            InputProps={{style: {fontSize: 30, height: '3rem'}}}
                         />
+                        <label className="text-2xl font-bold text-black">Description</label>
                         <TextField 
                             name="description"
                             value={formData.description}
                             onChange={handleInputChange}
                             label="Description"
-                            variant="standard"
+                            variant="filled"
                             fullWidth
+                            InputProps={{style: {fontSize: 30, height: '3rem'}}}
                         />
                     </div>
                 </div>
