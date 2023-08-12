@@ -26,6 +26,9 @@ body {
   /* custom styles added temporarily */
   height: 100%;
 }
+#root {
+  max-width: 100%;
+}
 
 h1 {
   font-size: 3.2em;
