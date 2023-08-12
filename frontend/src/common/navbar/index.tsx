@@ -1,7 +1,6 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -14,37 +13,42 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-interface Props {
+interface NavbarProps {
   navItems: string[];
+}
+
+interface DrawerProps {
+  navItems: string[];
+  handleDrawerToggle: () => void;
 }
 
 const drawerWidth = 240;
 
-const NavBar = ({ navItems }: Props) => {
+const DrawerElement = ({ handleDrawerToggle, navItems }: DrawerProps) => (
+  <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+    <Typography variant="h6" sx={{ my: 2 }}>
+      MUI
+    </Typography>
+    <Divider />
+    <List>
+      {navItems.map((item: string) => (
+        <ListItem key={item} disablePadding>
+          <ListItemButton sx={{ textAlign: "center" }}>
+            <ListItemText primary={item} />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
+  </Box>
+);
+
+const NavBar = ({ navItems }: NavbarProps) => {
   // const window = new Window();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
-
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        MUI
-      </Typography>
-      <Divider />
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }}>
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
 
   const container =
     window !== undefined ? () => window.document.body : undefined;
@@ -95,7 +99,7 @@ const NavBar = ({ navItems }: Props) => {
             },
           }}
         >
-          {drawer}
+          <DrawerElement {...{ handleDrawerToggle, navItems }} />
         </Drawer>
       </Box>
     </div>

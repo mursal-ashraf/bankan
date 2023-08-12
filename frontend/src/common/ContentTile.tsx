@@ -1,11 +1,5 @@
 import styled, { css } from "styled-components";
-
-export const colourLookup: { [key: string]: string } = {
-  yellow: "#ffcd29",
-  orange: "#f5754f",
-};
-
-export type GeneralColour = "yellow" | "blue" | "white" | "orange";
+import { ColourLookup } from "./utils";
 
 export const Tile = styled.div<{ colour?: GeneralColour; height?: number }>`
   display: flex;
@@ -15,7 +9,7 @@ export const Tile = styled.div<{ colour?: GeneralColour; height?: number }>`
   ${(props) =>
     props.colour &&
     css`
-      background-color: ${colourLookup[props.colour]};
+      background-color: ${ColourLookup[props.colour]};
     `}
 
   ${(props) =>

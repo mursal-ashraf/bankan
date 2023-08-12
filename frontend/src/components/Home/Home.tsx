@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import { AccessAlarm, ThreeDRotation } from "@mui/icons-material";
 
-const HomeContent: React.FC = () => (
+export const Home: React.FC = () => (
   <>
     <h1 className="text-yellow-500">This is BanKan</h1>
 
@@ -13,5 +13,3 @@ const HomeContent: React.FC = () => (
     <ThreeDRotation color="secondary" />
   </>
 );
-
-export const Home: React.FC = HomeContent;
