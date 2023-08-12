@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { TextField } from '@mui/material';
+import { TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
-import Button from '@mui/material/Button';
 
 export const Profile: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -13,6 +12,8 @@ export const Profile: React.FC = () => {
         description: ''
     });
 
+    const [open, setOpen] = useState(false);
+
     const handleEditClick = () => {
         console.log("Edit button clicked!");
     };
@@ -21,6 +22,12 @@ export const Profile: React.FC = () => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
         console.log("Information edited");
+    };
+
+    const handleUploadClick = () => {
+        console.log("Upload button clicked!");
+        // Add image upload logic here if needed.
+        setOpen(false);
     };
 
     return (
@@ -36,7 +43,7 @@ export const Profile: React.FC = () => {
                             variant="contained" 
                             color="primary" 
                             className="w-3/5 mt-2"
-                            onClick={handleEditClick}>
+                            onClick={() => setOpen(true)}>
                             Edit
                         </Button>
                     </div>
@@ -92,6 +99,27 @@ export const Profile: React.FC = () => {
                     </div>
                 </div>
             </div>
+            
+            {/* Dialog for image upload */}
+            <Dialog open={open} onClose={() => setOpen(false)}>
+                <DialogTitle>Upload or Replace Picture</DialogTitle>
+                <DialogContent>
+                    <input type="file" accept="image/*" onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                            // Handle the file here if needed
+                        }
+                    }} />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleUploadClick} color="primary">
+                        Upload
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };
