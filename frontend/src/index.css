@@ -18,6 +18,14 @@
   -webkit-text-size-adjust: 100%;
 }
 
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  /* custom styles added temporarily */
+  height: 100%;
+}
 #root {
   max-width: 100%;
 }
