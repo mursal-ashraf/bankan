@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import boardImage from './Boards.jpeg';
-import { Button, Grid, List, ListItem, Stack, Typography } from '@mui/material';
-import Footer from '../common';
-import { AuthModal } from '../common/AuthModal/AuthModal';
+import React, { useState } from "react";
+import boardImage from "./Boards.jpeg";
+import { Button, Grid, List, ListItem, Stack, Typography } from "@mui/material";
+import Footer from "../common";
+import { AuthModal } from "../common/AuthModal/AuthModal";
 
 export const Home: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
     <Stack spacing={2}>
-      <Grid container style={{ backgroundColor: '#FFCD29' }}>
+      <Grid container style={{ backgroundColor: "#FFCD29" }}>
         <Grid xs={4} item>
           <Typography variant="h5">Team Management</Typography>
           <Typography paragraph>
@@ -18,7 +18,7 @@ export const Home: React.FC = () => {
             success every time.
           </Typography>
           <Button
-            style={{ backgroundColor: 'white' }}
+            style={{ backgroundColor: "white" }}
             onClick={() => setOpen(true)}
           >
             Login/Signup
