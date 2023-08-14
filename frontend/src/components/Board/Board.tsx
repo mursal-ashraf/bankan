@@ -1,6 +1,12 @@
 import { useState } from 'react';
 // import { AccountCircle } from "@mui/icons-material";
-import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+  OnDragEndResponder,
+} from '@hello-pangea/dnd';
 import {
   Button,
   Card,
@@ -167,48 +173,22 @@ const members = [
   },
 ];
 
-interface IColumn {
-  id: string;
-  board_id: string;
-  board_version: number;
-  index: number;
-  name: string;
-  cards: ICard[];
-  created_at: string;
-}
-
-interface ICard {
-  id: string;
-  list_id: string;
-  index: number;
-  user_creator: string;
-  user_assigned: string | undefined;
-  title: string;
-  description: string;
-  deadline: string | undefined;
-  created_at: string;
-}
-
-interface IColumnProp {
-  column: IColumn;
-}
-
 function TaskCard(props: { item: ICard }) {
   const item = props.item;
   // console.log(item)
   return (
     <>
-      <Card className='m-1' sx={{ maxWidth: 345 }}>
+      <Card className="m-1" sx={{ maxWidth: 345 }}>
         <CardContent>
-          <Typography gutterBottom variant='h6' component='div'>
+          <Typography gutterBottom variant="h6" component="div">
             {item.title}
           </Typography>
-          <Typography variant='body2' color='text.secondary'>
+          <Typography variant="body2" color="text.secondary">
             {item.description}
           </Typography>
         </CardContent>
-        <CardActions className='flex flex-col'>
-          <Button className='justify-self-end' size='small'>
+        <CardActions className="flex flex-col">
+          <Button className="justify-self-end" size="small">
             Edit
           </Button>
         </CardActions>
@@ -217,25 +197,24 @@ function TaskCard(props: { item: ICard }) {
   );
 }
 
-function TaskColumn(props: IColumnProp) {
-  const column = props.column;
-  const items = props.column.cards
+const TaskColumn = ({ column }: IColumnProp) => {
+  const items = column.cards
     .filter((i: ICard) => i.list_id == column.id)
     .sort((c) => c.index);
   // console.log("Column: ", {column}, {items})
   return (
     <>
-      <div className='flex flex-col h-min-full w-full min-w-[200px] mx-2 px-2 bg-gray-500 rounded-md pt-2'>
-        <div className='w-full bg-gray-100 text-black font-bold text-xl rounded-md text-center border-2 border-gray-700'>
+      <div className="flex flex-col h-min-full w-full min-w-[200px] mx-2 px-2 bg-gray-500 rounded-md pt-2">
+        <div className="w-full bg-gray-100 text-black font-bold text-xl rounded-md text-center border-2 border-gray-700">
           {column.name}
         </div>
-        <div className='w-full h-full overflow-y-auto'>
+        <div className="w-full h-full overflow-y-auto">
           <Droppable droppableId={column.id}>
             {(provided) => (
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className='min-h-[95%]'
+                className="min-h-[95%]"
               >
                 {items.map((item: ICard, index: number) => (
                   <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -258,14 +237,14 @@ function TaskColumn(props: IColumnProp) {
       </div>
     </>
   );
-}
+};
 
 function TaskBoard() {
   const [myColumns, setMyColumns] = useState(columns);
 
   // Handles moving cards
-  function onDragEnd(result: any) {
-    // console.log("drag ended ", result);
+  function onDragEnd(result: DropResult) {
+    // console.log('drag ended ', result);
     const columnSource: IColumn | undefined = columns?.find(
       (c) => c.id == result?.source?.droppableId
     );
@@ -301,11 +280,11 @@ function TaskBoard() {
 
   return (
     <>
-      <div className='bg-gray-600 p-2 h-full overflow-x-auto'>
+      <div className="bg-gray-600 p-2 h-full overflow-x-auto">
         <DragDropContext onDragEnd={onDragEnd}>
-          <div className='h-full flex flex-row'>
-            {myColumns.map((col: IColumn, index: number) => (
-              <TaskColumn column={col} key={index} />
+          <div className="h-full flex flex-row">
+            {myColumns.map((col: IColumn) => (
+              <TaskColumn column={col} />
             ))}
           </div>
         </DragDropContext>
@@ -317,18 +296,18 @@ function TaskBoard() {
 export const Board: React.FC = () => {
   return (
     <>
-      <Tile colour='yellow' height={100}>
-        <div className=' inset-0 h-full w-full flex flex-col items-center '>
-          <div className='w-[95%] h-[90%] flex flex-col items-center justify-center'>
-            <p className='bg-white text-black text-bold px-10 text-4xl font-mono font-bold m-4 rounded-md'>
+      <Tile colour="yellow" height={100}>
+        <div className=" inset-0 h-full w-full flex flex-col items-center ">
+          <div className="w-[95%] h-[90%] flex flex-col items-center justify-center">
+            <p className="bg-white text-black text-bold px-10 text-4xl font-mono font-bold m-4 rounded-md">
               {board.name}
             </p>
 
-            <div className='bg-white w-full m-4 p-2 rounded-md text-black font-bold'>
+            <div className="bg-white w-full m-4 p-2 rounded-md text-black font-bold">
               Members
             </div>
 
-            <div className='bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full'>
+            <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full">
               <TaskBoard />
             </div>
           </div>
