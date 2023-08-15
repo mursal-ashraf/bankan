@@ -5,7 +5,6 @@ import {
   Draggable,
   DropResult,
   Droppable,
-  OnDragEndResponder,
 } from '@hello-pangea/dnd';
 import {
   Button,
@@ -178,17 +177,17 @@ function TaskCard(props: { item: ICard }) {
   // console.log(item)
   return (
     <>
-      <Card className="m-1" sx={{ maxWidth: 345 }}>
+      <Card className='m-1' sx={{ maxWidth: 345 }}>
         <CardContent>
-          <Typography gutterBottom variant="h6" component="div">
+          <Typography gutterBottom variant='h6' component='div'>
             {item.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant='body2' color='text.secondary'>
             {item.description}
           </Typography>
         </CardContent>
-        <CardActions className="flex flex-col">
-          <Button className="justify-self-end" size="small">
+        <CardActions className='flex flex-col'>
+          <Button className='justify-self-end' size='small'>
             Edit
           </Button>
         </CardActions>
@@ -204,17 +203,17 @@ const TaskColumn = ({ column }: IColumnProp) => {
   // console.log("Column: ", {column}, {items})
   return (
     <>
-      <div className="flex flex-col h-min-full w-full min-w-[200px] mx-2 px-2 bg-gray-500 rounded-md pt-2">
-        <div className="w-full bg-gray-100 text-black font-bold text-xl rounded-md text-center border-2 border-gray-700">
+      <div className='flex flex-col h-min-full w-full min-w-[200px] mx-2 px-2 bg-gray-500 rounded-md pt-2'>
+        <div className='w-full bg-gray-100 text-black font-bold text-xl rounded-md text-center border-2 border-gray-700'>
           {column.name}
         </div>
-        <div className="w-full h-full overflow-y-auto">
+        <div className='w-full h-full overflow-y-auto'>
           <Droppable droppableId={column.id}>
             {(provided) => (
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="min-h-[95%]"
+                className='min-h-[95%]'
               >
                 {items.map((item: ICard, index: number) => (
                   <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -266,12 +265,14 @@ function TaskBoard() {
         );
       } else {
         // else moving cards between columns
-        columnDestination?.cards?.splice(
-          result?.destination?.index,
-          0,
-          cardToMove
-        );
-        columnSource?.cards?.splice(result?.source?.index, 1);
+        if (!!result?.destination?.index) {
+          columnDestination?.cards?.splice(
+            result.destination.index,
+            0,
+            cardToMove
+          );
+          columnSource?.cards?.splice(result.source.index, 1);
+        }
       }
       const newColumn = [...columns];
       setMyColumns(newColumn);
@@ -280,9 +281,9 @@ function TaskBoard() {
 
   return (
     <>
-      <div className="bg-gray-600 p-2 h-full overflow-x-auto">
+      <div className='bg-gray-600 p-2 h-full overflow-x-auto'>
         <DragDropContext onDragEnd={onDragEnd}>
-          <div className="h-full flex flex-row">
+          <div className='h-full flex flex-row'>
             {myColumns.map((col: IColumn) => (
               <TaskColumn column={col} />
             ))}
@@ -296,18 +297,18 @@ function TaskBoard() {
 export const Board: React.FC = () => {
   return (
     <>
-      <Tile colour="yellow" height={100}>
-        <div className=" inset-0 h-full w-full flex flex-col items-center ">
-          <div className="w-[95%] h-[90%] flex flex-col items-center justify-center">
-            <p className="bg-white text-black text-bold px-10 text-4xl font-mono font-bold m-4 rounded-md">
+      <Tile colour='yellow' height={100}>
+        <div className=' inset-0 h-full w-full flex flex-col items-center '>
+          <div className='w-[95%] h-[90%] flex flex-col items-center justify-center'>
+            <p className='bg-white text-black text-bold px-10 text-4xl font-mono font-bold m-4 rounded-md'>
               {board.name}
             </p>
 
-            <div className="bg-white w-full m-4 p-2 rounded-md text-black font-bold">
+            <div className='bg-white w-full m-4 p-2 rounded-md text-black font-bold'>
               Members
             </div>
 
-            <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full">
+            <div className='bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full'>
               <TaskBoard />
             </div>
           </div>

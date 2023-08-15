@@ -9,19 +9,13 @@ const useUser = () => {
   const performGetUser = useCallback(async () => {
     const user = (await client.auth.getSession()).data.session?.user;
     setResult(user);
-  }, [client, result]);
+  }, [client]);
 
   useEffect(() => {
     performGetUser();
-  }, []);
+  }, [performGetUser]);
 
   return result;
-};
-
-export const useIsLoggedIn = () => {
-  const user = useUser();
-
-  return user?.role === 'authenticated';
 };
 
 export default useUser;
