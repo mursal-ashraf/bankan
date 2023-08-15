@@ -28,9 +28,9 @@ export const useLogin: LoginHook = () => {
 
   const performLogin = useCallback<LoginHookFunction>(
     async (credentials: SignInWithPasswordCredentials) => {
-      setResult({ ...result, isLoading: false });
+      setResult({ ...result, isLoading: true });
       const { data, error } = await client.auth.signInWithPassword(credentials);
-      setResult({ ...result, data, error });
+      setResult({ ...result, data, error, isLoading: false });
     },
     [client, result],
   );
