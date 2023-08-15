@@ -246,13 +246,13 @@ function TaskBoard() {
   function onDragEnd(result: DropResult) {
     // console.log('drag ended ', result);
     const columnSource: IColumn | undefined = columns?.find(
-      (c) => c.id == result?.source?.droppableId
+      (c) => c.id == result?.source?.droppableId,
     );
     const columnDestination: IColumn | undefined = columns?.find(
-      (c) => c.id == result?.destination?.droppableId
+      (c) => c.id == result?.destination?.droppableId,
     );
     const cardToMove: ICard | undefined = columnSource?.cards?.find(
-      (c) => c.id == result?.draggableId
+      (c) => c.id == result?.draggableId,
     );
     if (cardToMove && columnSource && columnDestination) {
       cardToMove.list_id = result?.destination?.droppableId;
@@ -262,14 +262,14 @@ function TaskBoard() {
         columnDestination?.cards?.splice(
           result?.destination?.index,
           0,
-          cardToMove
+          cardToMove,
         );
       } else {
         // else moving cards between columns
         columnDestination?.cards?.splice(
           result?.destination?.index,
           0,
-          cardToMove
+          cardToMove,
         );
         columnSource?.cards?.splice(result?.source?.index, 1);
       }
