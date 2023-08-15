@@ -1,9 +1,9 @@
-import { Tile } from "@/common/ContentTile";
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { Repeater } from "@/common/Repeater";
-import { useState } from "react";
+import { Tile } from '@/common/ContentTile';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Repeater } from '@/common/Repeater';
+import { useState } from 'react';
 
 interface BoardCardProps {
   id: string;
@@ -28,58 +28,58 @@ const BoardContainer: React.FC = () => {
   //Mock data for now..
   const [boardCards, setBoardCards] = useState([
     {
-      id: "1",
-      project: "Project A",
-      description: "This is the description for Project A",
-      lastModified: "2023-08-10",
+      id: '1',
+      project: 'Project A',
+      description: 'This is the description for Project A',
+      lastModified: '2023-08-10',
     },
     {
-      id: "2",
-      project: "Project B",
-      description: "Description for Project B goes here",
-      lastModified: "2023-08-09",
+      id: '2',
+      project: 'Project B',
+      description: 'Description for Project B goes here',
+      lastModified: '2023-08-09',
     },
     {
-      id: "3",
-      project: "Project C",
-      description: "Description for Project C",
-      lastModified: "2023-08-08",
+      id: '3',
+      project: 'Project C',
+      description: 'Description for Project C',
+      lastModified: '2023-08-08',
     },
     {
-      id: "4",
-      project: "Project A",
-      description: "This is the description for Project A",
-      lastModified: "2023-08-10",
+      id: '4',
+      project: 'Project A',
+      description: 'This is the description for Project A',
+      lastModified: '2023-08-10',
     },
     {
-      id: "5",
-      project: "Project B",
-      description: "Description for Project B goes here",
-      lastModified: "2023-08-09",
+      id: '5',
+      project: 'Project B',
+      description: 'Description for Project B goes here',
+      lastModified: '2023-08-09',
     },
     {
-      id: "6",
-      project: "Project C",
-      description: "Description for Project C",
-      lastModified: "2023-08-08",
+      id: '6',
+      project: 'Project C',
+      description: 'Description for Project C',
+      lastModified: '2023-08-08',
     },
     {
-      id: "7",
-      project: "Project A",
-      description: "This is the description for Project A",
-      lastModified: "2023-08-10",
+      id: '7',
+      project: 'Project A',
+      description: 'This is the description for Project A',
+      lastModified: '2023-08-10',
     },
     {
-      id: "8",
-      project: "Project B",
-      description: "Description for Project B goes here",
-      lastModified: "2023-08-09",
+      id: '8',
+      project: 'Project B',
+      description: 'Description for Project B goes here',
+      lastModified: '2023-08-09',
     },
     {
-      id: "9",
-      project: "Project C",
-      description: "Description for Project C",
-      lastModified: "2023-08-08",
+      id: '9',
+      project: 'Project C',
+      description: 'Description for Project C',
+      lastModified: '2023-08-08',
     },
   ] as BoardCardProps[]);
 
@@ -100,10 +100,10 @@ const BoardContainer: React.FC = () => {
           defaultMsg="No Bankan Boards here... try creating one!"
           ActionIcon={{
             icon: <DeleteIcon />,
-            colour: "orange",
+            colour: 'orange',
             onClick: elementOnDelete,
             actionModal:
-              "Are you sure you want to delete this Bankan board? This action cannot be undone!",
+              'Are you sure you want to delete this Bankan board? This action cannot be undone!',
           }}
         />
       </div>

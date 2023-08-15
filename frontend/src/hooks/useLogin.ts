@@ -13,7 +13,7 @@ interface LoginResult {
 }
 
 type LoginHookFunction = (
-  credentials: SignInWithPasswordCredentials
+  credentials: SignInWithPasswordCredentials,
 ) => Promise<void>;
 
 export type LoginHook = () => [LoginHookFunction, LoginResult];
@@ -32,7 +32,7 @@ export const useLogin: LoginHook = () => {
       const { data, error } = await client.auth.signInWithPassword(credentials);
       setResult({ ...result, data, error });
     },
-    [client, result]
+    [client, result],
   );
 
   return [performLogin, result];

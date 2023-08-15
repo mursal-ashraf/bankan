@@ -12,7 +12,7 @@ interface SignUpHookResult {
   error: AuthError | undefined | null;
 }
 type SignUpHookFunction = (
-  credentials: SignUpWithPasswordCredentials
+  credentials: SignUpWithPasswordCredentials,
 ) => Promise<void>;
 
 export type SignUpHook = () => [SignUpHookFunction, SignUpHookResult];
@@ -31,7 +31,7 @@ export const useSignUp: SignUpHook = () => {
       const { data, error } = await client.auth.signUp(credentials);
       setResult({ ...result, data, error });
     },
-    [client, result]
+    [client, result],
   );
 
   return [performSignUp, result];

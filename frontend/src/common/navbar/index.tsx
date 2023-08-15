@@ -27,7 +27,7 @@ const drawerWidth = 240;
 
 const DrawerElement = ({ handleDrawerToggle, navItems }: DrawerProps) => (
   <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-    <Typography variant='h6' sx={{ my: 2 }}>
+    <Typography variant="h6" sx={{ my: 2 }}>
       MUI
     </Typography>
     <Divider />
@@ -59,20 +59,20 @@ const NavBar = ({ navItems }: NavbarProps) => {
 
   return (
     <div style={{ position: 'initial' }}>
-      <AppBar component='nav' position='sticky'>
+      <AppBar component="nav" position="sticky">
         <Toolbar>
           <IconButton
-            color='inherit'
-            aria-label='open drawer'
-            edge='start'
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
             onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { sm: 'none' } }}
           >
             <MenuIcon />
           </IconButton>
           <Typography
-            variant='h6'
-            component='div'
+            variant="h6"
+            component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
             MUI
@@ -86,10 +86,10 @@ const NavBar = ({ navItems }: NavbarProps) => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Box component='nav'>
+      <Box component="nav">
         <Drawer
           container={container}
-          variant='temporary'
+          variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
