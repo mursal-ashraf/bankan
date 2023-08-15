@@ -48,7 +48,7 @@ const NavBar = ({ navItems }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const loggedIn = useIsLoggedIn();
 
-  console.log('logged in? ', loggedIn);
+  console.log('logged in? ', loggedIn); //FOR DONGYI -> loggedIn == true -> user is logged in -> show profile, dashboard buttons etc.
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
