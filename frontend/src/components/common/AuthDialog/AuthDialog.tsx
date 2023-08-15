@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import {
   Button,
   TextField,
@@ -15,6 +15,7 @@ import { SignUpHookFunction } from '@/hooks/useSignUp';
 import { LoginHookFunction } from '@/hooks/useLogin';
 import { Routes } from '@/Router/AppRouter';
 import AuthErrorAlert from './AuthErrorAlert';
+import { useIsLoggedIn } from '@/hooks';
 
 interface AuthDialogProps {
   title: string;
@@ -39,6 +40,7 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
 }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const isUserLoggedIn = useIsLoggedIn();
   const navigateTo = useNavigate();
 
   const onEmailChange = (
@@ -55,6 +57,8 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
     await finishHandler({ email, password });
     !error && navigateTo(submitRoute);
   };
+
+  if (isUserLoggedIn) return <Navigate to={Routes.Dashboard} />;
 
   return (
     <Dialog open>
