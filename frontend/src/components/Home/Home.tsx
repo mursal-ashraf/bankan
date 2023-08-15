@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import boardImage from './Boards.jpeg';
 import { Button, Grid, List, ListItem, Stack, Typography } from '@mui/material';
 import Footer from '../common';
-import { AuthModal } from '../common/AuthModal/AuthModal';
+import { Routes } from '@/Router/AppRouter';
 
 export const Home: React.FC = () => {
-  const [open, setOpen] = useState<boolean>(false);
+  const navigateTo = useNavigate();
 
   return (
     <Stack spacing={2}>
@@ -19,9 +20,15 @@ export const Home: React.FC = () => {
           </Typography>
           <Button
             style={{ backgroundColor: 'white' }}
-            onClick={() => setOpen(true)}
+            onClick={() => navigateTo(Routes.Login)}
           >
-            Login/Signup
+            Login
+          </Button>
+          <Button
+            style={{ backgroundColor: 'white' }}
+            onClick={() => navigateTo(Routes.Signup)}
+          >
+            Signup
           </Button>
         </Grid>
         <Grid xs={8} item>
@@ -56,14 +63,6 @@ export const Home: React.FC = () => {
         </Grid>
       </Grid>
       <Footer />
-      {open && (
-        <AuthModal
-          onClose={() => setOpen(false)}
-          onSubmit={() => {
-            window.location.reload();
-          }}
-        />
-      )}
     </Stack>
   );
 };
