@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 import { useLogin, useSignUp } from '@/hooks';
 import { loginConfig, signUpConfig, style } from './utils';
-import AuthErrorAlert from './AuthErrorAlert';
 import LoadingModal from '../LoadingModal';
+import AuthErrorAlert from '../AuthDialog/AuthErrorAlert';
 
 interface AuthModalProps {
   onClose: () => void;

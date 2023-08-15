@@ -12,7 +12,7 @@ interface LoginResult {
   error: AuthError | undefined | null;
 }
 
-type LoginHookFunction = (
+export type LoginHookFunction = (
   credentials: SignInWithPasswordCredentials,
 ) => Promise<void>;
 
