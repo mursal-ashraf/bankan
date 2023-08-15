@@ -42,7 +42,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       email,
       password,
     });
-    !error && onSubmit();
+    !!error && onSubmit();
   }, [error, onSubmit, email, password, performAuth]);
 
   if (isLoading) return <LoadingModal />;
