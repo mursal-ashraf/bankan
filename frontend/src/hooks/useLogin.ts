@@ -13,7 +13,7 @@ interface LoginResult {
 }
 
 type LoginHookFunction = (
-  credentials: SignInWithPasswordCredentials,
+  credentials: SignInWithPasswordCredentials
 ) => Promise<void>;
 
 export type LoginHook = () => [LoginHookFunction, LoginResult];
@@ -31,9 +31,19 @@ export const useLogin: LoginHook = () => {
       setResult({ ...result, isLoading: false });
       const { data, error } = await client.auth.signInWithPassword(credentials);
       setResult({ ...result, data, error });
+      if (data && !error) {
+        window.location.reload();
+      }
     },
-    [client, result],
+    [client, result]
   );
 
   return [performLogin, result];
 };
+
+
+
+
+
+
+
