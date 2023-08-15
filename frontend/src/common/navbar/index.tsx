@@ -51,11 +51,11 @@ const NavBar = () => {
                 </Button>
               </a>
               <Button color="inherit" onClick={handleLogOut}>
-                  Log Out
+                Log Out
               </Button>
               {logOutResult.error && (
                 <Typography variant="body2" color="error">
-                {logOutResult.error.message}
+                  {logOutResult.error.message}
                 </Typography>
               )}
             </>
