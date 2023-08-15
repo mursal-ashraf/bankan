@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "concurrently \"npm run dev --workspace=frontend\" \"npm run dev --workspace=server\""
+    "dev": "npm run dev --workspace=frontend"
   },
   "workspaces": [
-    "frontend",
-    "server"
+    "frontend"
   ],
   "keywords": [],
   "author": "",
