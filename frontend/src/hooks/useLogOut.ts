@@ -20,9 +20,6 @@ export const useLogOut: LogOutHook = () => {
 
   const performLogOut = useCallback<LogOutHookFunction>(
     async () => {
-      setResult({ ...result, isLoading: true });
-      await client.auth.signOut();
-      setResult({ isLoading: false, error: null });
       const { error } = await client.auth.signOut();
       setResult({...result, isLoading: false, error});
     },
