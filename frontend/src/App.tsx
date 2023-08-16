@@ -9,7 +9,7 @@ function App() {
 
   return (
     <AppContext.Provider value={{ client }}>
-      <NavBar navItems={['Dashboard']} />
+      <NavBar/>
       <></>
       <AppRouter />
     </AppContext.Provider>
