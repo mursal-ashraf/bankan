@@ -27,7 +27,7 @@ export const useSignUp: SignUpHook = () => {
 
   const performSignUp = useCallback<SignUpHookFunction>(
     async (credentials: SignUpWithPasswordCredentials) => {
-      setResult({ ...result, isLoading: false });
+      setResult({ ...result, isLoading: true });
       const { data, error } = await client.auth.signUp(credentials);
       setResult({ ...result, data, error });
     },
