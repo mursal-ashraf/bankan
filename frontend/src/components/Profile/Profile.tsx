@@ -20,6 +20,7 @@ export const Profile: React.FC = () => {
   });
 
   const [open, setOpen] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,7 +40,15 @@ export const Profile: React.FC = () => {
         <div className="flex h-full">
           <div className="relative w-1/3 h-1/3 flex flex-col items-center justify-center">
             <div className="w-40 h-40 rounded-full bg-gray-300 flex items-center justify-center">
-              <AccountCircle style={{ width: 160, height: 160 }} />
+              {image ? (
+                <img
+                  src={image}
+                  alt="Profile"
+                  className="w-40 h-40 rounded-full"
+                />
+              ) : (
+                <AccountCircle style={{ width: 160, height: 160 }} />
+              )}
             </div>
             <div className="pt-4"></div>
             <Button
@@ -61,7 +70,7 @@ export const Profile: React.FC = () => {
               label="Name"
               variant="filled"
               fullWidth
-              InputProps={{ style: { fontSize: 30, height: '3rem' } }}
+              InputProps={{ style: { fontSize: 20, height: '3rem' } }}
             />
             <label className="text-2xl font-bold text-black">Email</label>
             <TextField
@@ -71,7 +80,7 @@ export const Profile: React.FC = () => {
               label="Email"
               variant="filled"
               fullWidth
-              InputProps={{ style: { fontSize: 30, height: '3rem' } }}
+              InputProps={{ style: { fontSize: 20, height: '3rem' } }}
             />
             <label className="text-2xl font-bold text-black">
               Phone Number
@@ -83,7 +92,7 @@ export const Profile: React.FC = () => {
               label="Phone Number"
               variant="filled"
               fullWidth
-              InputProps={{ style: { fontSize: 30, height: '3rem' } }}
+              InputProps={{ style: { fontSize: 20, height: '3rem' } }}
             />
             <label className="text-2xl font-bold text-black">Address</label>
             <TextField
@@ -93,7 +102,7 @@ export const Profile: React.FC = () => {
               label="Address"
               variant="filled"
               fullWidth
-              InputProps={{ style: { fontSize: 30, height: '3rem' } }}
+              InputProps={{ style: { fontSize: 20, height: '3rem' } }}
             />
             <label className="text-2xl font-bold text-black">Company</label>
             <TextField
@@ -103,7 +112,7 @@ export const Profile: React.FC = () => {
               label="Company"
               variant="filled"
               fullWidth
-              InputProps={{ style: { fontSize: 30, height: '3rem' } }}
+              InputProps={{ style: { fontSize: 20, height: '3rem' } }}
             />
             <label className="text-2xl font-bold text-black">Description</label>
             <TextField
@@ -113,7 +122,7 @@ export const Profile: React.FC = () => {
               label="Description"
               variant="filled"
               fullWidth
-              InputProps={{ style: { fontSize: 30, height: '3rem' } }}
+              InputProps={{ style: { fontSize: 20, height: '3rem' } }}
             />
           </div>
         </div>
@@ -130,6 +139,11 @@ export const Profile: React.FC = () => {
               const file = e.target.files?.[0];
               if (file) {
                 // Handle the file here if needed
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  setImage(reader.result as string);
+                };
+                reader.readAsDataURL(file);
               }
             }}
           />
