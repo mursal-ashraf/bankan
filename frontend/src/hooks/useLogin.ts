@@ -31,9 +31,6 @@ export const useLogin: LoginHook = () => {
       setResult({ ...result, isLoading: true });
       const { data, error } = await client.auth.signInWithPassword(credentials);
       setResult({ ...result, data, error, isLoading: false });
-      if (data && !error) {
-        window.location.reload();
-      }
     },
     [client, result],
   );
