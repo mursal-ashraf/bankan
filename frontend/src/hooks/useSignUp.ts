@@ -29,7 +29,7 @@ export const useSignUp: SignUpHook = () => {
     async (credentials: SignUpWithPasswordCredentials) => {
       setResult({ ...result, isLoading: true });
       const { data, error } = await client.auth.signUp(credentials);
-      setResult({ ...result, data, error });
+      setResult({ ...result, data, error, isLoading: false });
     },
     [client, result],
   );
