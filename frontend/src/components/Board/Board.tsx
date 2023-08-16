@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 // import { AccountCircle } from "@mui/icons-material";
 import {
   DragDropContext,
@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Tile } from '@/common/ContentTile';
+import ComponentContainer from '../common/ComponentContainer';
 
 // Mock data
 const board = {
@@ -294,7 +295,7 @@ function TaskBoard() {
   );
 }
 
-export const Board: React.FC = () => {
+const InnerBoard: React.FC = () => {
   return (
     <>
       <Tile colour="yellow" height={100}>
@@ -315,5 +316,13 @@ export const Board: React.FC = () => {
         </div>
       </Tile>
     </>
+  );
+};
+
+export const Board: React.FC = () => {
+  return (
+    <ComponentContainer>
+      <InnerBoard />
+    </ComponentContainer>
   );
 };

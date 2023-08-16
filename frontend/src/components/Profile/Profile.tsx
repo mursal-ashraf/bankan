@@ -8,8 +8,9 @@ import {
   Button,
 } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
+import ComponentContainer from '../common/ComponentContainer';
 
-export const Profile: React.FC = () => {
+const InnerProfile: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -158,5 +159,13 @@ export const Profile: React.FC = () => {
         </DialogActions>
       </Dialog>
     </div>
+  );
+};
+
+export const Profile: React.FC = () => {
+  return (
+    <ComponentContainer>
+      <InnerProfile />
+    </ComponentContainer>
   );
 };

@@ -2,8 +2,9 @@ import { useLogin } from '@/hooks';
 import React from 'react';
 import AuthDialog from '../common/AuthDialog';
 import { Routes } from '@/Router/AppRouter';
+import ComponentContainer from '../common/ComponentContainer';
 
-export const Login: React.FC = () => {
+const InnerLogin: React.FC = () => {
   const [login, { isLoading, error }] = useLogin();
 
   return (
@@ -17,5 +18,13 @@ export const Login: React.FC = () => {
       isLoading={isLoading}
       error={error}
     />
+  );
+};
+
+export const Login: React.FC = () => {
+  return (
+    <ComponentContainer>
+      <InnerLogin />
+    </ComponentContainer>
   );
 };

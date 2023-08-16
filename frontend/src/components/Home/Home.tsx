@@ -2,10 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import boardImage from './Boards.jpeg';
 import { Button, Grid, List, ListItem, Stack, Typography } from '@mui/material';
-import Footer from '../common';
 import { Routes } from '@/Router/AppRouter';
+import ComponentContainer from '../common/ComponentContainer';
 
-export const Home: React.FC = () => {
+const InnerHome: React.FC = () => {
   const navigateTo = useNavigate();
 
   return (
@@ -62,7 +62,14 @@ export const Home: React.FC = () => {
           </List>
         </Grid>
       </Grid>
-      <Footer />
     </Stack>
+  );
+};
+
+export const Home: React.FC = () => {
+  return (
+    <ComponentContainer>
+      <InnerHome />
+    </ComponentContainer>
   );
 };
