@@ -138,3 +138,4 @@ export const Profile: React.FC = () => {
             </Dialog>
         </div>
     );
+};
