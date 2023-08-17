@@ -4,6 +4,10 @@ import {
 } from '@hello-pangea/dnd';
 import { TaskCard } from './TaskCard';
 
+interface IColumnProp {
+  column: IColumn;
+}
+
 export function TaskColumn({ column }: IColumnProp) {
   const items = column.cards
     .filter((i: ICard) => i.list_id == column.id)

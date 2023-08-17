@@ -6,6 +6,10 @@ import {
   Button,
 } from "@mui/material";
 
+interface ITaskCardProp {
+  item: ICard
+}
+
 export function TaskCard({ item }: ITaskCardProp) {
   return (
     <>

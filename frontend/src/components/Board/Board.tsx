@@ -1,5 +1,4 @@
 import { useState } from 'react';
-// import { AccountCircle } from "@mui/icons-material";
 import { Tile } from '@/common/ContentTile';
 import { MemberBar } from './BoardComponents/MemberBar'
 import { TaskBoard } from './BoardComponents/TaskBoard';
@@ -141,23 +140,19 @@ const team = {
 const members = [
   {
     id: '1',
+    username: 'kevinbuilderman',
+    given_name: 'Kevin',
+    surname: 'L',
     email: 'kev@example.com',
     phone: '123123123',
-    raw_user_meta_data: {
-      username: 'Kev',
-      given_name: 'Kevin',
-      surname: 'L',
-    }, // currently how supabase by default wants to store user data
   },
   {
     id: '2',
+    username: 'mursalcoolkid',
+    given_name: 'Mursal',
+    surname: 'A',
     email: 'mursal@example.com',
     phone: '123123123',
-    raw_user_meta_data: {
-      username: 'Mursal',
-      given_name: 'Mursal',
-      surname: 'A',
-    },
   },
 ];
 
@@ -170,12 +165,7 @@ export const Board: React.FC = () => {
             <p className="bg-white text-black text-bold px-10 text-4xl font-mono font-bold m-4 rounded-md">
               {board.name}
             </p>
-
-            <div className="bg-white w-full m-4 p-2 rounded-md text-black font-bold">
-              Members
-              <MemberBar></MemberBar>
-            </div>
-
+            <MemberBar members={members} />
             <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full overflow-auto">
               <TaskBoard columns={columns} />
             </div>
