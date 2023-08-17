@@ -1,21 +1,21 @@
 import { useState } from 'react';
-import {
-  DragDropContext,
-  DropResult,
-} from '@hello-pangea/dnd';
+import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { TaskColumn } from './TaskColumn';
 
 interface IBoardProp {
   columns: IColumn[];
+  onEditCardSelect: (card: ICard) => void;
 }
 
-export function TaskBoard({ columns }: IBoardProp) {
+export function TaskBoard({ columns, onEditCardSelect }: IBoardProp) {
   const [myColumns, setMyColumns] = useState(columns);
   const columnElements: Array<any> = [];
 
-  myColumns.forEach((col: IColumn) => (
-    columnElements.push(<TaskColumn column={col} />)
-  ))
+  myColumns.forEach((col: IColumn) =>
+    columnElements.push(
+      <TaskColumn column={col} onEditCardClick={onEditCardSelect} />,
+    ),
+  );
 
   // Handles moving cards
   function onDragEnd(result: DropResult) {
@@ -60,9 +60,7 @@ export function TaskBoard({ columns }: IBoardProp) {
     <>
       <div className="bg-gray-600 p-2 h-full overflow-x-auto">
         <DragDropContext onDragEnd={onDragEnd}>
-          <div className="h-full flex flex-row">
-            {columnElements}
-          </div>
+          <div className="h-full flex flex-row">{columnElements}</div>
         </DragDropContext>
       </div>
     </>

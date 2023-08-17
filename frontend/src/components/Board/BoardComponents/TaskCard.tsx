@@ -4,13 +4,17 @@ import {
   Typography,
   CardActions,
   Button,
-} from "@mui/material";
+} from '@mui/material';
 
 interface ITaskCardProp {
-  item: ICard
+  item: ICard;
+  onEditCardSelect: (card: ICard) => void;
 }
 
-export function TaskCard({ item }: ITaskCardProp) {
+export function TaskCard({ item, onEditCardSelect }: ITaskCardProp) {
+  const onEditCardClick = () => {
+    onEditCardSelect(item);
+  };
   return (
     <>
       <Card className="m-1" sx={{ maxWidth: 345 }}>
@@ -23,7 +27,11 @@ export function TaskCard({ item }: ITaskCardProp) {
           </Typography>
         </CardContent>
         <CardActions className="flex flex-col">
-          <Button className="justify-self-end" size="small">
+          <Button
+            className="justify-self-end"
+            size="small"
+            onClick={onEditCardClick}
+          >
             Edit
           </Button>
         </CardActions>

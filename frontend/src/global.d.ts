@@ -7,12 +7,12 @@ interface TextAndAction {
 
 // Database Types
 interface Member {
-    id: string;
-    username: string;
-    given_name: string;
-    surname: string;
-    email: string;
-    phone: string;
+  id: string;
+  username: string;
+  given_name: string;
+  surname: string;
+  email: string;
+  phone: string;
 }
 
 // Board Types

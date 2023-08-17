@@ -1,17 +1,16 @@
-import {
-  Draggable,
-  Droppable,
-} from '@hello-pangea/dnd';
+import { Draggable, Droppable } from '@hello-pangea/dnd';
 import { TaskCard } from './TaskCard';
 
 interface IColumnProp {
   column: IColumn;
+  onEditCardClick: (card: ICard) => void;
 }
 
-export function TaskColumn({ column }: IColumnProp) {
+export function TaskColumn({ column, onEditCardClick }: IColumnProp) {
   const items = column.cards
     .filter((i: ICard) => i.list_id == column.id)
     .sort((c) => c.index);
+
   // console.log("Column: ", {column}, {items})
   return (
     <>
@@ -35,7 +34,10 @@ export function TaskColumn({ column }: IColumnProp) {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
-                        <TaskCard item={item} />
+                        <TaskCard
+                          item={item}
+                          onEditCardSelect={onEditCardClick}
+                        />
                       </div>
                     )}
                   </Draggable>
@@ -48,4 +50,4 @@ export function TaskColumn({ column }: IColumnProp) {
       </div>
     </>
   );
-};
+}
