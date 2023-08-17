@@ -256,6 +256,9 @@ function TaskBoard() {
     if (cardToMove && columnSource && columnDestination) {
       cardToMove.list_id = result?.destination?.droppableId;
       // If moving cards in the same column
+      if (result?.destination?.index == null) {
+        return;
+      }
       if (result?.source?.droppableId == result?.destination?.droppableId) {
         columnSource?.cards?.splice(result?.source?.index, 1);
         columnDestination?.cards?.splice(
@@ -265,14 +268,12 @@ function TaskBoard() {
         );
       } else {
         // else moving cards between columns
-        if (result?.destination?.index) {
-          columnDestination?.cards?.splice(
-            result.destination.index,
-            0,
-            cardToMove,
-          );
-          columnSource?.cards?.splice(result.source.index, 1);
-        }
+        columnDestination?.cards?.splice(
+          result.destination.index,
+          0,
+          cardToMove,
+        );
+        columnSource?.cards?.splice(result.source.index, 1);
       }
       const newColumn = [...columns];
       setMyColumns(newColumn);
