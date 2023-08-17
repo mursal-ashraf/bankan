@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Tile } from '@/common/ContentTile';
-import { MemberBar } from './BoardComponents/MemberBar'
+import { MemberBar } from './BoardComponents/MemberBar';
 import { TaskBoard } from './BoardComponents/TaskBoard';
+import EditCardModal from './BoardComponents/EditCardModal';
+import dayjs from 'dayjs';
 
 // Mock data
 const board = {
@@ -35,7 +37,7 @@ const columns: IColumn[] = [
         title: 'Design the UI!',
         description:
           'Create a figma design of the initial UI to demo to the clients.',
-        deadline: undefined,
+        deadline: dayjs('2023-04-20 1:30 PM').format('DD-MM-YYYY HH:mm A'),
         created_at: new Date().toDateString(),
       },
     ],
@@ -55,7 +57,7 @@ const columns: IColumn[] = [
         user_assigned: '1',
         title: 'Get to know the team!',
         description: 'Do ice breaker activities to understand the team better.',
-        deadline: new Date().toDateString(),
+        deadline: dayjs('2023-05-31 10:45 AM').format('DD-MM-YYYY HH:mm A'),
         created_at: new Date().toDateString(),
       },
     ],
@@ -95,7 +97,7 @@ const columns: IColumn[] = [
         title: 'Watch Seminar Recordings',
         description:
           'Watch the Seminar recordings before meeting with the team.',
-        deadline: new Date().toDateString(),
+        deadline: dayjs().format('DD-MM-YYYY HH:mm A'),
         created_at: new Date().toDateString(),
       },
     ],
@@ -157,6 +159,18 @@ const members = [
 ];
 
 export const Board: React.FC = () => {
+  const [currentEditCard, setCurrentEditCard] = useState<ICard>();
+  const [editModalVisibility, setEditModalVisibility] = useState(false);
+
+  const onEditCardClick = (card: ICard) => {
+    setCurrentEditCard(card);
+    toggleEditModalVisibility();
+  };
+
+  const toggleEditModalVisibility = () => {
+    setEditModalVisibility(!editModalVisibility.valueOf());
+  };
+
   return (
     <>
       <Tile colour="yellow" height={93} className="">
@@ -167,10 +181,15 @@ export const Board: React.FC = () => {
             </p>
             <MemberBar members={members} />
             <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full overflow-auto">
-              <TaskBoard columns={columns} />
+              <TaskBoard columns={columns} onEditCardSelect={onEditCardClick} />
             </div>
           </div>
         </div>
+        <EditCardModal
+          card={currentEditCard}
+          isVisible={editModalVisibility}
+          toggleIsVisible={toggleEditModalVisibility}
+        />
       </Tile>
     </>
   );
