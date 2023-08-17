@@ -1,13 +1,21 @@
 import { useState } from 'react';
-// import { AccountCircle } from "@mui/icons-material";
 import {
   DragDropContext,
   DropResult,
 } from '@hello-pangea/dnd';
 import { TaskColumn } from './TaskColumn';
 
+interface IBoardProp {
+  columns: IColumn[];
+}
+
 export function TaskBoard({ columns }: IBoardProp) {
   const [myColumns, setMyColumns] = useState(columns);
+  const columnElements: Array<any> = [];
+
+  myColumns.forEach((col: IColumn) => (
+    columnElements.push(<TaskColumn column={col} />)
+  ))
 
   // Handles moving cards
   function onDragEnd(result: DropResult) {
@@ -53,9 +61,7 @@ export function TaskBoard({ columns }: IBoardProp) {
       <div className="bg-gray-600 p-2 h-full overflow-x-auto">
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="h-full flex flex-row">
-            {myColumns.map((col: IColumn) => (
-              <TaskColumn column={col} />
-            ))}
+            {columnElements}
           </div>
         </DragDropContext>
       </div>
