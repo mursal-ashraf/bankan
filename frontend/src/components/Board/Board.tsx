@@ -1,19 +1,8 @@
 import { useState } from 'react';
 // import { AccountCircle } from "@mui/icons-material";
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-} from '@hello-pangea/dnd';
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from '@mui/material';
 import { Tile } from '@/common/ContentTile';
+import { MemberBar } from './BoardComponents/MemberBar'
+import { TaskBoard } from './BoardComponents/TaskBoard';
 
 // Mock data
 const board = {
@@ -172,134 +161,11 @@ const members = [
   },
 ];
 
-function TaskCard(props: { item: ICard }) {
-  const item = props.item;
-  // console.log(item)
-  return (
-    <>
-      <Card className="m-1" sx={{ maxWidth: 345 }}>
-        <CardContent>
-          <Typography gutterBottom variant="h6" component="div">
-            {item.title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {item.description}
-          </Typography>
-        </CardContent>
-        <CardActions className="flex flex-col">
-          <Button className="justify-self-end" size="small">
-            Edit
-          </Button>
-        </CardActions>
-      </Card>
-    </>
-  );
-}
-
-const TaskColumn = ({ column }: IColumnProp) => {
-  const items = column.cards
-    .filter((i: ICard) => i.list_id == column.id)
-    .sort((c) => c.index);
-  // console.log("Column: ", {column}, {items})
-  return (
-    <>
-      <div className="flex flex-col h-min-full w-full min-w-[200px] mx-2 px-2 bg-gray-500 rounded-md pt-2">
-        <div className="w-full bg-gray-100 text-black font-bold text-xl rounded-md text-center border-2 border-gray-700">
-          {column.name}
-        </div>
-        <div className="w-full h-full overflow-y-auto">
-          <Droppable droppableId={column.id}>
-            {(provided) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                className="min-h-[95%]"
-              >
-                {items.map((item: ICard, index: number) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <TaskCard item={item} />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </div>
-      </div>
-    </>
-  );
-};
-
-function TaskBoard() {
-  const [myColumns, setMyColumns] = useState(columns);
-
-  // Handles moving cards
-  function onDragEnd(result: DropResult) {
-    // console.log('drag ended ', result);
-    const columnSource: IColumn | undefined = columns?.find(
-      (c) => c.id == result?.source?.droppableId,
-    );
-    const columnDestination: IColumn | undefined = columns?.find(
-      (c) => c.id == result?.destination?.droppableId,
-    );
-    const cardToMove: ICard | undefined = columnSource?.cards?.find(
-      (c) => c.id == result?.draggableId,
-    );
-    if (cardToMove && columnSource && columnDestination) {
-      cardToMove.list_id = result?.destination?.droppableId;
-      // If moving cards in the same column
-      if (result?.destination?.index == null) {
-        return;
-      }
-      if (result?.source?.droppableId == result?.destination?.droppableId) {
-        columnSource?.cards?.splice(result?.source?.index, 1);
-        columnDestination?.cards?.splice(
-          result?.destination?.index,
-          0,
-          cardToMove,
-        );
-      } else {
-        // else moving cards between columns
-        columnDestination?.cards?.splice(
-          result.destination.index,
-          0,
-          cardToMove,
-        );
-        columnSource?.cards?.splice(result.source.index, 1);
-      }
-      const newColumn = [...columns];
-      setMyColumns(newColumn);
-    }
-  }
-
-  return (
-    <>
-      <div className="bg-gray-600 p-2 h-full overflow-x-auto">
-        <DragDropContext onDragEnd={onDragEnd}>
-          <div className="h-full flex flex-row">
-            {myColumns.map((col: IColumn) => (
-              <TaskColumn column={col} />
-            ))}
-          </div>
-        </DragDropContext>
-      </div>
-    </>
-  );
-}
-
 export const Board: React.FC = () => {
   return (
     <>
-      <Tile colour="yellow" height={100}>
-        <div className=" inset-0 h-full w-full flex flex-col items-center ">
+      <Tile colour="yellow" height={93} className="">
+        <div className=" inset-0 h-full w-full flex flex-col items-center">
           <div className="w-[95%] h-[90%] flex flex-col items-center justify-center">
             <p className="bg-white text-black text-bold px-10 text-4xl font-mono font-bold m-4 rounded-md">
               {board.name}
@@ -307,10 +173,11 @@ export const Board: React.FC = () => {
 
             <div className="bg-white w-full m-4 p-2 rounded-md text-black font-bold">
               Members
+              <MemberBar></MemberBar>
             </div>
 
-            <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full">
-              <TaskBoard />
+            <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full overflow-auto">
+              <TaskBoard columns={columns} />
             </div>
           </div>
         </div>

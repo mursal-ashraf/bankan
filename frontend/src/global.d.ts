@@ -28,6 +28,13 @@ interface ICard {
   created_at: string;
 }
 
+interface ITaskCardProp {
+  item: ICard
+}
 interface IColumnProp {
   column: IColumn;
+}
+
+interface IBoardProp {
+  columns: IColumn[];
 }
