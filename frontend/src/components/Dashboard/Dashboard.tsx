@@ -4,6 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Repeater } from '@/common/Repeater';
 import { useState } from 'react';
+import ComponentContainer from '../common/ComponentContainer';
 
 interface BoardCardProps {
   id: string;
@@ -117,10 +118,18 @@ const BoardContainer: React.FC = () => {
   );
 };
 
-export const Dashboard: React.FC = () => {
+const InnerDashboard: React.FC = () => {
   return (
     <Tile colour="yellow" height={100}>
       <BoardContainer />
     </Tile>
+  );
+};
+
+export const Dashboard: React.FC = () => {
+  return (
+    <ComponentContainer>
+      <InnerDashboard />
+    </ComponentContainer>
   );
 };

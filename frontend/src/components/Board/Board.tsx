@@ -4,6 +4,7 @@ import { MemberBar } from './BoardComponents/MemberBar';
 import { TaskBoard } from './BoardComponents/TaskBoard';
 import EditCardModal from './BoardComponents/EditCardModal';
 import dayjs from 'dayjs';
+import ComponentContainer from '../common/ComponentContainer';
 
 // Mock data
 const board = {
@@ -158,7 +159,7 @@ const members = [
   },
 ];
 
-export const Board: React.FC = () => {
+const InnerBoard: React.FC = () => {
   const [currentEditCard, setCurrentEditCard] = useState<ICard>();
   const [editModalVisibility, setEditModalVisibility] = useState(false);
 
@@ -192,5 +193,13 @@ export const Board: React.FC = () => {
         />
       </Tile>
     </>
+  );
+};
+
+export const Board: React.FC = () => {
+  return (
+    <ComponentContainer>
+      <InnerBoard />
+    </ComponentContainer>
   );
 };

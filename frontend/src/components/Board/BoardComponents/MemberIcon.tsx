@@ -1,9 +1,16 @@
-import { useState } from "react";
-import { Button, Card, CardActions, CardContent, Popover, Typography } from "@mui/material";
-import { AccountCircle } from "@mui/icons-material";
+import { useState } from 'react';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Popover,
+  Typography,
+} from '@mui/material';
+import { AccountCircle } from '@mui/icons-material';
 
 interface IMemberIconProp {
-  member: Member
+  member: Member;
 }
 
 export function MemberIcon({ member }: IMemberIconProp) {
@@ -18,7 +25,10 @@ export function MemberIcon({ member }: IMemberIconProp) {
   };
   return (
     <>
-      <button onClick={handleClick} className="cursor-pointer border-2 rounded-lg" >
+      <button
+        onClick={handleClick}
+        className="cursor-pointer border-2 rounded-lg"
+      >
         <AccountCircle style={{ width: 35, height: 35 }} />
       </button>
       <Popover
@@ -40,17 +50,12 @@ export function MemberIcon({ member }: IMemberIconProp) {
                 <p className="text-md">{member.email}</p>
               </div>
             </div>
-
-
-
-
           </CardContent>
           <CardActions>
             <Button size="small">See Profile</Button>
           </CardActions>
         </Card>
       </Popover>
-
     </>
-  )
+  );
 }

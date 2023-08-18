@@ -11,7 +11,7 @@ interface SignUpHookResult {
   data: AuthResponse['data'] | undefined;
   error: AuthError | undefined | null;
 }
-type SignUpHookFunction = (
+export type SignUpHookFunction = (
   credentials: SignUpWithPasswordCredentials,
 ) => Promise<void>;
 
