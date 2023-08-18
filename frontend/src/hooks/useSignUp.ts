@@ -25,13 +25,37 @@ export const useSignUp: SignUpHook = () => {
     error: undefined,
   });
 
+  const onSuccessfulSignUp = useCallback(
+    ({
+      id,
+      email,
+      created_at,
+    }: {
+      id: string;
+      email?: string;
+      created_at: string;
+    }) => {
+      client.from('member').insert({
+        id: id,
+        email: email,
+        created_at: created_at,
+      });
+    },
+    [client],
+  );
+
   const performSignUp = useCallback<SignUpHookFunction>(
     async (credentials: SignUpWithPasswordCredentials) => {
       setResult({ ...result, isLoading: true });
       const { data, error } = await client.auth.signUp(credentials);
+      if (data.user) {
+        const { id, email, created_at } = data.user;
+        !error && onSuccessfulSignUp({ id, email, created_at });
+      }
+
       setResult({ ...result, data, error, isLoading: false });
     },
-    [client, result],
+    [client, result, onSuccessfulSignUp],
   );
 
   return [performSignUp, result];
