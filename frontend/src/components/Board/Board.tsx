@@ -132,6 +132,7 @@ const columns: IColumn[] = [
 //   },
 // ];
 
+// eslint-disable-next-line
 const team = {
   id: '123123',
   board_id: '123456789',

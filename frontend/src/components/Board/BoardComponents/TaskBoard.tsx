@@ -9,13 +9,9 @@ interface IBoardProp {
 
 export function TaskBoard({ columns, onEditCardSelect }: IBoardProp) {
   const [myColumns, setMyColumns] = useState(columns);
-  const columnElements: Array<any> = [];
-
-  myColumns.forEach((col: IColumn) =>
-    columnElements.push(
-      <TaskColumn column={col} onEditCardClick={onEditCardSelect} />,
-    ),
-  );
+  const columnElements = myColumns.map((col) => (
+    <TaskColumn column={col} onEditCardClick={onEditCardSelect} />
+  ));
 
   // Handles moving cards
   function onDragEnd(result: DropResult) {

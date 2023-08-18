@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Button,
   Dialog,
@@ -7,10 +6,9 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
-import { DateTimeField, DateTimePicker } from '@mui/x-date-pickers';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { Delete } from '@mui/icons-material';
-import { MemberBar } from './MemberBar';
 
 interface IEditCardModalProp {
   card: ICard | undefined;

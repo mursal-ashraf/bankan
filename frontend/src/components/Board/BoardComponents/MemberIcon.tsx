@@ -1,12 +1,5 @@
 import { useState } from 'react';
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Popover,
-  Typography,
-} from '@mui/material';
+import { Button, Card, CardActions, CardContent, Popover } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 
 interface IMemberIconProp {
