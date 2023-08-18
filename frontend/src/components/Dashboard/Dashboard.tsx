@@ -1,8 +1,8 @@
-import { Tile } from '@/common/ContentTile';
+import Tile from '@/components/common/Tile';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Repeater } from '@/common/Repeater';
+import Repeater from '@/components/common/Repeater';
 import { useState } from 'react';
 import ComponentContainer from '../common/ComponentContainer';
 

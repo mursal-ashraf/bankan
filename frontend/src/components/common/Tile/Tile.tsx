@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { ColourLookup } from './utils';
+import { ColourLookup } from '../../../utils/common-utils';
 
 export const Tile = styled.div<{ colour?: GeneralColour; height?: number }>`
   display: flex;

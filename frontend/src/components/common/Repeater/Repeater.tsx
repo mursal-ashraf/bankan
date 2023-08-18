@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
 import { Alert, IconButton } from '@mui/material';
 import { useState } from 'react';
-import AlertModal from './modals/AlertModal';
-import { ColourLookup } from './utils';
+import AlertModal from '../AlertModal';
+import { ColourLookup } from '../../../utils/common-utils';
 
 export const CornerIcon = styled.div<{ colour: GeneralColour }>`
   ${(props) => css`
