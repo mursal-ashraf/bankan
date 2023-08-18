@@ -5,6 +5,16 @@ interface TextAndAction {
   action: () => void;
 }
 
+// Database Types
+interface Member {
+  id: string;
+  username: string;
+  given_name: string;
+  surname: string;
+  email: string;
+  phone: string;
+}
+
 // Board Types
 interface IColumn {
   id: string;
@@ -26,8 +36,4 @@ interface ICard {
   description: string;
   deadline: string | undefined;
   created_at: string;
-}
-
-interface IColumnProp {
-  column: IColumn;
 }
