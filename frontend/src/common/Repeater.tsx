@@ -1,14 +1,13 @@
-import styled, { css } from "styled-components";
-import { Alert, IconButton } from "@mui/material";
-import { useState } from "react";
-import AlertModal from "./modals/AlertModal";
-import { ColourLookup } from "./utils";
+import styled, { css } from 'styled-components';
+import { Alert, IconButton } from '@mui/material';
+import { useState } from 'react';
+import AlertModal from './modals/AlertModal';
+import { ColourLookup } from './utils';
 
 export const CornerIcon = styled.div<{ colour: GeneralColour }>`
-  ${(props) =>
-    css`
-      background-color: ${ColourLookup[props.colour]};
-    `}
+  ${(props) => css`
+    background-color: ${ColourLookup[props.colour]};
+  `}
   color: white;
   padding: 10px;
   width: 40px;
@@ -64,21 +63,21 @@ export function Repeater<T>({
           title="Warning"
           body={
             ActionIcon?.actionModal ||
-            "Are you sure you want to delete this item?"
+            'Are you sure you want to delete this item?'
           }
-          accept={{ text: "Yes", action: modalAccept }}
-          decline={{ text: "No", action: modalDecline }}
+          accept={{ text: 'Yes', action: modalAccept }}
+          decline={{ text: 'No', action: modalDecline }}
         />
       )}
       {!feedList.length && (
         <Alert className="mx-5" severity="info">
-          {defaultMsg || "No items exist... try adding some"}
+          {defaultMsg || 'No items exist... try adding some'}
         </Alert>
       )}
       {feedList.map((item, idx) => (
         <div key={idx} className="flex w-full my-3 justify-center">
           <div className="relative w-11/12">
-            <CornerIcon colour={ActionIcon?.colour || "blue"}>
+            <CornerIcon colour={ActionIcon?.colour || 'blue'}>
               <IconButton
                 onClick={() => {
                   ActionIcon?.actionModal
