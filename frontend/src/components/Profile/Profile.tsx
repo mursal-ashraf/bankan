@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TextField,
   Dialog,
@@ -9,8 +9,12 @@ import {
 } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import ComponentContainer from '../common/ComponentContainer';
+import useUser from '@/hooks/useUser';
+
 
 const InnerProfile: React.FC = () => {
+  const user = useUser();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,6 +35,12 @@ const InnerProfile: React.FC = () => {
   const handleUploadClick = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (user && user.email) {
+      setFormData(prev => ({ ...prev, email: user.email as string }));
+    }
+  }, [user]);
 
   return (
     <div
@@ -77,11 +87,11 @@ const InnerProfile: React.FC = () => {
             <TextField
               name="email"
               value={formData.email}
-              onChange={handleInputChange}
               label="Email"
               variant="filled"
               fullWidth
               InputProps={{ style: { fontSize: 20, height: '3rem' } }}
+              disabled
             />
             <label className="text-2xl font-bold text-black">
               Phone Number
@@ -125,6 +135,7 @@ const InnerProfile: React.FC = () => {
               fullWidth
               InputProps={{ style: { fontSize: 20, height: '3rem' } }}
             />
+
           </div>
         </div>
       </div>
