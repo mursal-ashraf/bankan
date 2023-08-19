@@ -74,8 +74,8 @@ const InnerProfile: React.FC = () => {
   };
   return (
     <div
-      className="absolute inset-0 h-screen w-screen flex items-center justify-center"
-      style={{ backgroundColor: '#FFCD29' }}
+      className="flex justify-center items-center"
+      style={{ backgroundColor: '#FFCD29', flexGrow: 1, padding: '20px 0' }}
     >
       <div className="bg-white p-8 rounded-lg shadow-md w-4/5 h-4/5">
         <div className="flex h-full">
