@@ -3,16 +3,34 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "concurrently \"npm run dev --workspace=frontend\" \"npm run dev --workspace=server\""
+    "dev": "npm run dev --workspace=frontend",
+    "lint": "npm run lint --workspace=frontend",
+    "format": "npm run format --workspace=frontend",
+    "prepare": "husky install"
   },
   "workspaces": [
-    "frontend",
-    "server"
+    "frontend"
   ],
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.0",
+    "prettier": "^3.0.1"
+  },
+  "dependencies": {
+    "@hello-pangea/dnd": "^16.3.0"
+  },
+  "lint-staged": {
+    "*.tsx": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
