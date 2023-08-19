@@ -10,22 +10,35 @@ import {
 import { AccountCircle } from '@mui/icons-material';
 import ComponentContainer from '../common/ComponentContainer';
 import useUser from '@/hooks/useUser';
+import { useClient } from '@/contexts/AppContext';
 
 
 const InnerProfile: React.FC = () => {
+  type UserMetadata = {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    company: string;
+    description: string;
+  };
+
   const user = useUser();
 
-  const [formData, setFormData] = useState({
+  const client = useClient();
+
+  const defaultFormData: UserMetadata = {
     name: '',
     email: '',
     phone: '',
     address: '',
     company: '',
     description: '',
-  });
+  };
 
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
+  const [formData, setFormData] = useState<UserMetadata>(defaultFormData);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,11 +50,28 @@ const InnerProfile: React.FC = () => {
   };
 
   useEffect(() => {
+    if (user && user.user_metadata) {
+      setFormData((prev) => ({
+        ...prev,
+        ...user.user_metadata as UserMetadata,
+      }));
+    }
     if (user && user.email) {
       setFormData(prev => ({ ...prev, email: user.email as string }));
     }
   }, [user]);
 
+  const handleSave = async () => {
+    if (user) {
+      const { data, error } = await client.auth.updateUser({ data: formData });
+      if (error) {
+        console.error("Error updating user's data:", error);
+      }
+      if (data) {
+        console.log("User updated:", data);
+      }
+    }
+  };
   return (
     <div
       className="absolute inset-0 h-screen w-screen flex items-center justify-center"
@@ -135,7 +165,13 @@ const InnerProfile: React.FC = () => {
               fullWidth
               InputProps={{ style: { fontSize: 20, height: '3rem' } }}
             />
-
+            <Button onClick={handleSave}
+              variant="contained"
+              color="primary"
+              className="mt-6 text-xl"
+              style={{ padding: '8px 24px' }}>
+              Save
+            </Button>
           </div>
         </div>
       </div>
