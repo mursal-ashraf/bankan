@@ -12,7 +12,6 @@ import ComponentContainer from '../common/ComponentContainer';
 import useUser from '@/hooks/useUser';
 import { useClient } from '@/contexts/AppContext';
 
-
 const InnerProfile: React.FC = () => {
   type UserMetadata = {
     name: string;
@@ -23,8 +22,8 @@ const InnerProfile: React.FC = () => {
     description: string;
   };
 
+  const [isEditing, setIsEditing] = useState(false);
   const user = useUser();
-
   const client = useClient();
 
   const defaultFormData: UserMetadata = {
@@ -57,7 +56,7 @@ const InnerProfile: React.FC = () => {
       }));
     }
     if (user && user.email) {
-      setFormData(prev => ({ ...prev, email: user.email as string }));
+      setFormData((prev) => ({ ...prev, email: user.email as string }));
     }
   }, [user]);
 
@@ -71,100 +70,110 @@ const InnerProfile: React.FC = () => {
         console.log("User updated:", data);
       }
     }
+    setIsEditing(false);
   };
+
   return (
-    <div
-      className="flex justify-center items-center"
-      style={{ backgroundColor: '#FFCD29', flexGrow: 1, padding: '20px 0' }}
-    >
-      <div className="bg-white p-8 rounded-lg shadow-md w-4/5 h-4/5">
-        <div className="flex h-full">
-          <div className="relative w-1/3 h-1/3 flex flex-col items-center justify-center">
-            <div className="w-40 h-40 rounded-full bg-gray-300 flex items-center justify-center">
-              {image ? (
-                <img
-                  src={image}
-                  alt="Profile"
-                  className="w-40 h-40 rounded-full"
-                />
-              ) : (
-                <AccountCircle style={{ width: 160, height: 160 }} />
-              )}
-            </div>
-            <div className="pt-4"></div>
+    <div className="flex justify-center items-center" style={{ backgroundColor: '#FFCD29', flexGrow: 1, padding: '50px 0' }}>
+      <div className="bg-white p-8 rounded-lg shadow-md w-4/5 h-4/5 flex">
+        <div className="flex flex-col items-center justify-center w-1/3">
+          <div className="w-40 h-40 rounded-full bg-gray-300 flex items-center justify-center mb-6">
+            {image ? (
+              <img src={image} alt="Profile" className="w-40 h-40 rounded-full" />
+            ) : (
+              <AccountCircle style={{ width: 160, height: 160 }} />
+            )}
+          </div>
+          {isEditing && <Button
+            variant="contained"
+            color="primary"
+            className="text-xl mb-6"
+            style={{ padding: '8px 24px' }}
+            onClick={() => setOpen(true)}
+            disabled={!isEditing}
+          >
+            UPLOAD
+          </Button>}
+          <div className="mt-auto">
             <Button
               variant="contained"
-              color="primary"
-              className="mt-6 text-xl"
-              style={{ padding: '8px 24px' }}
-              onClick={() => setOpen(true)}
+              color="secondary"
+              onClick={() => setIsEditing(!isEditing)}
             >
-              Edit
+              {isEditing ? 'Cancel' : 'Edit'}
             </Button>
           </div>
-          <div className="relative ml-12 flex flex-col w-3/5 space-y-2">
-            <label className="text-2xl font-bold text-black">Name</label>
-            <TextField
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              label="Name"
-              variant="filled"
-              fullWidth
-              InputProps={{ style: { fontSize: 20, height: '3rem' } }}
-            />
-            <label className="text-2xl font-bold text-black">Email</label>
-            <TextField
-              name="email"
-              value={formData.email}
-              label="Email"
-              variant="filled"
-              fullWidth
-              InputProps={{ style: { fontSize: 20, height: '3rem' } }}
-              disabled
-            />
-            <label className="text-2xl font-bold text-black">
-              Phone Number
-            </label>
-            <TextField
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              label="Phone Number"
-              variant="filled"
-              fullWidth
-              InputProps={{ style: { fontSize: 20, height: '3rem' } }}
-            />
-            <label className="text-2xl font-bold text-black">Address</label>
-            <TextField
-              name="address"
-              value={formData.address}
-              onChange={handleInputChange}
-              label="Address"
-              variant="filled"
-              fullWidth
-              InputProps={{ style: { fontSize: 20, height: '3rem' } }}
-            />
-            <label className="text-2xl font-bold text-black">Company</label>
-            <TextField
-              name="company"
-              value={formData.company}
-              onChange={handleInputChange}
-              label="Company"
-              variant="filled"
-              fullWidth
-              InputProps={{ style: { fontSize: 20, height: '3rem' } }}
-            />
-            <label className="text-2xl font-bold text-black">Description</label>
-            <TextField
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              label="Description"
-              variant="filled"
-              fullWidth
-              InputProps={{ style: { fontSize: 20, height: '3rem' } }}
-            />
+        </div>
+        <div className="relative flex flex-col justify-center ml-12 w-2/3 space-y-2">
+
+          <label className="text-2xl font-bold text-black">Name</label>
+          <TextField
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            label="Name"
+            variant="filled"
+            fullWidth
+            disabled={!isEditing}
+            InputProps={{ style: { fontSize: 20, height: '3rem' } }}
+          />
+          <label className="text-2xl font-bold text-black">Email</label>
+          <TextField
+            name="email"
+            value={formData.email}
+            label="Email"
+            variant="filled"
+            fullWidth
+            InputProps={{ style: { fontSize: 20, height: '3rem' } }}
+            disabled
+          />
+          <label className="text-2xl font-bold text-black">
+            Phone Number
+          </label>
+          <TextField
+            name="phone"
+            value={formData.phone}
+            onChange={handleInputChange}
+            label="Phone Number"
+            variant="filled"
+            fullWidth
+            disabled={!isEditing}
+            InputProps={{ style: { fontSize: 20, height: '3rem' } }}
+          />
+          <label className="text-2xl font-bold text-black">Address</label>
+          <TextField
+            name="address"
+            value={formData.address}
+            onChange={handleInputChange}
+            label="Address"
+            variant="filled"
+            fullWidth
+            disabled={!isEditing}
+            InputProps={{ style: { fontSize: 20, height: '3rem' } }}
+          />
+          <label className="text-2xl font-bold text-black">Company</label>
+          <TextField
+            name="company"
+            value={formData.company}
+            onChange={handleInputChange}
+            label="Company"
+            variant="filled"
+            fullWidth
+            disabled={!isEditing}
+            InputProps={{ style: { fontSize: 20, height: '3rem' } }}
+          />
+          <label className="text-2xl font-bold text-black">Description</label>
+          <TextField
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            label="Description"
+            variant="filled"
+            fullWidth
+            disabled={!isEditing}
+            InputProps={{ style: { fontSize: 20, height: '3rem' } }}
+          />
+          {isEditing && (
             <Button onClick={handleSave}
               variant="contained"
               color="primary"
@@ -172,29 +181,22 @@ const InnerProfile: React.FC = () => {
               style={{ padding: '8px 24px' }}>
               Save
             </Button>
-          </div>
+          )}
         </div>
       </div>
-
-      {/* Dialog for image upload */}
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Upload or Replace Picture</DialogTitle>
         <DialogContent>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                // Handle the file here if needed
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  setImage(reader.result as string);
-                };
-                reader.readAsDataURL(file);
-              }
-            }}
-          />
+          <input type="file" accept="image/*" onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                setImage(reader.result as string);
+              };
+              reader.readAsDataURL(file);
+            }
+          }} />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)} color="primary">
