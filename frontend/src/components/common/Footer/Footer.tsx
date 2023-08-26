@@ -17,7 +17,7 @@ export const Footer: React.FC = () => (
       marginLeft: '-50vw',
       marginRight: '-50vw',
       marginTop: '0',
-      padding: '0'
+      padding: '0',
     }}
   >
     <Grid item style={{ padding: '0' }}>

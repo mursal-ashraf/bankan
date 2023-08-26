@@ -15,22 +15,23 @@ import { useClient } from '@/contexts/AppContext';
 import { UserMetadata } from './userTypes';
 
 const InnerProfile: React.FC = () => {
-
   const [isEditing, setIsEditing] = useState(false);
   const user = useUser();
   const client = useClient();
 
-  const defaultFormData: UserMetadata = user ? {
-    ...user.user_metadata as UserMetadata,
-    email: user.email as string
-  } : {
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    company: '',
-    description: '',
-  };
+  const defaultFormData: UserMetadata = user
+    ? {
+        ...(user.user_metadata as UserMetadata),
+        email: user.email as string,
+      }
+    : {
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        company: '',
+        description: '',
+      };
 
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
@@ -49,7 +50,7 @@ const InnerProfile: React.FC = () => {
     if (user && user.user_metadata) {
       setFormData((prev) => ({
         ...prev,
-        ...user.user_metadata as UserMetadata,
+        ...(user.user_metadata as UserMetadata),
       }));
     }
     if (user && user.email) {
@@ -68,48 +69,57 @@ const InnerProfile: React.FC = () => {
       }
 
       if (data) {
-        console.log("User updated:", data);
+        console.log('User updated:', data);
         setIsEditing(false);
       }
-
     } catch (err) {
-      console.error("An unexpected error occurred:", err);
+      console.error('An unexpected error occurred:', err);
       setIsEditing(true);
     }
   };
 
   return (
-    <div className="flex justify-center items-center" style={{ backgroundColor: '#FFCD29', flexGrow: 1, padding: '50px 0' }}>
+    <div
+      className="flex justify-center items-center"
+      style={{ backgroundColor: '#FFCD29', flexGrow: 1, padding: '50px 0' }}
+    >
       <div className="bg-white p-8 rounded-lg shadow-md w-4/5 h-4/5 flex">
         <div className="flex flex-col items-center justify-center w-1/3">
           <div className="w-40 h-40 rounded-full bg-gray-300 flex items-center justify-center mb-6">
             {image ? (
-              <img src={image} alt="Profile" className="w-40 h-40 rounded-full" />
+              <img
+                src={image}
+                alt="Profile"
+                className="w-40 h-40 rounded-full"
+              />
             ) : (
               <AccountCircle style={{ width: 160, height: 160 }} />
             )}
           </div>
-          {isEditing && <Button
-            variant="contained"
-            color="primary"
-            className="text-xl mb-6"
-            style={{ padding: '8px 24px' }}
-            onClick={() => setOpen(true)}
-          >
-            UPLOAD
-          </Button>}
-          <div className="mt-auto">
-            {user && <Button
+          {isEditing && (
+            <Button
               variant="contained"
-              color="secondary"
-              onClick={() => setIsEditing(!isEditing)}
+              color="primary"
+              className="text-xl mb-6"
+              style={{ padding: '8px 24px' }}
+              onClick={() => setOpen(true)}
             >
-              {isEditing ? 'Cancel' : 'Edit'}
-            </Button>}
+              UPLOAD
+            </Button>
+          )}
+          <div className="mt-auto">
+            {user && (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => setIsEditing(!isEditing)}
+              >
+                {isEditing ? 'Cancel' : 'Edit'}
+              </Button>
+            )}
           </div>
         </div>
         <div className="relative flex flex-col justify-center ml-12 w-2/3 space-y-2">
-
           <label className="text-2xl font-bold text-black">Name</label>
           <TextField
             name="name"
@@ -131,9 +141,7 @@ const InnerProfile: React.FC = () => {
             InputProps={{ style: { fontSize: 20, height: '3rem' } }}
             disabled
           />
-          <label className="text-2xl font-bold text-black">
-            Phone Number
-          </label>
+          <label className="text-2xl font-bold text-black">Phone Number</label>
           <TextField
             name="phone"
             value={formData.phone}
@@ -178,11 +186,13 @@ const InnerProfile: React.FC = () => {
             InputProps={{ style: { fontSize: 20, height: '3rem' } }}
           />
           {isEditing && (
-            <Button onClick={handleSave}
+            <Button
+              onClick={handleSave}
               variant="contained"
               color="primary"
               className="mt-6 text-xl"
-              style={{ padding: '8px 24px' }}>
+              style={{ padding: '8px 24px' }}
+            >
               Save
             </Button>
           )}
@@ -191,16 +201,20 @@ const InnerProfile: React.FC = () => {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Upload or Replace Picture</DialogTitle>
         <DialogContent>
-          <input type="file" accept="image/*" onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                setImage(reader.result as string);
-              };
-              reader.readAsDataURL(file);
-            }
-          }} />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  setImage(reader.result as string);
+                };
+                reader.readAsDataURL(file);
+              }
+            }}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)} color="primary">
