@@ -21,17 +21,17 @@ const InnerProfile: React.FC = () => {
 
   const defaultFormData: UserMetadata = user
     ? {
-        ...(user.user_metadata as UserMetadata),
-        email: user.email as string,
-      }
+      ...(user.user_metadata as UserMetadata),
+      email: user.email as string,
+    }
     : {
-        name: '',
-        email: '',
-        phone: '',
-        address: '',
-        company: '',
-        description: '',
-      };
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
+      company: '',
+      description: '',
+    };
 
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
@@ -59,24 +59,20 @@ const InnerProfile: React.FC = () => {
   }, [user]);
 
   const handleSave = async () => {
-    try {
-      const { data, error } = await client.auth.updateUser({ data: formData });
+    const { data, error } = await client.auth.updateUser({ data: formData });
 
-      if (error) {
-        console.error("Error updating user's data:", error);
-        setIsEditing(true);
-        return;
-      }
-
-      if (data) {
-        console.log('User updated:', data);
-        setIsEditing(false);
-      }
-    } catch (err) {
-      console.error('An unexpected error occurred:', err);
+    if (error) {
+      console.error("Error updating user's data:", error);
       setIsEditing(true);
+      return;
+    }
+
+    if (data) {
+      console.log('User updated:', data);
+      setIsEditing(false);
     }
   };
+
 
   return (
     <div
