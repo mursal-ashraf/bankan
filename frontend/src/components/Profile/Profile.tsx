@@ -77,9 +77,11 @@ const InnerProfile: React.FC = () => {
   return (
     <div
       className="flex justify-center items-center"
-      style={{ backgroundColor: '#FFCD29', flexGrow: 1, padding: '50px 0' }}
+      style={{ backgroundColor: '#FFCD29', flexGrow: 1, padding: '50px 0', height: '90vh' }}
     >
-      <div className="bg-white p-8 rounded-lg shadow-md w-4/5 h-4/5 flex">
+      <div className="bg-white p-8 rounded-lg shadow-md flex"
+        style={{ width: '85%', height: '100%' }}
+      >
         <div className="flex flex-col items-center justify-center w-1/3">
           <div className="w-40 h-40 rounded-full bg-gray-300 flex items-center justify-center mb-6">
             {image ? (
@@ -115,7 +117,7 @@ const InnerProfile: React.FC = () => {
             )}
           </div>
         </div>
-        <div className="relative flex flex-col justify-center ml-12 w-2/3 space-y-2">
+        <div className="relative flex-col justify-center ml-12 w-2/3 space-y-4">
           <label className="text-2xl font-bold text-black">Name</label>
           <TextField
             name="name"
