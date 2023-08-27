@@ -8,12 +8,22 @@ export const Footer: React.FC = () => (
     alignItems="center"
     spacing={2}
     component="footer"
-    style={{ borderTop: 'double', maxWidth: '100%' }}
+    style={{
+      borderTop: 'double',
+      width: '100vw',
+      position: 'relative',
+      left: '50%',
+      right: '50%',
+      marginLeft: '-50vw',
+      marginRight: '-50vw',
+      marginTop: '0',
+      padding: '0',
+    }}
   >
-    <Grid item>
+    <Grid item style={{ padding: '0' }}>
       <Button color="inherit">Terms of Use</Button>
     </Grid>
-    <Grid item>
+    <Grid item style={{ padding: '0' }}>
       <Button color="inherit">Privacy policy</Button>
     </Grid>
   </Grid>
