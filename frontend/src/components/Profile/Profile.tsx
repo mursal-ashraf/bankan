@@ -33,6 +33,7 @@ const InnerProfile: React.FC = () => {
       description: '',
     };
 
+
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [formData, setFormData] = useState<UserMetadata>(defaultFormData);
@@ -47,14 +48,12 @@ const InnerProfile: React.FC = () => {
   };
 
   useEffect(() => {
-    if (user && user.user_metadata) {
-      setFormData((prev) => ({
-        ...prev,
-        ...(user.user_metadata as UserMetadata),
+    if (user) {
+      setFormData((previousFormData) => ({
+        ...previousFormData,
+        ...(!!user.user_metadata && user.user_metadata),
+        ...(!!user.email && { email: user.email }),
       }));
-    }
-    if (user && user.email) {
-      setFormData((prev) => ({ ...prev, email: user.email as string }));
     }
   }, [user]);
 
@@ -105,16 +104,29 @@ const InnerProfile: React.FC = () => {
               UPLOAD
             </Button>
           )}
-          <div className="mt-auto">
+          <div className="flex mt-auto">
+            {isEditing && (
+              <Button
+                onClick={handleSave}
+                variant="contained"
+                color="primary"
+                className="text-xl"
+                style={{ marginRight: '10px' }}
+              >
+                Save
+              </Button>
+            )}
             {user && (
               <Button
                 variant="contained"
                 color="secondary"
+                className="mr-2" // Add some right margin for spacing
                 onClick={() => setIsEditing(!isEditing)}
               >
                 {isEditing ? 'Cancel' : 'Edit'}
               </Button>
             )}
+
           </div>
         </div>
         <div className="relative flex-col justify-center ml-12 w-2/3 space-y-4">
@@ -183,17 +195,6 @@ const InnerProfile: React.FC = () => {
             disabled={!isEditing}
             InputProps={{ style: { fontSize: 20, height: '3rem' } }}
           />
-          {isEditing && (
-            <Button
-              onClick={handleSave}
-              variant="contained"
-              color="primary"
-              className="mt-6 text-xl"
-              style={{ padding: '8px 24px' }}
-            >
-              Save
-            </Button>
-          )}
         </div>
       </div>
       <Dialog open={open} onClose={() => setOpen(false)}>
