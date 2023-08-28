@@ -14,7 +14,7 @@ export enum Routes {
   Home = '/',
   Dashboard = '/Dashboard',
   Profile = '/Profile',
-  Board = '/Board',
+  Board = '/Board/:board_id',
   Login = '/Login',
   Signup = '/Signup',
 }

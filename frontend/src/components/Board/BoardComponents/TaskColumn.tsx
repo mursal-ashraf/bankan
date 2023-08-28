@@ -1,17 +1,46 @@
 import { Draggable, Droppable } from '@hello-pangea/dnd';
 import { TaskCard } from './TaskCard';
+import { useClient } from '@/contexts/AppContext';
+import { useEffect, useState } from 'react';
 
 interface IColumnProp {
-  column: IColumn;
+  column: Column;
+  cards: Card[] | undefined;
   onEditCardClick: (card: ICard) => void;
 }
 
-export function TaskColumn({ column, onEditCardClick }: IColumnProp) {
-  const items = column.cards
-    .filter((i: ICard) => i.list_id == column.id)
-    .sort((c) => c.index);
+export function TaskColumn({ column, cards, onEditCardClick }: IColumnProp) {
+  console.log('TaskColumn', cards);
+  // console.log('TASKCOLUMN', { column, cards })
+  // const supabase = useClient();
+  // const [cards, setCards] = useState<Card[] | null>();
+  // if (!column) {
+  //   return (<><div>RIP</div></>)
+  // }
+  // let items: any = undefined;
 
-  // console.log("Column: ", {column}, {items})
+  // if (column.cards) {
+  //   items = column.cards
+  //     .filter((i: ICard) => i.list_id == column.id)
+  //     .sort((c) => c.index);
+  // } else {
+  //   return (<><div>{column.name}</div></>)
+  // }
+
+  // useEffect(() => {
+  //   getCards();
+  // }, [column])
+
+  // async function getCards() {
+  //   const { data } = await supabase
+  //     .from('card')
+  //     .select()
+  //     .match({ list_id: column.id, })
+  //     .order('index', { ascending: true });
+  //   setCards(data);
+  //   addColumnCards(data);
+  // }
+
   return (
     <>
       <div className="flex flex-col h-min-full w-full min-w-[200px] mx-2 px-2 bg-gray-500 rounded-md pt-2">
@@ -26,8 +55,12 @@ export function TaskColumn({ column, onEditCardClick }: IColumnProp) {
                 ref={provided.innerRef}
                 className="min-h-[95%]"
               >
-                {items.map((item: ICard, index: number) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
+                {cards?.map((item: Card) => (
+                  <Draggable
+                    key={item.id}
+                    draggableId={item.id}
+                    index={item.index}
+                  >
                     {(provided) => (
                       <div
                         ref={provided.innerRef}

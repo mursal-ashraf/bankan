@@ -16,6 +16,20 @@ interface Member {
 }
 
 // Board Types
+type Board = Database['public']['Tables']['board']['Row'];
+type Column = Database['public']['Tables']['list']['Row'];
+type Card = Database['public']['Tables']['card']['Row'];
+// interface Board {
+//   id: string;
+//   version: number;
+//   name: string;
+//   description: string;
+//   saved_date: string;
+//   created_at: string;
+//   user_id: string;
+//   team_id: string;
+// }
+
 interface IColumn {
   id: string;
   board_id: string;

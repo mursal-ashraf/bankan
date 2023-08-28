@@ -25,6 +25,7 @@ export function TaskCard({ item, onEditCardSelect }: ITaskCardProp) {
           <Typography variant="body2" color="text.secondary">
             {item.description}
           </Typography>
+          <Typography className="text-center">{item.index}</Typography>
         </CardContent>
         <CardActions className="flex flex-col">
           <Button

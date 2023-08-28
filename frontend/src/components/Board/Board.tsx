@@ -5,20 +5,11 @@ import { TaskBoard } from './BoardComponents/TaskBoard';
 import EditCardModal from './BoardComponents/EditCardModal';
 import dayjs from 'dayjs';
 import ComponentContainer from '../common/ComponentContainer';
+import useBoard from '@/hooks/useBoard';
+import { useParams } from 'react-router-dom';
+import useList from '@/hooks/useList';
 
 // Mock data
-const board = {
-  id: '123456789',
-  version: 1,
-  saved_date: new Date().toDateString(),
-  created_at: new Date().toDateString(),
-  user_id: '1111',
-  team_id: '2222',
-  name: 'FIT3162 Board',
-  description:
-    'This board is used to monitor the progress of the FIT3162 CS_20 Project.',
-};
-
 // list table
 const columns: IColumn[] = [
   {
@@ -161,6 +152,27 @@ const members = [
 ];
 
 const InnerBoard: React.FC = () => {
+  // Example Board
+  // http://localhost:5173/Board/02b5bfae-f543-42b6-aab0-51b39253a2e4
+  const { board_id } = useParams();
+
+  const boardResult = useBoard(board_id);
+  let board: Board = {
+    created_at: null,
+    description: null,
+    id: '',
+    name: null,
+    saved_date: null,
+    team_id: null,
+    user_id: null,
+    version: -1,
+  };
+  if (boardResult?.data?.length > 0) {
+    board = boardResult?.data?.slice(-1)[0];
+    // console.log({ board })
+  }
+  // console.log(useList("02b5bfae-f543-42b6-aab0-51b39253a2e4", 1))
+
   const [currentEditCard, setCurrentEditCard] = useState<ICard>();
   const [editModalVisibility, setEditModalVisibility] = useState(false);
 
@@ -179,11 +191,11 @@ const InnerBoard: React.FC = () => {
         <div className=" inset-0 h-full w-full flex flex-col items-center">
           <div className="w-[95%] h-[90%] flex flex-col items-center justify-center">
             <p className="bg-white text-black text-bold px-10 text-4xl font-mono font-bold m-4 rounded-md">
-              {board.name}
+              {board?.name}
             </p>
             <MemberBar members={members} />
             <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full overflow-auto">
-              <TaskBoard columns={columns} onEditCardSelect={onEditCardClick} />
+              <TaskBoard board={board} onEditCardSelect={onEditCardClick} />
             </div>
           </div>
         </div>
