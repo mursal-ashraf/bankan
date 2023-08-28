@@ -11,7 +11,6 @@ interface IBoardProp {
 export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
   const supabase = useClient();
   const [columns, setColumns] = useState<Column[] | undefined | null>();
-  // const [column_cards, column_setCards] = useState<Card[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
   // Get Columns
   useEffect(() => {
@@ -37,8 +36,6 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
     }
     // setCards([]);
     let count = 0;
-    // console.log("RETRIEVING COLUMN CARDS!!!")
-    // console.log(columns)
     const card_list: Card[] = [];
     columns?.forEach((col) => {
       // console.log(col.id)
@@ -74,8 +71,8 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
             ?.filter((card) => {
               return card.list_id == col.id;
             })
-            .sort((card) => {
-              return card.index;
+            .sort((card1, card2) => {
+              return card1.index - card2.index;
             })}
           onEditCardClick={onEditCardSelect}
         />
@@ -83,15 +80,6 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
     );
     // console.log({ cards, columns})
   }, [columns, cards]);
-
-  // const addColumnCards = (cardsToAdd: Card[] | null | undefined) => {
-  //   // console.log({ cards });
-  //   if (!cardsToAdd) {
-  //     return
-  //   }
-  //   setCards((arr) => arr?.concat(cardsToAdd));
-  //   // console.log({ cards });
-  // }
 
   if (!columns) {
     return (
@@ -105,29 +93,12 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
 
   // Handles moving cards
   function onDragEnd(result: DropResult) {
-    console.log('drag ended ', result);
+    // console.log('drag ended ', result);
     if (!result?.destination?.droppableId || !result.draggableId) {
       return;
     }
     const newCards = cards.map((c) => {
-      let res: Card;
-      // if (c.id == result?.draggableId) { // if the card is the dragged card
-      //   res = { ...c, list_id: result?.destination?.droppableId, index: result?.destination?.index };
-      // }
-      // // TODO: Correct Indices when dragging around cards.
-      // else if (result?.source?.droppableId != result?.destination?.droppableId && c.list_id == result?.destination?.droppableId && result?.destination && c.index >= result?.destination?.index) {  // If the card is in the same list as the dragged card and greater or equal in index
-      //   res = { ...c, index: c.index + 1 };
-      // }
-      // else if (result?.source?.droppableId != result?.destination?.droppableId && c.list_id == result?.source?.droppableId && c.index >= result?.source?.index) {
-      //   res = { ...c, index: c.index - 1 };
-      // }
-      // // else if (result?.source?.droppableId == result?.destination?.droppableId && c.) {
-      // //   res = { ...c, index: c.index };
-      // // }
-      // else {
-      //   res = c;
-      // }
-
+      let res: Card = undefined;
       // If moving between lists
       if (result?.source?.droppableId != result?.destination?.droppableId) {
         // If card is the card being dragged
@@ -152,12 +123,13 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
           c.index >= result?.source?.index
         ) {
           res = { ...c, index: c.index - 1 };
-        } else {
-          res = c;
         }
       }
       // If moving cards in within the same list
-      else {
+      else if (
+        result?.source?.droppableId == result?.destination?.droppableId &&
+        c.list_id == result?.destination?.droppableId
+      ) {
         // If card is the card being dragged
         if (c.id == result?.draggableId) {
           res = {
@@ -165,60 +137,34 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
             list_id: result?.destination?.droppableId,
             index: result?.destination?.index,
           };
+          // If card is moving up a list
         } else if (
           result?.source?.index > result?.destination?.index &&
-          c.index > result?.source?.index &&
-          c.index < result?.destination?.index
+          c.index <= result?.source?.index &&
+          c.index >= result?.destination?.index
         ) {
           res = { ...c, index: c.index + 1 };
+          // If card is moving down a list
         } else if (
           result?.source.index < result?.destination?.index &&
-          c.index < result?.source?.index &&
-          c.index > result?.destination?.index
+          c.index >= result?.source?.index &&
+          c.index <= result?.destination?.index
         ) {
           res = { ...c, index: c.index - 1 };
-        } else {
-          res = c;
+          console.log(
+            'WTF',
+            result?.source?.droppableId == result?.destination?.droppableId,
+          );
         }
+      }
+      if (!res) {
+        res = c;
       }
 
       return res;
     });
-    console.log({ newCards });
+    // console.log({ newCards });
     setCards(newCards);
-    // const cardSource: Card = cards.find((c) => { return c.id == result?.draggableId });
-    // const columnSource: IColumn | undefined = columns?.find(
-    //   (c) => c.id == result?.source?.droppableId,
-    // );
-    // const columnDestination: IColumn | undefined = columns?.find(
-    //   (c) => c.id == result?.destination?.droppableId,
-    // );
-    // const cardToMove: ICard | undefined = columnSource?.cards?.find(
-    //   (c) => c.id == result?.draggableId,
-    // );
-    // if (cardToMove && columnSource && columnDestination) {
-    //   cardToMove.list_id = result?.destination?.droppableId;
-    //   // If moving cards in the same column
-    //   if (result?.destination?.index == null) {
-    //     return;
-    //   }
-    //   if (result?.source?.droppableId == result?.destination?.droppableId) {
-    //     columnSource?.cards?.splice(result?.source?.index, 1);
-    //     columnDestination?.cards?.splice(
-    //       result?.destination?.index,
-    //       0,
-    //       cardToMove,
-    //     );
-    //   } else {
-    //     // else moving cards between columns
-    //     columnDestination?.cards?.splice(
-    //       result.destination.index,
-    //       0,
-    //       cardToMove,
-    //     );
-    //     columnSource?.cards?.splice(result.source.index, 1);
-    //   }
-    // }
   }
 
   return (

@@ -10,37 +10,6 @@ interface IColumnProp {
 }
 
 export function TaskColumn({ column, cards, onEditCardClick }: IColumnProp) {
-  console.log('TaskColumn', cards);
-  // console.log('TASKCOLUMN', { column, cards })
-  // const supabase = useClient();
-  // const [cards, setCards] = useState<Card[] | null>();
-  // if (!column) {
-  //   return (<><div>RIP</div></>)
-  // }
-  // let items: any = undefined;
-
-  // if (column.cards) {
-  //   items = column.cards
-  //     .filter((i: ICard) => i.list_id == column.id)
-  //     .sort((c) => c.index);
-  // } else {
-  //   return (<><div>{column.name}</div></>)
-  // }
-
-  // useEffect(() => {
-  //   getCards();
-  // }, [column])
-
-  // async function getCards() {
-  //   const { data } = await supabase
-  //     .from('card')
-  //     .select()
-  //     .match({ list_id: column.id, })
-  //     .order('index', { ascending: true });
-  //   setCards(data);
-  //   addColumnCards(data);
-  // }
-
   return (
     <>
       <div className="flex flex-col h-min-full w-full min-w-[200px] mx-2 px-2 bg-gray-500 rounded-md pt-2">

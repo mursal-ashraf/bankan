@@ -9,120 +9,6 @@ import useBoard from '@/hooks/useBoard';
 import { useParams } from 'react-router-dom';
 import useList from '@/hooks/useList';
 
-// Mock data
-// list table
-const columns: IColumn[] = [
-  {
-    id: '1',
-    board_id: '123456789',
-    board_version: 1,
-    index: 1,
-    name: 'Backlog',
-    created_at: new Date().toDateString(),
-    cards: [
-      {
-        id: '1',
-        list_id: '1',
-        index: 1,
-        user_creator: '1',
-        user_assigned: undefined,
-        title: 'Design the UI!',
-        description:
-          'Create a figma design of the initial UI to demo to the clients.',
-        deadline: dayjs('2023-04-20 1:30 PM').format('DD-MM-YYYY HH:mm A'),
-        created_at: new Date().toDateString(),
-      },
-    ],
-  },
-  {
-    id: '2',
-    board_id: '123456789',
-    board_version: 1,
-    index: 2,
-    name: 'Doing',
-    cards: [
-      {
-        id: '2',
-        list_id: '2',
-        index: 1,
-        user_creator: '1',
-        user_assigned: '1',
-        title: 'Get to know the team!',
-        description: 'Do ice breaker activities to understand the team better.',
-        deadline: dayjs('2023-05-31 10:45 AM').format('DD-MM-YYYY HH:mm A'),
-        created_at: new Date().toDateString(),
-      },
-    ],
-    created_at: new Date().toDateString(),
-  },
-  {
-    id: '3',
-    board_id: '123456789',
-    board_version: 1,
-    index: 3,
-    name: 'Code Review',
-    cards: [],
-    created_at: new Date().toDateString(),
-  },
-  {
-    id: '4',
-    board_id: '123456789',
-    board_version: 1,
-    index: 4,
-    name: 'Testing',
-    cards: [],
-    created_at: new Date().toDateString(),
-  },
-  {
-    id: '5',
-    board_id: '123456789',
-    board_version: 1,
-    index: 5,
-    name: 'Done',
-    cards: [
-      {
-        id: '3',
-        list_id: '5',
-        index: 1,
-        user_creator: '1',
-        user_assigned: '1',
-        title: 'Watch Seminar Recordings',
-        description:
-          'Watch the Seminar recordings before meeting with the team.',
-        deadline: dayjs().format('DD-MM-YYYY HH:mm A'),
-        created_at: new Date().toDateString(),
-      },
-    ],
-    created_at: new Date().toDateString(),
-  },
-];
-
-// const cards = [
-//   {
-//     id: "1",
-//     list_id: "1",
-//     index: 1,
-//     user_creator: "1",
-//     user_assigned: undefined,
-//     title: "Design the UI!",
-//     description:
-//       "Create a figma design of the initial UI to demo to the clients.",
-//     deadline: undefined,
-//     created_at: new Date().toDateString(),
-//   },
-//   {
-//     id: "2",
-//     list_id: "2",
-//     index: 2,
-//     user_creator: "1",
-//     user_assigned: "1",
-//     title: "Get to know the team!",
-//     description: "Do ice breaker activities to understand the team better.",
-//     deadline: new Date().toDateString(),
-//     created_at: new Date().toDateString(),
-//   },
-// ];
-
 // eslint-disable-next-line
 const team = {
   id: '123123',
@@ -171,7 +57,6 @@ const InnerBoard: React.FC = () => {
     board = boardResult?.data?.slice(-1)[0];
     // console.log({ board })
   }
-  // console.log(useList("02b5bfae-f543-42b6-aab0-51b39253a2e4", 1))
 
   const [currentEditCard, setCurrentEditCard] = useState<ICard>();
   const [editModalVisibility, setEditModalVisibility] = useState(false);
