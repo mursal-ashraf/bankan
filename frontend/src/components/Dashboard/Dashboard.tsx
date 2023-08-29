@@ -3,8 +3,9 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Repeater from '@/components/common/Repeater';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ComponentContainer from '../common/ComponentContainer';
+import { useClient } from '@/contexts/AppContext';
 
 interface BoardCardProps {
   id: string;
@@ -26,6 +27,27 @@ const BoardCardElement: React.FC<BoardCardProps> = ({
 );
 
 const BoardContainer: React.FC = () => {
+  const client = useClient();
+
+  useEffect(() => {
+    client
+      .from('board')
+      .select()
+      .then((e) => {
+        setBoardCards(
+          (e.data || []).map(
+            (d) =>
+              ({
+                id: d.id,
+                project: d.name,
+                description: d.description,
+                lastModified: d.saved_date,
+              }) as BoardCardProps,
+          ),
+        );
+      });
+  }, []);
+
   //Mock data for now..
   const [boardCards, setBoardCards] = useState([
     {
