@@ -1,8 +1,6 @@
 import { useClient } from '@/contexts/AppContext';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
-// import { User } from '@supabase/supabase-js';
 import { useCallback, useEffect, useState } from 'react';
-import useList from './useList';
 
 const useBoard = (board_id: string | undefined) => {
   const client = useClient();

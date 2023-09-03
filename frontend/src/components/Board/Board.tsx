@@ -3,11 +3,9 @@ import Tile from '@/components/common/Tile';
 import { MemberBar } from './BoardComponents/MemberBar';
 import { TaskBoard } from './BoardComponents/TaskBoard';
 import EditCardModal from './BoardComponents/EditCardModal';
-import dayjs from 'dayjs';
 import ComponentContainer from '../common/ComponentContainer';
 import useBoard from '@/hooks/useBoard';
 import { useParams } from 'react-router-dom';
-import useList from '@/hooks/useList';
 
 // eslint-disable-next-line
 const team = {
