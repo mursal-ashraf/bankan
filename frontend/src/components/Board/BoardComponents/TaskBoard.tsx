@@ -34,21 +34,12 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
     if (!columns) {
       return;
     }
-    // setCards([]);
-    let count = 0;
-    const card_list: Card[] = [];
-    columns?.forEach((col) => {
-      // console.log(col.id)
-      getCards(col).then((result) => {
-        // console.log('result', result)
-        result?.forEach((card) => {
-          card_list.push(card);
-        });
-        count++;
-        if (count == columns?.length) {
-          setCards(card_list);
-        }
-      });
+
+    getCards(columns).then((res) => {
+      const card_list: Card[] | null = res;
+      if (card_list) {
+        setCards(card_list);
+      }
     });
   }
 
@@ -56,8 +47,12 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
     const { data } = await supabase
       .from('card')
       .select()
-      .match({ list_id: col.id })
+      .in(
+        'list_id',
+        col.map((col: Column) => col.id),
+      )
       .order('index', { ascending: true });
+
     return data;
   }
 
