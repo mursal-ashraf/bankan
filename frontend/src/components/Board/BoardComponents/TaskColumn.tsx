@@ -2,16 +2,12 @@ import { Draggable, Droppable } from '@hello-pangea/dnd';
 import { TaskCard } from './TaskCard';
 
 interface IColumnProp {
-  column: IColumn;
+  column: Column;
+  cards: Card[] | undefined;
   onEditCardClick: (card: ICard) => void;
 }
 
-export function TaskColumn({ column, onEditCardClick }: IColumnProp) {
-  const items = column.cards
-    .filter((i: ICard) => i.list_id == column.id)
-    .sort((c) => c.index);
-
-  // console.log("Column: ", {column}, {items})
+export function TaskColumn({ column, cards, onEditCardClick }: IColumnProp) {
   return (
     <>
       <div className="flex flex-col h-min-full w-full min-w-[200px] mx-2 px-2 bg-gray-500 rounded-md pt-2">
@@ -26,8 +22,12 @@ export function TaskColumn({ column, onEditCardClick }: IColumnProp) {
                 ref={provided.innerRef}
                 className="min-h-[95%]"
               >
-                {items.map((item: ICard, index: number) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
+                {cards?.map((item: Card) => (
+                  <Draggable
+                    key={item.id}
+                    draggableId={item.id}
+                    index={item.index}
+                  >
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
