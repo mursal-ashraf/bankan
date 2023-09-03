@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { TaskColumn } from './TaskColumn';
 import { useClient } from '@/contexts/AppContext';
@@ -34,21 +34,12 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
     if (!columns) {
       return;
     }
-    // setCards([]);
-    let count = 0;
-    const card_list: Card[] = [];
-    columns?.forEach((col) => {
-      // console.log(col.id)
-      getCards(col).then((result) => {
-        // console.log('result', result)
-        result?.forEach((card) => {
-          card_list.push(card);
-        });
-        count++;
-        if (count == columns?.length) {
-          setCards(card_list);
-        }
-      });
+
+    getCards(columns).then((res) => {
+      const card_list: Card[] | null = res;
+      if (card_list) {
+        setCards(card_list);
+      }
     });
   }
 
@@ -56,8 +47,12 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
     const { data } = await supabase
       .from('card')
       .select()
-      .match({ list_id: col.id })
+      .in(
+        'list_id',
+        col.map((col: Column) => col.id),
+      )
       .order('index', { ascending: true });
+
     return data;
   }
 
@@ -69,7 +64,7 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
           column={col}
           cards={cards
             ?.filter((card) => {
-              return card.list_id == col.id;
+              return card.list_id === col.id;
             })
             .sort((card1, card2) => {
               return card1.index - card2.index;
@@ -94,67 +89,69 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
   // Handles moving cards
   function onDragEnd(result: DropResult) {
     // console.log('drag ended ', result);
-    if (!result?.destination?.droppableId || !result.draggableId) {
+    const isDragInvalid =
+      !result?.destination?.droppableId || !result.draggableId;
+    if (isDragInvalid) {
       return;
     }
     const newCards = cards.map((c) => {
       let res: Card = undefined;
+      const isDragInDifferentList =
+        result?.source?.droppableId != result?.destination?.droppableId;
+      const isDragInSameList =
+        result?.source?.droppableId == result?.destination?.droppableId &&
+        c.list_id == result?.destination?.droppableId;
+      const isDragCard = c.id == result?.draggableId;
+      const isCardAboveDragCardInDestinationList =
+        c.list_id == result?.destination?.droppableId &&
+        result?.destination &&
+        c.index >= result?.destination?.index;
+      const isCardAboveDragCardInSourceList =
+        c.list_id == result?.source?.droppableId &&
+        c.index >= result?.source?.index;
+      const isCardBelowDragCard =
+        result?.destination &&
+        result?.source?.index > result?.destination?.index &&
+        c.index <= result?.source?.index &&
+        c.index >= result?.destination?.index;
+      const isCardAboveDragCard =
+        result?.destination &&
+        result?.source.index < result?.destination?.index &&
+        c.index >= result?.source?.index &&
+        c.index <= result?.destination?.index;
+
       // If moving between lists
-      if (result?.source?.droppableId != result?.destination?.droppableId) {
-        // If card is the card being dragged
-        if (c.id == result?.draggableId) {
+      if (isDragInDifferentList) {
+        if (isDragCard) {
+          // If card is the card being dragged
           res = {
             ...c,
             list_id: result?.destination?.droppableId,
             index: result?.destination?.index,
           };
-        }
-        // If card is in the destination list and index is larger than desintation index
-        else if (
-          c.list_id == result?.destination?.droppableId &&
-          result?.destination &&
-          c.index >= result?.destination?.index
-        ) {
+        } else if (isCardAboveDragCardInDestinationList) {
+          // If card is in the destination list and index is larger than destination index
           res = { ...c, index: c.index + 1 };
-        }
-        // If card is in the source list and index is larger than source index
-        else if (
-          c.list_id == result?.source?.droppableId &&
-          c.index >= result?.source?.index
-        ) {
+        } else if (isCardAboveDragCardInSourceList) {
+          // If card is in the source list and index is larger than source index
           res = { ...c, index: c.index - 1 };
         }
       }
       // If moving cards in within the same list
-      else if (
-        result?.source?.droppableId == result?.destination?.droppableId &&
-        c.list_id == result?.destination?.droppableId
-      ) {
-        // If card is the card being dragged
-        if (c.id == result?.draggableId) {
+      else if (isDragInSameList) {
+        if (isDragCard) {
+          // If card is the card being dragged
           res = {
             ...c,
             list_id: result?.destination?.droppableId,
             index: result?.destination?.index,
           };
+        } else if (isCardBelowDragCard) {
           // If card is moving up a list
-        } else if (
-          result?.source?.index > result?.destination?.index &&
-          c.index <= result?.source?.index &&
-          c.index >= result?.destination?.index
-        ) {
           res = { ...c, index: c.index + 1 };
+        } else if (isCardAboveDragCard) {
           // If card is moving down a list
-        } else if (
-          result?.source.index < result?.destination?.index &&
-          c.index >= result?.source?.index &&
-          c.index <= result?.destination?.index
-        ) {
           res = { ...c, index: c.index - 1 };
-          console.log(
-            'WTF',
-            result?.source?.droppableId == result?.destination?.droppableId,
-          );
         }
       }
       if (!res) {
