@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 interface IColumnProp {
   column: Column;
   cards: Card[] | undefined;
-  onEditCardClick: (card: ICard) => void;
+  onEditCardClick: (card: Card) => void;
 }
 
 export function TaskColumn({ column, cards, onEditCardClick }: IColumnProp) {

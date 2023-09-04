@@ -29,15 +29,3 @@ interface IColumn {
   cards: ICard[];
   created_at: string;
 }
-
-interface ICard {
-  id: string;
-  list_id: string | undefined;
-  index: number;
-  user_creator: string;
-  user_assigned: string | undefined;
-  title: string;
-  description: string;
-  deadline: string | undefined;
-  created_at: string;
-}

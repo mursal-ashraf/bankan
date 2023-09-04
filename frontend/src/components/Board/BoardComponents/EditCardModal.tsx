@@ -9,26 +9,43 @@ import {
 import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { Delete } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
 
 interface IEditCardModalProp {
-  card: ICard | undefined;
+  card: Card | null;
+  onSaveCardClick: (card: Card) => void;
+  onDeleteCardClick: (card: Card) => void;
   isVisible: boolean;
   toggleIsVisible: () => void;
 }
 
 export default function EditCardModal({
   card,
+  onSaveCardClick,
+  onDeleteCardClick,
   isVisible,
   toggleIsVisible,
 }: IEditCardModalProp) {
+  const [cardToEdit, setCardToEdit] = useState<Card>(card);
+
+  useEffect(() => {
+    setCardToEdit(card);
+  }, [card]);
+
+  const setTitle = (newTitle: string) => {
+    setCardToEdit({ ...cardToEdit.valueOf(), title: newTitle });
+  };
+  const setDescription = (newDescription: string) => {
+    setCardToEdit({ ...cardToEdit.valueOf(), description: newDescription });
+  };
+  const setDeadline = (newDeadline: string) => {
+    setCardToEdit({ ...cardToEdit.valueOf(), deadline: newDeadline });
+  };
+
   return (
     <div>
-      {/* <Button variant="outlined" onClick={handleClickOpen}>
-        Open alert dialog
-      </Button> */}
       <Dialog
         open={isVisible}
-        // onClose={handleClose}
         fullWidth={true}
         maxWidth={'md'}
         aria-labelledby="alert-dialog-title"
@@ -41,7 +58,10 @@ export default function EditCardModal({
               style={{ width: 30, height: 30 }}
               className="cursor-pointer"
               color="error"
-              onClick={toggleIsVisible}
+              onClick={() => {
+                toggleIsVisible();
+                onDeleteCardClick(cardToEdit);
+              }}
             />
           </div>
         </DialogTitle>
@@ -52,12 +72,20 @@ export default function EditCardModal({
               label="Title"
               variant="standard"
               fullWidth
-              defaultValue={card?.title}
+              value={cardToEdit?.title}
+              onChange={(event) => {
+                setTitle(event.target.value);
+              }}
             />
             <div className="w-full">
               <DateTimePicker
                 label="Deadline"
-                defaultValue={dayjs(card?.deadline, 'DD-MM-YYYY HH:mm A')}
+                value={
+                  cardToEdit?.deadline ? dayjs(cardToEdit?.deadline) : null
+                }
+                onChange={(event) => {
+                  setDeadline(event?.format('DD-MM-YYYY HH:mm A') || '');
+                }}
                 className="w-full"
                 format="LLL"
               />
@@ -68,15 +96,30 @@ export default function EditCardModal({
               multiline
               rows={4}
               fullWidth
-              defaultValue={card?.description}
+              value={cardToEdit?.description}
+              onChange={(event) => {
+                setDescription(event.target.value);
+              }}
             />
           </div>
         </DialogContent>
         <DialogActions>
-          <Button color="secondary" onClick={toggleIsVisible} autoFocus>
+          <Button
+            color="secondary"
+            onClick={() => {
+              toggleIsVisible();
+            }}
+            autoFocus
+          >
             Close
           </Button>
-          <Button onClick={toggleIsVisible} autoFocus>
+          <Button
+            onClick={() => {
+              toggleIsVisible();
+              onSaveCardClick(cardToEdit);
+            }}
+            autoFocus
+          >
             Save
           </Button>
         </DialogActions>

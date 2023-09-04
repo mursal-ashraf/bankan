@@ -2,16 +2,18 @@ import { useEffect, useState } from 'react';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { TaskColumn } from './TaskColumn';
 import { useClient } from '@/contexts/AppContext';
+import EditCardModal from './EditCardModal';
 
 interface IBoardProp {
   board: Board;
-  onEditCardSelect: (card: ICard) => void;
 }
 
-export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
+export function TaskBoard({ board }: IBoardProp) {
+  // Get Columns/Cards from Supabase
   const supabase = useClient();
   const [columns, setColumns] = useState<Column[] | undefined | null>();
   const [cards, setCards] = useState<Card[]>([]);
+
   // Get Columns
   useEffect(() => {
     getColumns();
@@ -56,6 +58,51 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
     return data;
   }
 
+  // Edit Card Modal
+  const [currentEditCard, setCurrentEditCard] = useState<Card | null>();
+  const [editModalVisibility, setEditModalVisibility] = useState(false);
+
+  const onEditCardClick = (card: Card) => {
+    setCurrentEditCard(card);
+    toggleEditModalVisibility();
+  };
+
+  const toggleEditModalVisibility = () => {
+    if (editModalVisibility) {
+      setCurrentEditCard(null);
+    }
+    setEditModalVisibility(!editModalVisibility.valueOf());
+  };
+
+  const onDeleteCardClick = (card: Card) => {
+    setCards((old_cards) => {
+      const index = old_cards.findIndex((c) => {
+        return c.id == card.id;
+      });
+      console.log(index);
+      if (index >= 0) {
+        old_cards = old_cards.splice(index, 1);
+      }
+      return [...old_cards];
+    });
+  };
+
+  const onSaveCardClick = (card: Card) => {
+    if (!card) {
+      return;
+    }
+    setCards((old_cards) => {
+      const index = old_cards.findIndex((c) => {
+        return c.id == card.id;
+      });
+      console.log(index);
+      if (index >= 0) {
+        old_cards[index] = card;
+      }
+      return [...old_cards];
+    });
+  };
+
   const [columnElements, setColumnElements] = useState<JSX.Element[]>();
   useEffect(() => {
     setColumnElements(
@@ -69,11 +116,11 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
             .sort((card1, card2) => {
               return card1.index - card2.index;
             })}
-          onEditCardClick={onEditCardSelect}
+          onEditCardClick={onEditCardClick}
         />
       )),
     );
-    // console.log({ cards, columns})
+    // console.log({ cards, columns })
   }, [columns, cards]);
 
   if (!columns) {
@@ -171,6 +218,13 @@ export function TaskBoard({ board, onEditCardSelect }: IBoardProp) {
           <div className="h-full flex flex-row">{columnElements}</div>
         </DragDropContext>
       </div>
+      <EditCardModal
+        card={currentEditCard}
+        onSaveCardClick={onSaveCardClick}
+        onDeleteCardClick={onDeleteCardClick}
+        isVisible={editModalVisibility}
+        toggleIsVisible={toggleEditModalVisibility}
+      />
     </>
   );
 }
