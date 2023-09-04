@@ -7,14 +7,11 @@ import {
 } from '@mui/material';
 
 interface ITaskCardProp {
-  item: ICard;
-  onEditCardSelect: (card: ICard) => void;
+  item: Card;
+  onEditCardSelect: (card: Card) => void;
 }
 
 export function TaskCard({ item, onEditCardSelect }: ITaskCardProp) {
-  const onEditCardClick = () => {
-    onEditCardSelect(item);
-  };
   return (
     <>
       <Card className="m-1" sx={{ maxWidth: 345 }}>
@@ -31,7 +28,9 @@ export function TaskCard({ item, onEditCardSelect }: ITaskCardProp) {
           <Button
             className="justify-self-end"
             size="small"
-            onClick={onEditCardClick}
+            onClick={() => {
+              onEditCardSelect(item);
+            }}
           >
             Edit
           </Button>
