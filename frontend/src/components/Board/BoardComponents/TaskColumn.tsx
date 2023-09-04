@@ -1,5 +1,7 @@
 import { Draggable, Droppable } from '@hello-pangea/dnd';
 import { TaskCard } from './TaskCard';
+import { useClient } from '@/contexts/AppContext';
+import { useEffect, useState } from 'react';
 
 interface IColumnProp {
   column: Column;

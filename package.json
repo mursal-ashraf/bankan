@@ -21,7 +21,10 @@
     "prettier": "^3.0.1"
   },
   "dependencies": {
-    "@hello-pangea/dnd": "^16.3.0"
+    "@hello-pangea/dnd": "^16.3.0",
+    "@supabase/supabase-js": "^2.33.1",
+    "react-query": "^3.39.3",
+    "supabase-query": "^1.0.1"
   },
   "lint-staged": {
     "*.tsx": [

@@ -1,25 +1,19 @@
 import { useClient } from '@/contexts/AppContext';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import { useCallback, useEffect, useState } from 'react';
+import { Database } from 'schema';
+import { useSupabaseQuery, TypedUseSupabaseQuery } from 'supabase-query';
 
-const useBoard = (board_id: string | undefined) => {
-  const client = useClient();
-  const [result, setResult] = useState<PostgrestSingleResponse<any>>();
+const useTypedSupabaseQuery: TypedUseSupabaseQuery<Database> = useSupabaseQuery;
 
-  const performGetBoard = useCallback(async () => {
-    const board = await client
+const useBoard = (board_id: string) => {
+  return useTypedSupabaseQuery((supabase) =>
+    supabase
       .from('board')
       .select()
       .eq('id', board_id)
-      .order('version', { ascending: true });
-    setResult(board);
-  }, [client]);
-
-  useEffect(() => {
-    performGetBoard();
-  }, [performGetBoard]);
-
-  return result;
+      .order('version', { ascending: true }),
+  );
 };
 
 export default useBoard;

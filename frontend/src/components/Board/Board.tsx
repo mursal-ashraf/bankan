@@ -38,23 +38,9 @@ const members = [
 const InnerBoard: React.FC = () => {
   // Example Board
   // http://localhost:5173/Board/02b5bfae-f543-42b6-aab0-51b39253a2e4
-  const { board_id } = useParams();
+  const { board_id } = useParams() as { board_id: string };
 
-  const boardResult = useBoard(board_id);
-  let board: Board = {
-    created_at: null,
-    description: null,
-    id: '',
-    name: null,
-    saved_date: null,
-    team_id: null,
-    user_id: null,
-    version: -1,
-  };
-  if (boardResult?.data?.length > 0) {
-    board = boardResult?.data?.slice(-1)[0];
-    // console.log({ board })
-  }
+  const { data, isLoading, error, refetch, isRefetching } = useBoard(board_id);
 
   const [currentEditCard, setCurrentEditCard] = useState<ICard>();
   const [editModalVisibility, setEditModalVisibility] = useState(false);
@@ -67,6 +53,21 @@ const InnerBoard: React.FC = () => {
   const toggleEditModalVisibility = () => {
     setEditModalVisibility(!editModalVisibility.valueOf());
   };
+
+  if (isLoading || isRefetching) {
+    return <>Loading fellas!!!!!</>;
+  }
+
+  if (error) {
+    return (
+      <>
+        <h1>Error</h1>
+        <button onClick={() => refetch()}>Retry</button>
+      </>
+    );
+  }
+
+  const [board] = (data || []).slice(-1) || [{}];
 
   return (
     <>
