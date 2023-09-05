@@ -1,6 +1,3 @@
-import { useClient } from '@/contexts/AppContext';
-import { PostgrestSingleResponse } from '@supabase/supabase-js';
-import { useCallback, useEffect, useState } from 'react';
 import { Database } from 'schema';
 import { useSupabaseQuery, TypedUseSupabaseQuery } from 'supabase-query';
 
