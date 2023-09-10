@@ -133,6 +133,25 @@ export function TaskBoard({ board }: IBoardProp) {
     });
   };
 
+  const onEditColumn = (newName: string, col: Column) => {
+    // console.log("ON EDIT COLUMN")
+    setColumns((old_columns) => {
+      const index = old_columns?.indexOf(col);
+      if (!index || !old_columns) {
+        return old_columns;
+      }
+      old_columns[index].name = newName;
+      return [...old_columns];
+    });
+  };
+
+  const onDeleteColumn = (col: Column) => {
+    // console.log("ON DELETE COLUMN");
+    setColumns((old_columns) => {
+      return old_columns?.filter((c) => c != col);
+    });
+  };
+
   const [columnElements, setColumnElements] = useState<JSX.Element[]>();
   useEffect(() => {
     setColumnElements(
@@ -148,6 +167,8 @@ export function TaskBoard({ board }: IBoardProp) {
             })}
           onEditCardClick={onEditCardClick}
           onAddCardClick={onAddCardClick}
+          onEditColumn={onEditColumn}
+          onDeleteColumn={onDeleteColumn}
         />
       )),
     );
