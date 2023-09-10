@@ -94,7 +94,6 @@ export function TaskBoard({ board }: IBoardProp) {
       const index = old_cards.findIndex((c) => {
         return c.id == card.id;
       });
-      console.log(index);
       if (index >= 0) {
         old_cards = old_cards.splice(index, 1);
       }
@@ -110,7 +109,6 @@ export function TaskBoard({ board }: IBoardProp) {
       const index = old_cards.findIndex((c) => {
         return c.id == card.id;
       });
-      console.log(index);
       if (index >= 0) {
         old_cards[index] = card;
       }
@@ -119,7 +117,6 @@ export function TaskBoard({ board }: IBoardProp) {
   };
 
   const onAddCardClick = (col: Column) => {
-    console.log('Adding new Card');
     setCards((old_cards) => {
       old_cards.push({
         id: uuidv4(),
