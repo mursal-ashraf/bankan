@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Tile from '@/components/common/Tile';
 import { MemberBar } from './BoardComponents/MemberBar';
 import { TaskBoard } from './BoardComponents/TaskBoard';

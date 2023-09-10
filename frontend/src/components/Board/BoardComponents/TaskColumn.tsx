@@ -7,9 +7,15 @@ interface IColumnProp {
   column: Column;
   cards: Card[] | undefined;
   onEditCardClick: (card: Card) => void;
+  onAddCardClick: (col: Column) => void;
 }
 
-export function TaskColumn({ column, cards, onEditCardClick }: IColumnProp) {
+export function TaskColumn({
+  column,
+  cards,
+  onEditCardClick,
+  onAddCardClick,
+}: IColumnProp) {
   return (
     <>
       <div className="flex flex-col h-min-full w-full min-w-[200px] mx-2 px-2 bg-gray-500 rounded-md pt-2">
@@ -49,6 +55,12 @@ export function TaskColumn({ column, cards, onEditCardClick }: IColumnProp) {
             )}
           </Droppable>
         </div>
+        <button
+          onClick={() => onAddCardClick(column)}
+          className="flex flex-col justify-center items-center bg-gray-600 rounded-lg m-2"
+        >
+          + Add Card
+        </button>
       </div>
     </>
   );
