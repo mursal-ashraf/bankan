@@ -3,6 +3,8 @@ import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { TaskColumn } from './TaskColumn';
 import { useClient } from '@/contexts/AppContext';
 import EditCardModal from './EditCardModal';
+import dayjs from 'dayjs';
+import { useUser } from '@/hooks';
 
 interface IBoardProp {
   board: Board;
@@ -13,6 +15,19 @@ export function TaskBoard({ board }: IBoardProp) {
   const supabase = useClient();
   const [columns, setColumns] = useState<Column[] | undefined | null>();
   const [cards, setCards] = useState<Card[]>([]);
+  const user = useUser();
+
+  // Generate UUID
+  function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      },
+    );
+  }
 
   // Get Columns
   useEffect(() => {
@@ -103,6 +118,24 @@ export function TaskBoard({ board }: IBoardProp) {
     });
   };
 
+  const onAddCardClick = (col: Column) => {
+    console.log('Adding new Card');
+    setCards((old_cards) => {
+      old_cards.push({
+        id: uuidv4(),
+        list_id: col.id,
+        user_creator: user?.id,
+        user_assigned: null,
+        title: 'New Card',
+        description: 'New Card',
+        deadline: '',
+        created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
+        index: cards.filter((card) => card.list_id == col.id).length,
+      });
+      return [...old_cards];
+    });
+  };
+
   const [columnElements, setColumnElements] = useState<JSX.Element[]>();
   useEffect(() => {
     setColumnElements(
@@ -117,6 +150,7 @@ export function TaskBoard({ board }: IBoardProp) {
               return card1.index - card2.index;
             })}
           onEditCardClick={onEditCardClick}
+          onAddCardClick={onAddCardClick}
         />
       )),
     );
