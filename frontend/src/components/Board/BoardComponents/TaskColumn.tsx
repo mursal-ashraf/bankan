@@ -1,7 +1,6 @@
 import { Draggable, Droppable } from '@hello-pangea/dnd';
 import { TaskCard } from './TaskCard';
 import { Delete } from '@mui/icons-material';
-import { useEffect, useRef } from 'react';
 
 interface IColumnProp {
   column: Column;
