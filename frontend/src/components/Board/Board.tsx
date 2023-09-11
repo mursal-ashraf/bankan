@@ -43,17 +43,16 @@ const InnerBoard: React.FC = () => {
   const { data, isLoading, isError, refetch, isRefetching } =
     useBoard(board_id);
 
+  const [currentEditCard, setCurrentEditCard] = useState<ICard>();
+  const [editModalVisibility, setEditModalVisibility] = useState(false);
+
+  const onEditCardClick = (card: ICard) => {
+    setCurrentEditCard(card);
+    toggleEditModalVisibility();
+  };
+
   // const [currentEditCard, setCurrentEditCard] = useState<ICard>();
   // const [editModalVisibility, setEditModalVisibility] = useState(false);
-
-  // const onEditCardClick = (card: ICard) => {
-  //   setCurrentEditCard(card);
-  //   toggleEditModalVisibility();
-  // };
-
-  // const toggleEditModalVisibility = () => {
-  //   setEditModalVisibility(!editModalVisibility.valueOf());
-  // };
 
   const [board] = (data || []).slice(-1) || [{}];
 
