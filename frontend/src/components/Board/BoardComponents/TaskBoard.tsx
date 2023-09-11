@@ -108,20 +108,33 @@ export function TaskBoard({ board }: IBoardProp) {
     });
   };
 
-  // const onAddColumn = () => {
-  //   setColumns((old_columns) => {
-  //     old_columns.push({
-  //       id: uuidv4(),
-  //       board_id: string;
-  //       board_version: number;
-  //       created_at: string | null;
-  //       id: string;
-  //       index: number | null;
-  //       name: string | null;
-  //       user_id: string | null;
-  //     })
-  //   })
-  // }
+  const onAddColumn = () => {
+    console.log(columns);
+    setColumns((old_columns) => {
+      let index = 0;
+      if (!old_columns) {
+        return old_columns;
+      }
+      if (old_columns?.length > 0) {
+        index =
+          old_columns?.reduce((prev, curr) => {
+            return prev?.index > curr?.index ? prev : curr;
+          })?.index + 1;
+
+        old_columns.push({
+          id: uuidv4(),
+          board_id: board?._id,
+          board_version: board?.version,
+          created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
+          index: index,
+          name: 'New Column',
+          user_id: user?.id,
+        });
+        return [...old_columns];
+      }
+    });
+    console.log(columns);
+  };
 
   const onEditColumn = (newName: string, col: Column) => {
     // console.log("ON EDIT COLUMN")
@@ -304,10 +317,16 @@ export function TaskBoard({ board }: IBoardProp) {
 
   return (
     <>
-      <div className="bg-gray-600 p-2 h-full overflow-x-auto">
+      <div className="bg-gray-600 flex flex-row p-2 h-full overflow-x-auto">
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="h-full flex flex-row">{columnElements}</div>
         </DragDropContext>
+        <button
+          className="bg-gray-500 rounded-sm mx-2 p-2 hover:bg-gray-700"
+          onClick={onAddColumn}
+        >
+          +
+        </button>
       </div>
       <EditCardModal
         card={currentEditCard}
