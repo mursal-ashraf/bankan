@@ -16,6 +16,7 @@ import { LoginHookFunction } from '@/hooks/useLogin';
 import { Routes } from '@/Router/AppRouter';
 import AuthErrorAlert from './AuthErrorAlert';
 import { useIsLoggedIn } from '@/hooks';
+import ValidationErrorAlert from './ValidationErrorAlert';
 
 interface AuthDialogProps {
   title: string;
@@ -26,6 +27,7 @@ interface AuthDialogProps {
   finishHandler: LoginHookFunction | SignUpHookFunction;
   isLoading: boolean;
   error: AuthError | null | undefined;
+  validationHandler?: (email: string, password: string) => string;
 }
 
 export const AuthDialog: React.FC<AuthDialogProps> = ({
@@ -37,11 +39,15 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
   finishHandler,
   error,
   isLoading,
+  validationHandler,
 }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const isUserLoggedIn = useIsLoggedIn();
   const navigateTo = useNavigate();
+  const validationErrorMessage = validationHandler
+    ? validationHandler(email, password)
+    : null;
 
   const onEmailChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -54,6 +60,7 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
   const onDecline = () => navigateTo(alternateRoute);
 
   const onSubmit = async () => {
+    if (!validationErrorMessage) return;
     await finishHandler({ email, password });
     !error && navigateTo(submitRoute);
   };
@@ -65,6 +72,9 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
       <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
       <DialogContent>
         {!!error && <AuthErrorAlert {...{ error }} />}
+        {validationErrorMessage && (
+          <ValidationErrorAlert message={validationErrorMessage} />
+        )}
         <TextField
           label="Email address"
           type="email"
