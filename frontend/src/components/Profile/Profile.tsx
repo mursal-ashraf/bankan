@@ -1,5 +1,5 @@
 import ComponentContainer from '../common/ComponentContainer';
-
+import emailjs from 'emailjs-com';
 import React, { useEffect, useState } from 'react';
 import {
   TextField,
@@ -13,6 +13,7 @@ import { AccountCircle } from '@mui/icons-material';
 import useUser from '@/hooks/useUser';
 import { useClient } from '@/contexts/AppContext';
 import { UserMetadata } from './userTypes';
+import sendEmailNotification from '../common/SendEmailNotification';
 
 const InnerProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -57,6 +58,7 @@ const InnerProfile: React.FC = () => {
     }
   }, [user]);
 
+
   const handleSave = async () => {
     const { data, error } = await client.auth.updateUser({ data: formData });
 
@@ -69,6 +71,7 @@ const InnerProfile: React.FC = () => {
     if (data) {
       console.log('User updated:', data);
       setIsEditing(false);
+      sendEmailNotification(formData.email, formData.name, 'Profile Updated', 'Your profile has been updated');
     }
   };
 
