@@ -11,11 +11,15 @@ export const sendEmailNotification = (
         subject,
         message,
     };
-
+    const service_id = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const private_id = import.meta.env.VITE_EMAILJS_PRIVATE_ID;
     import('emailjs-com')
         .then(emailjs => {
             emailjs
-                .send('service_rkmqc9w', 'template_h8ylqcg', templateParams, 'yo_kKRN2eG451iE_u')
+                // template could be edited in emailjs web
+                // Account : kanban.official@gmail.com
+                // Password : kanbanboard
+                .send(service_id, 'template_h8ylqcg', templateParams, private_id)
                 .then(response => {
                     console.log('Email successfully sent!', response);
                 })
