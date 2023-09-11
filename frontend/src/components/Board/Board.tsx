@@ -8,12 +8,12 @@ import { Button, LinearProgress } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 
 // eslint-disable-next-line
-const team = {
-  id: '123123',
-  board_id: '123456789',
-  user_id: '1',
-  created_at: new Date().getDate(),
-};
+// const team = {
+//   id: '123123',
+//   board_id: '123456789',
+//   user_id: '1',
+//   created_at: new Date().getDate(),
+// };
 
 // user_team table
 const members = [
