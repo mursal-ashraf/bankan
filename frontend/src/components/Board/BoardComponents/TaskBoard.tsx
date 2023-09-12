@@ -5,6 +5,7 @@ import { useClient } from '@/contexts/AppContext';
 import EditCardModal from './EditCardModal';
 import dayjs from 'dayjs';
 import { useUser } from '@/hooks';
+import { uuidv4 } from '@/utils/common-utils';
 
 interface IBoardProp {
   board: Board;
@@ -16,18 +17,6 @@ export function TaskBoard({ board }: IBoardProp) {
   const [columns, setColumns] = useState<Column[] | undefined | null>(null);
   const [cards, setCards] = useState<Card[]>([]);
   const user = useUser();
-
-  // Generate UUID
-  function uuidv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      },
-    );
-  }
 
   // Get Columns
   useEffect(() => {
