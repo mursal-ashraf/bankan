@@ -27,7 +27,7 @@ interface AuthDialogProps {
   finishHandler: LoginHookFunction | SignUpHookFunction;
   isLoading: boolean;
   error: AuthError | null | undefined;
-  validationHandler?: (email: string, password: string) => string;
+  validationHandler?: (email: string, password: string) => string | null;
 }
 
 export const AuthDialog: React.FC<AuthDialogProps> = ({
@@ -60,7 +60,7 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
   const onDecline = () => navigateTo(alternateRoute);
 
   const onSubmit = async () => {
-    if (!validationErrorMessage) return;
+    if (validationErrorMessage) return;
     await finishHandler({ email, password });
     !error && navigateTo(submitRoute);
   };
