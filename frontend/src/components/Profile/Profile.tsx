@@ -1,5 +1,4 @@
 import ComponentContainer from '../common/ComponentContainer';
-import emailjs from 'emailjs-com';
 import React, { useEffect, useState } from 'react';
 import {
   TextField,
@@ -8,17 +7,24 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  LinearProgress,
 } from '@mui/material';
-import { AccountCircle } from '@mui/icons-material';
+import { AccountCircle, Refresh } from '@mui/icons-material';
 import useUser from '@/hooks/useUser';
 import { useClient } from '@/contexts/AppContext';
 import { UserMetadata } from './userTypes';
 import sendEmailNotification from '../common/SendEmailNotification';
+import { useParams } from 'react-router-dom';
+import useProfile from '@/hooks/useProfile';
 
 const InnerProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const user = useUser();
   const client = useClient();
+  const user = useUser();
+  const { user_id } = useParams() as { user_id: string };
+  const { data, isLoading, isError, refetch, isRefetching } = useProfile(user_id);
+  const isOwnProfile = user_id === user?.id;
+  const [profile] = (data || []).slice(-1);
 
   const defaultFormData: UserMetadata = user
     ? {
@@ -33,8 +39,6 @@ const InnerProfile: React.FC = () => {
       company: '',
       description: '',
     };
-
-
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [formData, setFormData] = useState<UserMetadata>(defaultFormData);
@@ -52,28 +56,50 @@ const InnerProfile: React.FC = () => {
     if (user) {
       setFormData((previousFormData) => ({
         ...previousFormData,
-        ...(!!user.user_metadata && user.user_metadata),
-        ...(!!user.email && { email: user.email }),
+        name: profile.name || 'Dongyi',
+        email: profile.email || '',
+        phone: profile.phone || '',
+        address: profile.address || '',
+        company: profile.company || '',
+        description: profile.description || ''
       }));
     }
-  }, [user]);
+
+  }, [profile]);
 
 
   const handleSave = async () => {
-    const { data, error } = await client.auth.updateUser({ data: formData });
-
-    if (error) {
-      console.error("Error updating user's data:", error);
+    const { data: memberData, error: memberError } = await client
+      .from('member')
+      .update({
+        name: formData.name,
+        email: formData.email,
+        address: formData.address,
+        phone: formData.phone,
+        description: formData.description,
+        company: formData.company
+      })
+      .eq('id', user_id);
+    if (memberError) {
+      console.error("Error updating member table:", memberError);
       setIsEditing(true);
       return;
     }
-
-    if (data) {
-      console.log('User updated:', data);
+    if (memberData) {
+      console.log("Updated member table");
+    }
+    const { data: userData, error: userError } = await client.auth.updateUser({ data: formData });
+    if (userData) {
       setIsEditing(false);
       sendEmailNotification(formData.email, formData.name, 'Profile Updated', 'Your profile has been updated');
     }
+    if (userError) {
+      console.error("Error updating auth.users:", userError);
+      setIsEditing(true);
+      return;
+    }
   };
+
 
 
   return (
@@ -119,7 +145,8 @@ const InnerProfile: React.FC = () => {
                 Save
               </Button>
             )}
-            {user && (
+
+            {user && isOwnProfile && (
               <Button
                 variant="contained"
                 color="secondary"
@@ -129,7 +156,17 @@ const InnerProfile: React.FC = () => {
                 {isEditing ? 'Cancel' : 'Edit'}
               </Button>
             )}
-
+            {(isLoading || isRefetching) && <LinearProgress color="secondary" />}
+            {isError && (
+              <><LinearProgress variant="determinate" color="error" value={100} /><Button
+                variant="contained"
+                color="error"
+                onClick={() => refetch()}
+              >
+                Reload Profile
+                <Refresh className="lr-1" />
+              </Button></>
+            )}
           </div>
         </div>
         <div className="relative flex-col justify-center ml-12 w-2/3 space-y-4">

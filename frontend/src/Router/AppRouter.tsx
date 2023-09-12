@@ -13,7 +13,7 @@ import Login from '@/components/Login';
 export enum Routes {
   Home = '/',
   Dashboard = '/Dashboard',
-  Profile = '/Profile',
+  Profile = '/Profile/:user_id',
   Board = '/Board/:board_id',
   Login = '/Login',
   Signup = '/Signup',
