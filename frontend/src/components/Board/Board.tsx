@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import Tile from '@/components/common/Tile';
 import { MemberBar } from './BoardComponents/MemberBar';
 import { TaskBoard } from './BoardComponents/TaskBoard';
-import EditCardModal from './BoardComponents/EditCardModal';
 import ComponentContainer from '../common/ComponentContainer';
 import useBoard from '@/hooks/useBoard';
 import { useParams } from 'react-router-dom';
@@ -10,12 +8,12 @@ import { Button, LinearProgress } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 
 // eslint-disable-next-line
-const team = {
-  id: '123123',
-  board_id: '123456789',
-  user_id: '1',
-  created_at: new Date().getDate(),
-};
+// const team = {
+//   id: '123123',
+//   board_id: '123456789',
+//   user_id: '1',
+//   created_at: new Date().getDate(),
+// };
 
 // user_team table
 const members = [
@@ -45,17 +43,17 @@ const InnerBoard: React.FC = () => {
   const { data, isLoading, isError, refetch, isRefetching } =
     useBoard(board_id);
 
-  const [currentEditCard, setCurrentEditCard] = useState<ICard>();
-  const [editModalVisibility, setEditModalVisibility] = useState(false);
+  // const [currentEditCard, setCurrentEditCard] = useState<ICard>();
+  // const [editModalVisibility, setEditModalVisibility] = useState(false);
 
-  const onEditCardClick = (card: ICard) => {
-    setCurrentEditCard(card);
-    toggleEditModalVisibility();
-  };
+  // const onEditCardClick = (card: ICard) => {
+  //   setCurrentEditCard(card);
+  //   toggleEditModalVisibility();
+  // };
 
-  const toggleEditModalVisibility = () => {
-    setEditModalVisibility(!editModalVisibility.valueOf());
-  };
+  // const toggleEditModalVisibility = () => {
+  //   setEditModalVisibility(!editModalVisibility.valueOf());
+  // };
 
   const [board] = (data || []).slice(-1) || [{}];
 
@@ -86,15 +84,15 @@ const InnerBoard: React.FC = () => {
 
             <MemberBar members={members} />
             <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full overflow-auto">
-              <TaskBoard board={board} onEditCardSelect={onEditCardClick} />
+              <TaskBoard board={board} />
             </div>
           </div>
         </div>
-        <EditCardModal
+        {/* <EditCardModal
           card={currentEditCard}
           isVisible={editModalVisibility}
           toggleIsVisible={toggleEditModalVisibility}
-        />
+        /> */}
       </Tile>
     </>
   );
