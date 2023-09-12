@@ -3,8 +3,13 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Repeater from '@/components/common/Repeater';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ComponentContainer from '../common/ComponentContainer';
+import { useClient } from '@/contexts/AppContext';
+import useBoardOverview from '@/hooks/useBoardOverview';
+import { useUser } from '@/hooks';
+import LinearProgress from '@mui/material/LinearProgress';
+import { Refresh } from '@mui/icons-material';
 
 interface BoardCardProps {
   id: string;
@@ -26,67 +31,80 @@ const BoardCardElement: React.FC<BoardCardProps> = ({
 );
 
 const BoardContainer: React.FC = () => {
+  const user = useUser();
+
+  const { data, isLoading, error, refetch, isRefetching } = useBoardOverview(
+    user?.id || '',
+  );
+
+  useEffect(() => {
+    console.log('user', user?.id);
+
+    refetch();
+  }, [user?.id]);
+
+  useEffect(() => {
+    // client
+    //   .from('board')
+    //   .select()
+    //   .then((e) => {
+    //     setBoardCards(
+    //       (e.data || []).map(
+    //         (d) =>
+    // ({
+    //   id: d.id,
+    //   project: d.name,
+    //   description: d.description,
+    //   lastModified: d.saved_date,
+    // }) as BoardCardProps,
+    //       ),
+    //     );
+    //   });
+
+    setBoardCards(
+      (data || [])?.map((d) => ({
+        id: d.id,
+        project: d.name,
+        description: d.description,
+        lastModified: d.saved_date,
+      })) as unknown as BoardCardProps[],
+    );
+  }, [data]);
+
   //Mock data for now..
-  const [boardCards, setBoardCards] = useState([
-    {
-      id: '1',
-      project: 'Project A',
-      description: 'This is the description for Project A',
-      lastModified: '2023-08-10',
-    },
-    {
-      id: '2',
-      project: 'Project B',
-      description: 'Description for Project B goes here',
-      lastModified: '2023-08-09',
-    },
-    {
-      id: '3',
-      project: 'Project C',
-      description: 'Description for Project C',
-      lastModified: '2023-08-08',
-    },
-    {
-      id: '4',
-      project: 'Project A',
-      description: 'This is the description for Project A',
-      lastModified: '2023-08-10',
-    },
-    {
-      id: '5',
-      project: 'Project B',
-      description: 'Description for Project B goes here',
-      lastModified: '2023-08-09',
-    },
-    {
-      id: '6',
-      project: 'Project C',
-      description: 'Description for Project C',
-      lastModified: '2023-08-08',
-    },
-    {
-      id: '7',
-      project: 'Project A',
-      description: 'This is the description for Project A',
-      lastModified: '2023-08-10',
-    },
-    {
-      id: '8',
-      project: 'Project B',
-      description: 'Description for Project B goes here',
-      lastModified: '2023-08-09',
-    },
-    {
-      id: '9',
-      project: 'Project C',
-      description: 'Description for Project C',
-      lastModified: '2023-08-08',
-    },
-  ] as BoardCardProps[]);
+  const [boardCards, setBoardCards] = useState(
+    (data || [])?.map((d) => ({
+      id: d.id,
+      project: d.name,
+      description: d.description,
+      lastModified: d.saved_date,
+    })) as unknown as BoardCardProps[],
+  );
+
+  console.log('data', boardCards);
+  // console.log("user", user)
 
   const elementOnDelete = (boardCard: BoardCardProps) => {
     setBoardCards(boardCards.filter((bc) => bc.id !== boardCard.id));
   };
+
+  if (isLoading || isRefetching) {
+    return <LinearProgress color="secondary" />;
+  }
+
+  console.log('ERROR', error);
+
+  if (error) {
+    return (
+      <>
+        <LinearProgress variant="determinate" color="error" value={100} />
+        <Button variant="contained" color="error" onClick={() => refetch()}>
+          Reload Board
+          <Refresh className="lr-1" />
+        </Button>
+      </>
+    );
+  }
 
   return (
     <div className="relative flex flex-col mx-5 my-10 py-3 rounded-xl bg-white w-2/3 items-center">
