@@ -5,11 +5,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Repeater from '@/components/common/Repeater';
 import { useEffect, useState } from 'react';
 import ComponentContainer from '../common/ComponentContainer';
+import { useSupabaseQuery, TypedUseSupabaseQuery } from 'supabase-query';
 import { useClient } from '@/contexts/AppContext';
 import useBoardOverview from '@/hooks/useBoardOverview';
 import { useUser } from '@/hooks';
 import LinearProgress from '@mui/material/LinearProgress';
 import { Refresh } from '@mui/icons-material';
+import WithLoader from '../common/WithLoader/WithLoader';
+import { Database } from 'schema';
 
 interface BoardCardProps {
   id: string;
@@ -17,6 +20,8 @@ interface BoardCardProps {
   description: string;
   lastModified: string;
 }
+
+const useTypedSupabaseQuery: TypedUseSupabaseQuery<Database> = useSupabaseQuery;
 
 const BoardCardElement: React.FC<BoardCardProps> = ({
   project,
@@ -33,14 +38,20 @@ const BoardCardElement: React.FC<BoardCardProps> = ({
 const BoardContainer: React.FC = () => {
   const user = useUser();
 
-  const { data, isLoading, error, refetch, isRefetching } = useBoardOverview(
-    user?.id || '',
-  );
+  const [userId, setUserId] = useState(user?.id);
+
+  console.log('Userid', userId);
+
+  const { data, isLoading, error, refetch, isRefetching } =
+    useTypedSupabaseQuery((supabase) =>
+      supabase
+        .from('board')
+        .select()
+        .eq('user_id', userId || ''),
+    );
 
   useEffect(() => {
-    console.log('user', user?.id);
-
-    refetch();
+    setUserId(user?.id);
   }, [user?.id]);
 
   useEffect(() => {
@@ -88,23 +99,11 @@ const BoardContainer: React.FC = () => {
     setBoardCards(boardCards.filter((bc) => bc.id !== boardCard.id));
   };
 
-  if (isLoading || isRefetching) {
-    return <LinearProgress color="secondary" />;
-  }
+  // if (isLoading || isRefetching) {
+  //   return <LinearProgress color="secondary" />;
+  // }
 
   console.log('ERROR', error);
-
-  if (error) {
-    return (
-      <>
-        <LinearProgress variant="determinate" color="error" value={100} />
-        <Button variant="contained" color="error" onClick={() => refetch()}>
-          Reload Board
-          <Refresh className="lr-1" />
-        </Button>
-      </>
-    );
-  }
 
   return (
     <div className="relative flex flex-col mx-5 my-10 py-3 rounded-xl bg-white w-2/3 items-center">
@@ -113,18 +112,24 @@ const BoardContainer: React.FC = () => {
       </div>
 
       <div className="flex flex-col w-full mb-12 overflow-y-auto">
-        <Repeater
-          Component={BoardCardElement}
-          feedList={boardCards}
-          defaultMsg="No Bankan Boards here... try creating one!"
-          ActionIcon={{
-            icon: <DeleteIcon />,
-            colour: 'orange',
-            onClick: elementOnDelete,
-            actionModal:
-              'Are you sure you want to delete this Bankan board? This action cannot be undone!',
-          }}
-        />
+        <WithLoader
+          isLoading={isLoading || isRefetching}
+          error={!!error}
+          refetch={refetch}
+        >
+          <Repeater
+            Component={BoardCardElement}
+            feedList={boardCards}
+            defaultMsg="No Bankan Boards here... try creating one!"
+            ActionIcon={{
+              icon: <DeleteIcon />,
+              colour: 'orange',
+              onClick: elementOnDelete,
+              actionModal:
+                'Are you sure you want to delete this Bankan board? This action cannot be undone!',
+            }}
+          />
+        </WithLoader>
       </div>
 
       <div className="absolute bottom-0 flex my-5 w-1/3">
