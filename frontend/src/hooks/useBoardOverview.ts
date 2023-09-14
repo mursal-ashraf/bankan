@@ -1,14 +1,11 @@
-import { Database } from 'schema';
-import { useSupabaseQuery, TypedUseSupabaseQuery } from 'supabase-query';
 import useUser from './useUser';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import supabase from '@/utils/supabase';
+import { useCallback, useEffect, useState } from 'react';
 import { useClient } from '@/contexts/AppContext';
 
 const fetchBoards = async (user_id: string, client: any) =>
   client.from('board').select().eq('user_id', user_id);
 
-const useBoardOverview = () => {
+const useBoardOverview = (): fetchReturn<any> => {
   const user = useUser();
 
   const client = useClient();
@@ -30,7 +27,7 @@ const useBoardOverview = () => {
   return {
     ...result,
     isLoading: !result?.data && !result?.error,
-    refetch: performGetBoards,
+    refetch: () => user?.id && performGetBoards(user?.id),
   };
 };
 

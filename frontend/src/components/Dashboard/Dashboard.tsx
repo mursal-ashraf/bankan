@@ -5,14 +5,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Repeater from '@/components/common/Repeater';
 import { useEffect, useState } from 'react';
 import ComponentContainer from '../common/ComponentContainer';
-import { useSupabaseQuery, TypedUseSupabaseQuery } from 'supabase-query';
-import { useClient } from '@/contexts/AppContext';
 import useBoardOverview from '@/hooks/useBoardOverview';
 import { useUser } from '@/hooks';
-import LinearProgress from '@mui/material/LinearProgress';
-import { Refresh } from '@mui/icons-material';
 import WithLoader from '../common/WithLoader/WithLoader';
-import { Database } from 'schema';
 
 interface BoardCardProps {
   id: string;
@@ -20,8 +15,6 @@ interface BoardCardProps {
   description: string;
   lastModified: string;
 }
-
-const useTypedSupabaseQuery: TypedUseSupabaseQuery<Database> = useSupabaseQuery;
 
 const BoardCardElement: React.FC<BoardCardProps> = ({
   project,
@@ -49,23 +42,6 @@ const BoardContainer: React.FC = () => {
   }, [user?.id]);
 
   useEffect(() => {
-    // client
-    //   .from('board')
-    //   .select()
-    //   .then((e) => {
-    //     setBoardCards(
-    //       (e.data || []).map(
-    //         (d) =>
-    // ({
-    //   id: d.id,
-    //   project: d.name,
-    //   description: d.description,
-    //   lastModified: d.saved_date,
-    // }) as BoardCardProps,
-    //       ),
-    //     );
-    //   });
-
     setBoardCards(
       (data || [])?.map(
         (d: { id: any; name: any; description: any; saved_date: any }) => ({
@@ -96,12 +72,6 @@ const BoardContainer: React.FC = () => {
   const elementOnDelete = (boardCard: BoardCardProps) => {
     setBoardCards(boardCards.filter((bc) => bc.id !== boardCard.id));
   };
-
-  // if (isLoading || isRefetching) {
-  //   return <LinearProgress color="secondary" />;
-  // }
-
-  console.log('ERROR', error);
 
   return (
     <div className="relative flex flex-col mx-5 my-10 py-3 rounded-xl bg-white w-2/3 items-center">

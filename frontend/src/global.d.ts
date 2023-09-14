@@ -29,3 +29,10 @@ interface IColumn {
   cards: ICard[];
   created_at: string;
 }
+
+interface fetchReturn<Data> {
+  data: Data;
+  error: any;
+  refetch: () => void;
+  isLoading: boolean;
+}
