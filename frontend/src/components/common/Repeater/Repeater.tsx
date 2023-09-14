@@ -61,13 +61,14 @@ export function Repeater<T>({
       {modalItem && (
         <AlertModal
           title="Warning"
-          body={
-            ActionIcon?.actionModal ||
-            'Are you sure you want to delete this item?'
-          }
           accept={{ text: 'Yes', action: modalAccept }}
           decline={{ text: 'No', action: modalDecline }}
-        />
+        >
+          <>
+            {ActionIcon?.actionModal ||
+              'Are you sure you want to delete this item?'}
+          </>
+        </AlertModal>
       )}
       {!feedList.length && (
         <Alert className="mx-5" severity="info">

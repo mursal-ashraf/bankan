@@ -30,6 +30,11 @@ interface IColumn {
   created_at: string;
 }
 
+interface boardDetails {
+  name: string;
+  description: string;
+}
+
 interface fetchReturn<Data> {
   data: Data;
   error: any;

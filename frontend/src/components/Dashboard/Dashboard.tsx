@@ -8,6 +8,7 @@ import ComponentContainer from '../common/ComponentContainer';
 import useBoardOverview from '@/hooks/useBoardOverview';
 import { useUser } from '@/hooks';
 import WithLoader from '../common/WithLoader/WithLoader';
+import { CreateNewBoard } from './DashboardUtils';
 
 interface BoardCardProps {
   id: string;
@@ -32,6 +33,7 @@ const BoardContainer: React.FC = () => {
   const user = useUser();
 
   const [userId, setUserId] = useState(user?.id);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   console.log('Userid', userId);
 
@@ -79,6 +81,10 @@ const BoardContainer: React.FC = () => {
         Search...
       </div>
 
+      {showCreateModal && (
+        <CreateNewBoard onClose={() => setShowCreateModal(false)} />
+      )}
+
       <div className="flex flex-col w-full mb-12 overflow-y-auto">
         <WithLoader isLoading={isLoading} error={!!error} refetch={refetch}>
           <Repeater
@@ -97,7 +103,12 @@ const BoardContainer: React.FC = () => {
       </div>
 
       <div className="absolute bottom-0 flex my-5 w-1/3">
-        <Button className="w-full" variant="contained" startIcon={<AddIcon />}>
+        <Button
+          className="w-full"
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setShowCreateModal(true)}
+        >
           Create New
         </Button>
       </div>

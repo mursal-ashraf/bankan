@@ -8,23 +8,23 @@ import React from 'react';
 
 interface AlertModalProps {
   title: string;
-  body: string;
-  accept: TextAndAction;
+  children: JSX.Element | JSX.Element[];
   decline: TextAndAction;
+  accept?: TextAndAction;
 }
 
 /**
  *
  * To open, simply render this component. Ensure some condition is used if you do not always want this pop up to be shown.
  * @param title: title text
- * @param body: body text
+ * @param children: body text
  * @param accept: accept button text & function to perform on click of accept btn
  * @param decline: decline button text & function to perform on click of decline btn
  *
  */
 export default function AlertModal({
   title,
-  body,
+  children,
   accept,
   decline,
 }: AlertModalProps) {
@@ -32,6 +32,7 @@ export default function AlertModal({
 
   const handleClose = () => {
     setOpen(false);
+    decline.action();
   };
 
   return (
@@ -44,15 +45,17 @@ export default function AlertModal({
       >
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {body}
-          </DialogContentText>
+          {/* <DialogContentText id="alert-dialog-description"> */}
+          {children}
+          {/* </DialogContentText> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={decline.action}>{decline.text}</Button>
-          <Button onClick={accept.action} autoFocus>
-            {accept.text}
-          </Button>
+          {accept && (
+            <Button onClick={accept.action} autoFocus>
+              {accept.text}
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>
