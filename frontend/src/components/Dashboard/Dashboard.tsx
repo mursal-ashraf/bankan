@@ -9,6 +9,10 @@ import useBoardOverview from '@/hooks/useBoardOverview';
 import { useUser } from '@/hooks';
 import WithLoader from '../common/WithLoader/WithLoader';
 import { CreateNewBoard } from './DashboardUtils';
+import UseDeleteBoard from '@/hooks/useDeleteBoard';
+import { Alert } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Routes } from '@/Router/AppRouter';
 
 interface BoardCardProps {
   id: string;
@@ -18,16 +22,25 @@ interface BoardCardProps {
 }
 
 const BoardCardElement: React.FC<BoardCardProps> = ({
+  id,
   project,
   description,
   lastModified,
-}) => (
-  <div className="relative rounded-lg shadow-md bg-slate-300 p-6">
-    <h2 className="text-xl font-semibold mb-2">{project}</h2>
-    <p className="text-gray-700">{description}</p>
-    <p className="text-gray-500 mt-2">Last Modified: {lastModified}</p>
-  </div>
-);
+}) => {
+  const navigate = useNavigate();
+
+  return (
+    <div
+      style={{ cursor: 'pointer' }}
+      className="relative rounded-lg shadow-md bg-slate-300 p-6"
+      onClick={() => navigate(Routes.Board.replace(':board_id', id))}
+    >
+      <h2 className="text-xl font-semibold mb-2">{project}</h2>
+      <p className="text-gray-700">{description}</p>
+      <p className="text-gray-500 mt-2">Last Modified: {lastModified}</p>
+    </div>
+  );
+};
 
 const BoardContainer: React.FC = () => {
   const user = useUser();
@@ -38,6 +51,12 @@ const BoardContainer: React.FC = () => {
   console.log('Userid', userId);
 
   const { data, isLoading, error, refetch } = useBoardOverview();
+  const {
+    isLoading: deleteLoading,
+    error: deleteError,
+    deleteBoard,
+    success,
+  } = UseDeleteBoard();
 
   useEffect(() => {
     setUserId(user?.id);
@@ -56,7 +75,6 @@ const BoardContainer: React.FC = () => {
     );
   }, [data]);
 
-  //Mock data for now..
   const [boardCards, setBoardCards] = useState(
     (data || [])?.map(
       (d: { id: any; name: any; description: any; saved_date: any }) => ({
@@ -72,7 +90,11 @@ const BoardContainer: React.FC = () => {
   // console.log("user", user)
 
   const elementOnDelete = (boardCard: BoardCardProps) => {
-    setBoardCards(boardCards.filter((bc) => bc.id !== boardCard.id));
+    deleteBoard(boardCard.id).then(() => {
+      refetch();
+    });
+
+    // setBoardCards(boardCards.filter((bc) => bc.id !== boardCard.id));
   };
 
   return (
@@ -80,13 +102,25 @@ const BoardContainer: React.FC = () => {
       <div className="mx-10 my-5 p-2 rounded-3xl shadow-md bg-slate-300 w-2/3 self-start">
         Search...
       </div>
+      {deleteError && (
+        <Alert severity="error">
+          Error deleting, please try again later...
+        </Alert>
+      )}
 
       {showCreateModal && (
-        <CreateNewBoard onClose={() => setShowCreateModal(false)} />
+        <CreateNewBoard
+          onClose={() => setShowCreateModal(false)}
+          refetch={refetch}
+        />
       )}
 
       <div className="flex flex-col w-full mb-12 overflow-y-auto">
-        <WithLoader isLoading={isLoading} error={!!error} refetch={refetch}>
+        <WithLoader
+          isLoading={isLoading || deleteLoading}
+          error={!!error}
+          refetch={refetch}
+        >
           <Repeater
             Component={BoardCardElement}
             feedList={boardCards}

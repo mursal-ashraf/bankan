@@ -13,9 +13,10 @@ import WithLoader from '../common/WithLoader/WithLoader';
 
 interface CreateNewBoardProps {
   onClose: () => void;
+  refetch: () => void;
 }
 
-export const CreateNewBoard = ({ onClose }: CreateNewBoardProps) => {
+export const CreateNewBoard = ({ onClose, refetch }: CreateNewBoardProps) => {
   const { isLoading, error, insertBoard, success } = UseCreateNewBoard();
 
   const formik = useFormik({
@@ -30,7 +31,10 @@ export const CreateNewBoard = ({ onClose }: CreateNewBoardProps) => {
 
   console.log('success, err', success, error);
 
-  if (success && !error) onClose();
+  if (success && !error) {
+    onClose();
+    refetch();
+  }
 
   return (
     <AlertModal
