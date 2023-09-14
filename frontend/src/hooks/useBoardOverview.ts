@@ -1,42 +1,37 @@
-// import { useClient } from '@/contexts/AppContext';
-// import { PostgrestSingleResponse } from '@supabase/supabase-js';
-// import { useCallback, useEffect, useState } from 'react';
-// import useUser from './useUser';
-
-// const useBoardOverview = () => {
-//   const client = useClient();
-//   const user = useUser();
-//   const [result, setResult] = useState<PostgrestSingleResponse<any>>();
-
-//   const performGetBoards = useCallback(async () => {
-//     const board = await client
-//       .from('board')
-//       .select()
-//       .eq('user_id', user?.id)
-//       .order('saved_date', { ascending: false });
-//     setResult(board);
-//   }, [client]);
-
-//   useEffect(() => {
-//     performGetBoards();
-//   }, [performGetBoards]);
-
-//   return result;
-// };
-
-// export default useBoardOverview;
-
 import { Database } from 'schema';
 import { useSupabaseQuery, TypedUseSupabaseQuery } from 'supabase-query';
 import useUser from './useUser';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import supabase from '@/utils/supabase';
+import { useClient } from '@/contexts/AppContext';
 
-const useTypedSupabaseQuery: TypedUseSupabaseQuery<Database> = useSupabaseQuery;
+const fetchBoards = async (user_id: string, client: any) =>
+  client.from('board').select().eq('user_id', user_id);
 
-const useBoardOverview = (user_id: string) => {
-  return useTypedSupabaseQuery((supabase) =>
-    supabase.from('board').select().eq('user_id', user_id),
+const useBoardOverview = () => {
+  const user = useUser();
+
+  const client = useClient();
+
+  const [result, setResult] = useState<any>();
+
+  const performGetBoards = useCallback(
+    async (user_id: string) => {
+      const boards = await fetchBoards(user_id, client);
+      setResult(boards);
+    },
+    [client],
   );
+
+  useEffect(() => {
+    if (user?.id) performGetBoards(user.id);
+  }, [performGetBoards, user?.id]);
+
+  return {
+    ...result,
+    isLoading: !result?.data && !result?.error,
+    refetch: performGetBoards,
+  };
 };
 
 export default useBoardOverview;

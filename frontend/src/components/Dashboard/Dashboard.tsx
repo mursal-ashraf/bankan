@@ -42,13 +42,7 @@ const BoardContainer: React.FC = () => {
 
   console.log('Userid', userId);
 
-  const { data, isLoading, error, refetch, isRefetching } =
-    useTypedSupabaseQuery((supabase) =>
-      supabase
-        .from('board')
-        .select()
-        .eq('user_id', userId || ''),
-    );
+  const { data, isLoading, error, refetch } = useBoardOverview();
 
   useEffect(() => {
     setUserId(user?.id);
@@ -73,23 +67,27 @@ const BoardContainer: React.FC = () => {
     //   });
 
     setBoardCards(
-      (data || [])?.map((d) => ({
-        id: d.id,
-        project: d.name,
-        description: d.description,
-        lastModified: d.saved_date,
-      })) as unknown as BoardCardProps[],
+      (data || [])?.map(
+        (d: { id: any; name: any; description: any; saved_date: any }) => ({
+          id: d.id,
+          project: d.name,
+          description: d.description,
+          lastModified: d.saved_date,
+        }),
+      ) as unknown as BoardCardProps[],
     );
   }, [data]);
 
   //Mock data for now..
   const [boardCards, setBoardCards] = useState(
-    (data || [])?.map((d) => ({
-      id: d.id,
-      project: d.name,
-      description: d.description,
-      lastModified: d.saved_date,
-    })) as unknown as BoardCardProps[],
+    (data || [])?.map(
+      (d: { id: any; name: any; description: any; saved_date: any }) => ({
+        id: d.id,
+        project: d.name,
+        description: d.description,
+        lastModified: d.saved_date,
+      }),
+    ) as unknown as BoardCardProps[],
   );
 
   console.log('data', boardCards);
@@ -112,11 +110,7 @@ const BoardContainer: React.FC = () => {
       </div>
 
       <div className="flex flex-col w-full mb-12 overflow-y-auto">
-        <WithLoader
-          isLoading={isLoading || isRefetching}
-          error={!!error}
-          refetch={refetch}
-        >
+        <WithLoader isLoading={isLoading} error={!!error} refetch={refetch}>
           <Repeater
             Component={BoardCardElement}
             feedList={boardCards}
