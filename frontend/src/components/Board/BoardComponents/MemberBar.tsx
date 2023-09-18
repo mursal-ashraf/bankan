@@ -32,7 +32,7 @@ export function MemberBar() {
         <p className="mx-2">Members</p>
         {(users || []).map((member) => (
           <div className="mx-1">
-            <MemberIcon member={member} />
+            <MemberIcon member={member as any} />
           </div>
         ))}
         <IconButton onClick={() => navigateTo(`/Board/member/${board_id}`)}>
