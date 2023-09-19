@@ -1,5 +1,4 @@
 import ComponentContainer from '../common/ComponentContainer';
-import emailjs from 'emailjs-com';
 import React, { useEffect, useState } from 'react';
 import {
   TextField,

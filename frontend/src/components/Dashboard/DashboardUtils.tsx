@@ -9,7 +9,6 @@ import AlertModal from '../common/AlertModal';
 import { useFormik } from 'formik';
 import { FormSpacer } from '../common/Utils';
 import UseCreateNewBoard from '@/hooks/useCreateNewBoard';
-import WithLoader from '../common/WithLoader/WithLoader';
 
 interface CreateNewBoardProps {
   onClose: () => void;
@@ -43,7 +42,6 @@ export const CreateNewBoard = ({ onClose, refetch }: CreateNewBoardProps) => {
     >
       <DialogContentText>
         Please enter a name and description for your new board.
-        {error && 'Error!'}
       </DialogContentText>
       <FormSpacer />
       {error && (

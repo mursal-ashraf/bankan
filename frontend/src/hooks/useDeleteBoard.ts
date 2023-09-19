@@ -1,5 +1,4 @@
-import useUser from './useUser';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useClient } from '@/contexts/AppContext';
 
 interface UseDeleteBoardReturn {

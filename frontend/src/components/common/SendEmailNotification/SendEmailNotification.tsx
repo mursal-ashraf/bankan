@@ -1,4 +1,3 @@
-import emailjs from 'emailjs-com';
 export const sendEmailNotification = (
   to_email: string,
   to_name: string,
