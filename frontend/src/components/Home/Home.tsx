@@ -4,8 +4,10 @@ import boardImage from './Boards.jpeg';
 import { Button, Grid, List, ListItem, Stack, Typography } from '@mui/material';
 import { Routes } from '@/Router/AppRouter';
 import ComponentContainer from '../common/ComponentContainer';
+import { useIsLoggedIn } from '@/hooks';
 
 const InnerHome: React.FC = () => {
+  const isLoggedIn = useIsLoggedIn();
   const navigateTo = useNavigate();
 
   return (
@@ -18,18 +20,22 @@ const InnerHome: React.FC = () => {
             the pieces of a puzzle, and make your team's projects a cohesive
             success every time.
           </Typography>
-          <Button
-            style={{ backgroundColor: 'white' }}
-            onClick={() => navigateTo(Routes.Login)}
-          >
-            Login
-          </Button>
-          <Button
-            style={{ backgroundColor: 'white' }}
-            onClick={() => navigateTo(Routes.Signup)}
-          >
-            Signup
-          </Button>
+          {!isLoggedIn && (
+            <>
+              <Button
+                style={{ backgroundColor: 'white' }}
+                onClick={() => navigateTo(Routes.Login)}
+              >
+                Login
+              </Button>
+              <Button
+                style={{ backgroundColor: 'white' }}
+                onClick={() => navigateTo(Routes.Signup)}
+              >
+                Signup
+              </Button>
+            </>
+          )}
         </Grid>
         <Grid xs={8} item>
           <img src={boardImage} />

@@ -22,18 +22,17 @@ const InnerProfile: React.FC = () => {
 
   const defaultFormData: UserMetadata = user
     ? {
-      ...(user.user_metadata as UserMetadata),
-      email: user.email as string,
-    }
+        ...(user.user_metadata as UserMetadata),
+        email: user.email as string,
+      }
     : {
-      name: '',
-      email: '',
-      phone: '',
-      address: '',
-      company: '',
-      description: '',
-    };
-
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        company: '',
+        description: '',
+      };
 
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
@@ -58,7 +57,6 @@ const InnerProfile: React.FC = () => {
     }
   }, [user]);
 
-
   const handleSave = async () => {
     const { data, error } = await client.auth.updateUser({ data: formData });
 
@@ -71,17 +69,27 @@ const InnerProfile: React.FC = () => {
     if (data) {
       console.log('User updated:', data);
       setIsEditing(false);
-      sendEmailNotification(formData.email, formData.name, 'Profile Updated', 'Your profile has been updated');
+      sendEmailNotification(
+        formData.email,
+        formData.name,
+        'Profile Updated',
+        'Your profile has been updated',
+      );
     }
   };
-
 
   return (
     <div
       className="flex justify-center items-center"
-      style={{ backgroundColor: '#FFCD29', flexGrow: 1, padding: '50px 0', height: '90vh' }}
+      style={{
+        backgroundColor: '#FFCD29',
+        flexGrow: 1,
+        padding: '50px 0',
+        height: '90vh',
+      }}
     >
-      <div className="bg-white p-8 rounded-lg shadow-md flex"
+      <div
+        className="bg-white p-8 rounded-lg shadow-md flex"
         style={{ width: '85%', height: '100%' }}
       >
         <div className="flex flex-col items-center justify-center w-1/3">
@@ -129,7 +137,6 @@ const InnerProfile: React.FC = () => {
                 {isEditing ? 'Cancel' : 'Edit'}
               </Button>
             )}
-
           </div>
         </div>
         <div className="relative flex-col justify-center ml-12 w-2/3 space-y-4">

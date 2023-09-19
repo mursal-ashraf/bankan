@@ -17,7 +17,7 @@ export const NavBar: React.FC = () => {
   const handleLogOut = async (event: React.MouseEvent) => {
     event.preventDefault(); // prevent default anchor behavior
     await performLogOut();
-    !error && window.location.reload();
+    !error && navigateTo(Routes.Home);
   };
 
   return (
