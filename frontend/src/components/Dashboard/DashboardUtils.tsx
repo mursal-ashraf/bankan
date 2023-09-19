@@ -8,7 +8,8 @@ import {
 import AlertModal from '../common/AlertModal';
 import { useFormik } from 'formik';
 import { FormSpacer } from '../common/Utils';
-import UseCreateNewBoard from '@/hooks/useCreateNewBoard';
+import { useTypedSupabaseMutation } from '@/hooks/utils';
+import { useUser } from '@/hooks';
 
 interface CreateNewBoardProps {
   onClose: () => void;
@@ -16,7 +17,10 @@ interface CreateNewBoardProps {
 }
 
 export const CreateNewBoard = ({ onClose, refetch }: CreateNewBoardProps) => {
-  const { isLoading, error, insertBoard, success } = UseCreateNewBoard();
+  const user = useUser();
+  const user_id = user?.id as string;
+
+  const { mutate, isLoading, isError, isSuccess } = useTypedSupabaseMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -24,13 +28,13 @@ export const CreateNewBoard = ({ onClose, refetch }: CreateNewBoardProps) => {
       description: '',
     },
     onSubmit: (values) => {
-      insertBoard(values);
+      mutate((supabase) =>
+        supabase.from('board').insert([{ ...values, user_id }]),
+      );
     },
   });
 
-  console.log('success, err', success, error);
-
-  if (success && !error) {
+  if (isSuccess) {
     onClose();
     refetch();
   }
@@ -44,11 +48,13 @@ export const CreateNewBoard = ({ onClose, refetch }: CreateNewBoardProps) => {
         Please enter a name and description for your new board.
       </DialogContentText>
       <FormSpacer />
-      {error && (
+      {isError ? (
         <>
-          <Alert severity="error">That didn't work... try again later.</Alert>{' '}
+          <Alert severity="error">That didn't work... try again later.</Alert>
           <FormSpacer />
         </>
+      ) : (
+        <></>
       )}
       {isLoading ? (
         <LinearProgress color="secondary" />
