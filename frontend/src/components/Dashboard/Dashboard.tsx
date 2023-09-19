@@ -3,8 +3,16 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Repeater from '@/components/common/Repeater';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ComponentContainer from '../common/ComponentContainer';
+import useBoardOverview from '@/hooks/useBoardOverview';
+import { useUser } from '@/hooks';
+import WithLoader from '../common/WithLoader/WithLoader';
+import { CreateNewBoard } from './DashboardUtils';
+import UseDeleteBoard from '@/hooks/useDeleteBoard';
+import { Alert } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Routes } from '@/Router/AppRouter';
 
 interface BoardCardProps {
   id: string;
@@ -14,78 +22,79 @@ interface BoardCardProps {
 }
 
 const BoardCardElement: React.FC<BoardCardProps> = ({
+  id,
   project,
   description,
   lastModified,
-}) => (
-  <div className="relative rounded-lg shadow-md bg-slate-300 p-6">
-    <h2 className="text-xl font-semibold mb-2">{project}</h2>
-    <p className="text-gray-700">{description}</p>
-    <p className="text-gray-500 mt-2">Last Modified: {lastModified}</p>
-  </div>
-);
+}) => {
+  const navigate = useNavigate();
+
+  return (
+    <div
+      style={{ cursor: 'pointer' }}
+      className="relative rounded-lg shadow-md bg-slate-300 p-6"
+      onClick={() => navigate(Routes.Board.replace(':board_id', id))}
+    >
+      <h2 className="text-xl font-semibold mb-2">{project}</h2>
+      <p className="text-gray-700">{description}</p>
+      <p className="text-gray-500 mt-2">Last Modified: {lastModified}</p>
+    </div>
+  );
+};
 
 const BoardContainer: React.FC = () => {
-  //Mock data for now..
-  const [boardCards, setBoardCards] = useState([
-    {
-      id: '1',
-      project: 'Project A',
-      description: 'This is the description for Project A',
-      lastModified: '2023-08-10',
-    },
-    {
-      id: '2',
-      project: 'Project B',
-      description: 'Description for Project B goes here',
-      lastModified: '2023-08-09',
-    },
-    {
-      id: '3',
-      project: 'Project C',
-      description: 'Description for Project C',
-      lastModified: '2023-08-08',
-    },
-    {
-      id: '4',
-      project: 'Project A',
-      description: 'This is the description for Project A',
-      lastModified: '2023-08-10',
-    },
-    {
-      id: '5',
-      project: 'Project B',
-      description: 'Description for Project B goes here',
-      lastModified: '2023-08-09',
-    },
-    {
-      id: '6',
-      project: 'Project C',
-      description: 'Description for Project C',
-      lastModified: '2023-08-08',
-    },
-    {
-      id: '7',
-      project: 'Project A',
-      description: 'This is the description for Project A',
-      lastModified: '2023-08-10',
-    },
-    {
-      id: '8',
-      project: 'Project B',
-      description: 'Description for Project B goes here',
-      lastModified: '2023-08-09',
-    },
-    {
-      id: '9',
-      project: 'Project C',
-      description: 'Description for Project C',
-      lastModified: '2023-08-08',
-    },
-  ] as BoardCardProps[]);
+  const user = useUser();
+
+  const [userId, setUserId] = useState(user?.id);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
+  console.log('Userid', userId);
+
+  const { data, isLoading, error, refetch } = useBoardOverview();
+  const {
+    isLoading: deleteLoading,
+    error: deleteError,
+    deleteBoard,
+    success,
+  } = UseDeleteBoard();
+
+  useEffect(() => {
+    setUserId(user?.id);
+  }, [user?.id]);
+
+  useEffect(() => {
+    setBoardCards(
+      (data || [])?.map(
+        (d: { id: any; name: any; description: any; saved_date: any }) => ({
+          id: d.id,
+          project: d.name,
+          description: d.description,
+          lastModified: d.saved_date,
+        }),
+      ) as unknown as BoardCardProps[],
+    );
+  }, [data]);
+
+  const [boardCards, setBoardCards] = useState(
+    (data || [])?.map(
+      (d: { id: any; name: any; description: any; saved_date: any }) => ({
+        id: d.id,
+        project: d.name,
+        description: d.description,
+        lastModified: d.saved_date,
+      }),
+    ) as unknown as BoardCardProps[],
+  );
+
+  console.log('data', boardCards);
+  // console.log("user", user)
 
   const elementOnDelete = (boardCard: BoardCardProps) => {
-    setBoardCards(boardCards.filter((bc) => bc.id !== boardCard.id));
+    deleteBoard(boardCard.id).then(() => {
+      refetch();
+    });
+
+    // setBoardCards(boardCards.filter((bc) => bc.id !== boardCard.id));
   };
 
   return (
@@ -93,24 +102,47 @@ const BoardContainer: React.FC = () => {
       <div className="mx-10 my-5 p-2 rounded-3xl shadow-md bg-slate-300 w-2/3 self-start">
         Search...
       </div>
+      {deleteError && (
+        <Alert severity="error">
+          Error deleting, please try again later...
+        </Alert>
+      )}
+
+      {showCreateModal && (
+        <CreateNewBoard
+          onClose={() => setShowCreateModal(false)}
+          refetch={refetch}
+        />
+      )}
 
       <div className="flex flex-col w-full mb-12 overflow-y-auto">
-        <Repeater
-          Component={BoardCardElement}
-          feedList={boardCards}
-          defaultMsg="No Bankan Boards here... try creating one!"
-          ActionIcon={{
-            icon: <DeleteIcon />,
-            colour: 'orange',
-            onClick: elementOnDelete,
-            actionModal:
-              'Are you sure you want to delete this Bankan board? This action cannot be undone!',
-          }}
-        />
+        <WithLoader
+          isLoading={isLoading || deleteLoading}
+          error={!!error}
+          refetch={refetch}
+        >
+          <Repeater
+            Component={BoardCardElement}
+            feedList={boardCards}
+            defaultMsg="No Bankan Boards here... try creating one!"
+            ActionIcon={{
+              icon: <DeleteIcon />,
+              colour: 'orange',
+              onClick: elementOnDelete,
+              actionModal:
+                'Are you sure you want to delete this Bankan board? This action cannot be undone!',
+            }}
+          />
+        </WithLoader>
       </div>
 
       <div className="absolute bottom-0 flex my-5 w-1/3">
-        <Button className="w-full" variant="contained" startIcon={<AddIcon />}>
+        <Button
+          className="w-full"
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setShowCreateModal(true)}
+        >
           Create New
         </Button>
       </div>
