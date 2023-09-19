@@ -9,12 +9,14 @@ import Profile from '@/components/Profile';
 import Board from '@/components/Board';
 import Signup from '@/components/Signup';
 import Login from '@/components/Login';
+import AddMemberDialog from '@/components/AddMemberDialog';
 
 export enum Routes {
   Home = '/',
   Dashboard = '/Dashboard',
   Profile = '/Profile',
   Board = '/Board/:board_id',
+  AddMemberToBoard = '/Board/member/:board_id',
   Login = '/Login',
   Signup = '/Signup',
 }
@@ -26,6 +28,7 @@ export const AppRoutes: RouteObject[] = [
   { path: Routes.Board, element: <Board /> },
   { path: Routes.Signup, element: <Signup /> },
   { path: Routes.Login, element: <Login /> },
+  { path: Routes.AddMemberToBoard, element: <AddMemberDialog /> },
 ];
 
 const router = createBrowserRouter(AppRoutes);

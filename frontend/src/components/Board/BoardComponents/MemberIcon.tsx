@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Button, Card, CardActions, CardContent, Popover } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
+import { Database } from 'schema';
 
 interface IMemberIconProp {
-  member: Member;
+  member: Database['public']['Tables']['member']['Row'];
 }
 
 export function MemberIcon({ member }: IMemberIconProp) {
@@ -38,8 +39,7 @@ export function MemberIcon({ member }: IMemberIconProp) {
             <div className="flex flex-row w-full">
               <AccountCircle style={{ width: 100, height: '100%' }} />
               <div className="ml-2">
-                <p className="font-bold text-lg">@{member.username}</p>
-                <p className="text-md">{`${member.given_name} ${member.surname}`}</p>
+                <p className="text-md">{`${member.name}`}</p>
                 <p className="text-md">{member.email}</p>
               </div>
             </div>

@@ -7,34 +7,6 @@ import { useParams } from 'react-router-dom';
 import { Button, LinearProgress } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 
-// eslint-disable-next-line
-// const team = {
-//   id: '123123',
-//   board_id: '123456789',
-//   user_id: '1',
-//   created_at: new Date().getDate(),
-// };
-
-// user_team table
-const members = [
-  {
-    id: '1',
-    username: 'kevinbuilderman',
-    given_name: 'Kevin',
-    surname: 'L',
-    email: 'kev@example.com',
-    phone: '123123123',
-  },
-  {
-    id: '2',
-    username: 'mursalcoolkid',
-    given_name: 'Mursal',
-    surname: 'A',
-    email: 'mursal@example.com',
-    phone: '123123123',
-  },
-];
-
 const InnerBoard: React.FC = () => {
   // Example Board
   // http://localhost:5173/Board/02b5bfae-f543-42b6-aab0-51b39253a2e4
@@ -82,7 +54,7 @@ const InnerBoard: React.FC = () => {
               {board?.name}
             </p>
 
-            <MemberBar members={members} />
+            <MemberBar />
             <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full overflow-auto">
               <TaskBoard board={board} />
             </div>
