@@ -29,11 +29,13 @@ export const useSignUp: SignUpHook = () => {
     async (credentials: SignUpWithPasswordCredentials) => {
       setResult({ ...result, isLoading: true });
       const { data, error } = await client.auth.signUp(credentials);
-      client
-        .from('members')
-        .insert([
-          { email: data.user?.email, id: data.user?.id, createdAt: new Date() },
-        ]);
+      await client.from('member').insert([
+        {
+          email: data.user?.email,
+          id: data.user?.id,
+          created_at: new Date(),
+        },
+      ]);
       setResult({ ...result, data, error, isLoading: false });
     },
     [client, result],
