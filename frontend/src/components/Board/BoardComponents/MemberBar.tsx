@@ -18,6 +18,9 @@ export function MemberBar() {
       .order('version', { ascending: true }),
   );
 
+  const team_id = data?.find((board) => board.id === board_id)
+    ?.team_id as string;
+
   const users = flatten(
     data
       ?.find((board) => board.id === board_id)
@@ -32,7 +35,7 @@ export function MemberBar() {
         <p className="mx-2">Members</p>
         {(users || []).map((member) => (
           <div className="mx-1">
-            <MemberIcon member={member} />
+            <MemberIcon {...{ member, team_id }} />
           </div>
         ))}
         <IconButton onClick={() => navigateTo(`/Board/member/${board_id}`)}>
