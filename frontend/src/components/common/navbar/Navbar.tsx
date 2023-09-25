@@ -4,7 +4,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { useIsLoggedIn } from '@/hooks';
+import { useIsLoggedIn, useUser } from '@/hooks';
 import { useLogOut } from '@/hooks/useLogOut';
 import { Routes } from '@/Router/AppRouter';
 import AuthErrorAlert from '@/components/common/AuthDialog/AuthErrorAlert';
@@ -13,13 +13,16 @@ export const NavBar: React.FC = () => {
   const isLoggedIn = useIsLoggedIn();
   const [performLogOut, { error }] = useLogOut();
   const navigateTo = useNavigate();
+  const user = useUser();
 
   const handleLogOut = async (event: React.MouseEvent) => {
     event.preventDefault(); // prevent default anchor behavior
     await performLogOut();
     !error && navigateTo(Routes.Home);
   };
-
+  const profileRoute = user?.id
+    ? `${Routes.Profile.replace(':user_id', user.id)}`
+    : Routes.Profile;
   return (
     <>
       <AppBar position="sticky">
@@ -40,7 +43,7 @@ export const NavBar: React.FC = () => {
               <a href={Routes.Board} style={{ textDecoration: 'none' }}>
                 <Button color="inherit">Board</Button>
               </a>
-              <a href={Routes.Profile} style={{ textDecoration: 'none' }}>
+              <a href={profileRoute} style={{ textDecoration: 'none' }}>
                 <Button color="inherit">Profile</Button>
               </a>
               <Button color="inherit" onClick={handleLogOut}>

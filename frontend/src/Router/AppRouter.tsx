@@ -14,7 +14,7 @@ import AddMemberDialog from '@/components/AddMemberDialog';
 export enum Routes {
   Home = '/',
   Dashboard = '/Dashboard',
-  Profile = '/Profile',
+  Profile = '/Profile/:user_id',
   Board = '/Board/:board_id',
   AddMemberToBoard = '/Board/member/:board_id',
   Login = '/Login',
