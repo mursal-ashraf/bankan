@@ -1,7 +1,4 @@
-import { Database } from 'schema';
-import { useSupabaseQuery, TypedUseSupabaseQuery } from 'supabase-query';
-
-const useTypedSupabaseQuery: TypedUseSupabaseQuery<Database> = useSupabaseQuery;
+import { useTypedSupabaseQuery } from './utils';
 
 const useBoard = (board_id: string) => {
   return useTypedSupabaseQuery((supabase) =>

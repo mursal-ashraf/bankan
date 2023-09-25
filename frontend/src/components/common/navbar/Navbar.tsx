@@ -18,9 +18,11 @@ export const NavBar: React.FC = () => {
   const handleLogOut = async (event: React.MouseEvent) => {
     event.preventDefault(); // prevent default anchor behavior
     await performLogOut();
-    !error && window.location.reload();
+    !error && navigateTo(Routes.Home);
   };
-  const profileRoute = user?.id ? `${Routes.Profile.replace(":user_id", user.id)}` : Routes.Profile;
+  const profileRoute = user?.id
+    ? `${Routes.Profile.replace(':user_id', user.id)}`
+    : Routes.Profile;
   return (
     <>
       <AppBar position="sticky">
@@ -42,7 +44,7 @@ export const NavBar: React.FC = () => {
                 <Button color="inherit">Board</Button>
               </a>
               <a href={profileRoute} style={{ textDecoration: 'none' }}>
-                <Button color="inherit" >Profile</Button>
+                <Button color="inherit">Profile</Button>
               </a>
               <Button color="inherit" onClick={handleLogOut}>
                 Log Out

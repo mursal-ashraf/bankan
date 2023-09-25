@@ -7,6 +7,9 @@ declare module 'schema' {
     | { [key: string]: Json | undefined }
     | Json[];
 
+  export type Board = Database['public']['Tables']['board']['Row'];
+  export type Member = Database['public']['Tables']['member']['Row'];
+
   export interface Database {
     public: {
       Tables: {

@@ -22,23 +22,24 @@ const InnerProfile: React.FC = () => {
   const client = useClient();
   const user = useUser();
   const { user_id } = useParams() as { user_id: string };
-  const { data, isLoading, isError, refetch, isRefetching } = useProfile(user_id);
+  const { data, isLoading, isError, refetch, isRefetching } =
+    useProfile(user_id);
   const isOwnProfile = user_id === user?.id;
   const [profile] = (data || []).slice(-1);
 
   const defaultFormData: UserMetadata = user
     ? {
-      ...(user.user_metadata as UserMetadata),
-      email: user.email as string,
-    }
+        ...(user.user_metadata as UserMetadata),
+        email: user.email as string,
+      }
     : {
-      name: '',
-      email: '',
-      phone: '',
-      address: '',
-      company: '',
-      description: '',
-    };
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        company: '',
+        description: '',
+      };
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [formData, setFormData] = useState<UserMetadata>(defaultFormData);
@@ -61,12 +62,10 @@ const InnerProfile: React.FC = () => {
         phone: profile.phone || '',
         address: profile.address || '',
         company: profile.company || '',
-        description: profile.description || ''
+        description: profile.description || '',
       }));
     }
-
   }, [profile]);
-
 
   const handleSave = async () => {
     const { data: memberData, error: memberError } = await client
@@ -77,37 +76,53 @@ const InnerProfile: React.FC = () => {
         address: formData.address,
         phone: formData.phone,
         description: formData.description,
-        company: formData.company
+        company: formData.company,
       })
       .eq('id', user_id);
     if (memberError) {
-      console.error("Error updating member table:", memberError);
+      console.error('Error updating member table:', memberError);
       setIsEditing(true);
       return;
     }
     if (memberData) {
-      console.log("Updated member table");
+      console.log('Updated member table');
     }
-    const { data: userData, error: userError } = await client.auth.updateUser({ data: formData });
+    const { data: userData, error: userError } = await client.auth.updateUser({
+      data: formData,
+    });
     if (userData) {
       setIsEditing(false);
-      sendEmailNotification(formData.email, formData.name, 'Profile Updated', 'Your profile has been updated');
+      sendEmailNotification(
+        formData.email,
+        formData.name,
+        'Profile Updated',
+        'Your profile has been updated',
+      );
     }
     if (userError) {
-      console.error("Error updating auth.users:", userError);
+      console.error('Error updating auth.users:', userError);
+      setIsEditing(true);
+      return;
+    }
+    if (userError) {
+      console.error('Error updating auth.users:', userError);
       setIsEditing(true);
       return;
     }
   };
 
-
-
   return (
     <div
       className="flex justify-center items-center"
-      style={{ backgroundColor: '#FFCD29', flexGrow: 1, padding: '50px 0', height: '90vh' }}
+      style={{
+        backgroundColor: '#FFCD29',
+        flexGrow: 1,
+        padding: '50px 0',
+        height: '90vh',
+      }}
     >
-      <div className="bg-white p-8 rounded-lg shadow-md flex"
+      <div
+        className="bg-white p-8 rounded-lg shadow-md flex"
         style={{ width: '85%', height: '100%' }}
       >
         <div className="flex flex-col items-center justify-center w-1/3">
@@ -156,16 +171,25 @@ const InnerProfile: React.FC = () => {
                 {isEditing ? 'Cancel' : 'Edit'}
               </Button>
             )}
-            {(isLoading || isRefetching) && <LinearProgress color="secondary" />}
+            {(isLoading || isRefetching) && (
+              <LinearProgress color="secondary" />
+            )}
             {isError && (
-              <><LinearProgress variant="determinate" color="error" value={100} /><Button
-                variant="contained"
-                color="error"
-                onClick={() => refetch()}
-              >
-                Reload Profile
-                <Refresh className="lr-1" />
-              </Button></>
+              <>
+                <LinearProgress
+                  variant="determinate"
+                  color="error"
+                  value={100}
+                />
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => refetch()}
+                >
+                  Reload Profile
+                  <Refresh className="lr-1" />
+                </Button>
+              </>
             )}
           </div>
         </div>

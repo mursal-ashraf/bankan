@@ -1,3 +1,3 @@
-import { sendEmailNotification } from "./SendEmailNotification";
+import { sendEmailNotification } from './SendEmailNotification';
 
 export default sendEmailNotification;
