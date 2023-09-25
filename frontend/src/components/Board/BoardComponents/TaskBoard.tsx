@@ -104,6 +104,18 @@ export function TaskBoard({ board }: IBoardProp) {
       if (!old_columns) {
         return old_columns;
       }
+      if (old_columns.length === 0) {
+        old_columns.push({
+          id: uuidv4(),
+          board_id: board?._id,
+          board_version: board?.version,
+          created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
+          index: index,
+          name: 'New Column',
+          user_id: user?.id,
+        });
+        return [...old_columns];
+      }
       if (old_columns?.length > 0) {
         index =
           old_columns?.reduce((prev, curr) => {
