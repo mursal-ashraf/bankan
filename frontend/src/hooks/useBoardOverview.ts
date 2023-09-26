@@ -27,7 +27,7 @@ const useBoardOverview = (): fetchReturn<Board[]> => {
 
   return {
     ...result,
-    isLoading: !result?.data && !result?.error,
+    isLoading: user?.id && !result?.data && !result?.error,
     refetch: () => user?.id && performGetBoards(user?.id),
   };
 };
