@@ -2,6 +2,7 @@ import Tile from '@/components/common/Tile';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Search } from '@mui/icons-material';
 import Repeater from '@/components/common/Repeater';
 import { useEffect, useState } from 'react';
 import ComponentContainer from '../common/ComponentContainer';
@@ -96,14 +97,17 @@ const BoardContainer: React.FC = () => {
 
   return (
     <div className="relative flex flex-col mx-5 my-10 py-3 rounded-xl bg-white w-2/3 items-center">
-      <div className="mx-10 my-5 p-2 rounded-3xl shadow-md bg-slate-300 w-2/3 self-start">
-        <div className="mx-5">
-          <TextField
-            id="standard-basic"
-            label="Search..."
-            variant="standard"
-            onChange={(s) => setSearchString(s.target?.value)}
-          />{' '}
+      <div className="mx-10 my-5 rounded-3xl shadow-md bg-slate-300 w-auto self-start">
+        <div className="flex justify-between items-center px-6">
+          <Search />
+          <div className="pb-1 ml-10">
+            <TextField
+              hiddenLabel
+              id="standard-basic"
+              variant="standard"
+              onChange={(s) => setSearchString(s.target?.value)}
+            />{' '}
+          </div>
         </div>
       </div>
       {deleteError && (
