@@ -1,11 +1,12 @@
 import useUser from './useUser';
 import { useCallback, useEffect, useState } from 'react';
 import { useClient } from '@/contexts/AppContext';
+import { Board } from 'schema';
 
 const fetchBoards = async (user_id: string, client: any) =>
   client.from('board').select().eq('user_id', user_id);
 
-const useBoardOverview = (): fetchReturn<Board> => {
+const useBoardOverview = (): fetchReturn<Board[]> => {
   const user = useUser();
 
   const client = useClient();
