@@ -5,6 +5,23 @@ export const ColourLookup: { [key in GeneralColour]: string } = {
   white: '#FFFFFF',
 };
 
+export function getISODate(dateString: string) {
+  // Step 1: Convert the string to a Date object
+  const dateParts = dateString.split(/[- :]/); // Split the string into parts
+  const day = parseInt(dateParts[0], 10);
+  const month = parseInt(dateParts[1], 10) - 1; // Month is 0-based in JavaScript (0 = January)
+  const year = parseInt(dateParts[2], 10);
+  const hours = dateParts[3].includes('PM')
+    ? parseInt(dateParts[3], 10) + 12 // Convert to 24-hour format if PM
+    : parseInt(dateParts[3], 10);
+  const minutes = parseInt(dateParts[4], 10);
+
+  const isoDate = new Date(year, month, day, hours, minutes);
+
+  // Step 2: Format the Date object as an ISO string
+  return isoDate.toISOString();
+}
+
 // Generate UUID
 export function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
