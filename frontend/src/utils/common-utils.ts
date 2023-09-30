@@ -28,6 +28,14 @@ export function stripField(object: any, field: string) {
   return rest;
 }
 
+export const getSQLStringifiedArr = (c: string[]) =>
+  '(' +
+  c.reduce(
+    (acc, curr, idx) => (idx === c.length - 1 ? acc + curr : acc + curr + ','),
+    '',
+  ) +
+  ')';
+
 // Generate UUID
 export function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
