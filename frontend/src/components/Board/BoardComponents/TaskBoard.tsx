@@ -28,11 +28,8 @@ export function TaskBoard({ board }: IBoardProp) {
         .order('index', { ascending: true });
       setColumns(data);
     }
-
-    if (columns == null) {
-      getColumns();
-    }
-  }, [board, columns, supabase]);
+    getColumns();
+  }, [board, supabase]);
 
   // Get Cards of each Column
   useEffect(() => {
@@ -61,10 +58,8 @@ export function TaskBoard({ board }: IBoardProp) {
       });
     }
 
-    if (cards.length === 0) {
-      getColumnCards();
-    }
-  }, [columns, cards.length, supabase]);
+    getColumnCards();
+  }, [columns, supabase]);
 
   // Edit Card Modal
   const [currentEditCard, setCurrentEditCard] = useState<Card | null>();
