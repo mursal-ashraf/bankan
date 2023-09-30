@@ -312,12 +312,14 @@ export function TaskBoard({ board }: IBoardProp) {
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="h-full flex flex-row">{columnElements}</div>
         </DragDropContext>
-        <button
-          className="bg-gray-500 rounded-sm mx-2 p-2 hover:bg-gray-700"
-          onClick={onAddColumn}
-        >
-          +
-        </button>
+        <div className="flex-none">
+          <button
+            className="bg-gray-500 rounded-md m-2 px-4 hover:bg-gray-700 text-white"
+            onClick={onAddColumn}
+          >
+            + Add Column
+          </button>
+        </div>
       </div>
       <EditCardModal
         card={currentEditCard}

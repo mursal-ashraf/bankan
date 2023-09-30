@@ -21,7 +21,7 @@ export function TaskColumn({
 }: IColumnProp) {
   return (
     <>
-      <div className="flex flex-col h-min-full w-full min-w-[200px] mx-2 px-2 bg-gray-500 rounded-md pt-2">
+      <div className="flex flex-col h-min-full w-full min-w-[200px] max-w-[300px] mx-2 px-2 bg-gray-500 rounded-md pt-2">
         <div className="w-full flex flex-row items-center px-2 bg-gray-100 text-black font-bold text-xl rounded-md text-center border-2 border-gray-700">
           <input
             className="bg-gray-100 w-full rounded-md mx-2"
@@ -73,7 +73,7 @@ export function TaskColumn({
         </div>
         <button
           onClick={() => onAddCardClick(column)}
-          className="flex flex-col justify-center items-center bg-gray-600 rounded-md m-2 hover:bg-gray-700"
+          className="flex flex-col justify-center items-center bg-gray-600 rounded-md m-2 hover:bg-gray-700 text-white"
         >
           + Add Card
         </button>

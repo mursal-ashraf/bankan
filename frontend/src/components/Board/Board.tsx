@@ -36,7 +36,7 @@ const InnerBoard: React.FC = () => {
         <LinearProgress variant="determinate" color="error" value={100} />
       )}
       <Tile colour="yellow" height={93} className="">
-        <div className=" inset-0 h-full w-full flex flex-col items-center">
+        <div className=" inset-0 h-full w-full p-2 flex flex-col items-center">
           <div className="w-full flex flex-col items-center justify-center">
             {isError && (
               <Button
@@ -49,8 +49,8 @@ const InnerBoard: React.FC = () => {
               </Button>
             )}
           </div>
-          <div className="w-[95%] h-[90%] flex flex-col items-center justify-center">
-            <p className="bg-white text-black text-bold px-10 text-4xl font-mono font-bold m-4 rounded-md">
+          <div className="w-full h-full flex flex-col items-center justify-center">
+            <p className="bg-white text-black text-bold px-10 text-4xl font-mono font-bold m-2 rounded-md">
               {board?.name}
             </p>
 
