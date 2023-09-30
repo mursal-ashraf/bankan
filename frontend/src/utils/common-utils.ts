@@ -22,6 +22,12 @@ export function getISODate(dateString: string) {
   return isoDate.toISOString();
 }
 
+export function stripField(object: any, field: string) {
+  const { [field]: _, ...rest } = object;
+
+  return rest;
+}
+
 // Generate UUID
 export function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

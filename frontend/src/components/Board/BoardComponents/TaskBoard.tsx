@@ -26,7 +26,7 @@ export function TaskBoard({ board, setBoardData }: IBoardProp) {
       const { data } = await supabase
         .from('list')
         .select()
-        .match({ board_id: board.id, board_version: board.version })
+        .match({ board_id: board?.id, board_version: board?.version })
         .order('index', { ascending: true });
       setColumns(data);
     }
@@ -224,6 +224,7 @@ export function TaskBoard({ board, setBoardData }: IBoardProp) {
           onAddCardClick={onAddCardClick}
           onEditColumn={onEditColumn}
           onDeleteColumn={onDeleteColumn}
+          key={col.id}
         />
       )),
     );

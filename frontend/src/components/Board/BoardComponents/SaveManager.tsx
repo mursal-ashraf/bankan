@@ -1,6 +1,6 @@
 import { RefreshAlert } from '@/components/common/Utils';
 import { useTypedSupabaseMutation } from '@/hooks/utils';
-import { getISODate } from '@/utils/common-utils';
+import { getISODate, stripField } from '@/utils/common-utils';
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Board } from 'schema';
@@ -21,22 +21,24 @@ const HandleSave = ({
   const updateCardsAndColumns = () => {
     mutate((supabase) =>
       supabase.from('card').upsert(
-        cards.map((c) => ({
-          ...c,
-          created_at: getISODate(c.created_at),
-          deadline: getISODate(c.deadline),
-        })),
+        cards
+          .map((c) => ({
+            ...c,
+            deadline: c.deadline ? getISODate(c.deadline) : null,
+          }))
+          .map((c: any) => stripField(c, 'created_at')),
         { onConflict: 'id', ignoreDuplicates: false },
       ),
     );
 
     mutate((supabase) =>
       supabase.from('list').upsert(
-        columns.map((c) => ({
-          ...c,
-          created_at: getISODate(c.created_at),
-          board_id: board.id,
-        })),
+        columns
+          .map((c) => ({
+            ...c,
+            board_id: board.id,
+          }))
+          .map((c: any) => stripField(c, 'created_at')),
         { onConflict: 'id', ignoreDuplicates: false },
       ),
     );
