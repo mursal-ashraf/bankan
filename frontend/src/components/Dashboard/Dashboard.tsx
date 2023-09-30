@@ -2,6 +2,7 @@ import Tile from '@/components/common/Tile';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Search } from '@mui/icons-material';
 import Repeater from '@/components/common/Repeater';
 import { useEffect, useState } from 'react';
 import ComponentContainer from '../common/ComponentContainer';
@@ -10,9 +11,10 @@ import { useUser } from '@/hooks';
 import WithLoader from '../common/WithLoader/WithLoader';
 import { CreateNewBoard } from './DashboardUtils';
 import UseDeleteBoard from '@/hooks/useDeleteBoard';
-import { Alert } from '@mui/material';
+import { Alert, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from '@/Router/AppRouter';
+import { keywordFilter } from '@/utils/common-utils';
 
 interface BoardCardProps {
   id: string;
@@ -43,12 +45,9 @@ const BoardCardElement: React.FC<BoardCardProps> = ({
 };
 
 const BoardContainer: React.FC = () => {
-  const user = useUser();
-
-  const [userId, setUserId] = useState(user?.id);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  console.log('Userid', userId);
+  const [searchString, setSearchString] = useState('');
 
   const { data, isLoading, error, refetch } = useBoardOverview();
   const {
@@ -59,21 +58,23 @@ const BoardContainer: React.FC = () => {
   } = UseDeleteBoard();
 
   useEffect(() => {
-    setUserId(user?.id);
-  }, [user?.id]);
-
-  useEffect(() => {
     setBoardCards(
-      (data || [])?.map(
-        (d: { id: any; name: any; description: any; saved_date: any }) => ({
-          id: d.id,
-          project: d.name,
-          description: d.description,
-          lastModified: d.saved_date,
-        }),
-      ) as unknown as BoardCardProps[],
+      (data || [])
+        ?.map(
+          (d: { id: any; name: any; description: any; saved_date: any }) => ({
+            id: d.id,
+            project: d.name,
+            description: d.description,
+            lastModified: d.saved_date,
+          }),
+        )
+        .filter((board) =>
+          keywordFilter(searchString.toLowerCase())(
+            ((board.project || '') + (board.description || '')).toLowerCase(),
+          ),
+        ) as unknown as BoardCardProps[],
     );
-  }, [data]);
+  }, [data, searchString]);
 
   const [boardCards, setBoardCards] = useState(
     (data || [])?.map(
@@ -86,9 +87,6 @@ const BoardContainer: React.FC = () => {
     ) as unknown as BoardCardProps[],
   );
 
-  console.log('data', boardCards);
-  // console.log("user", user)
-
   const elementOnDelete = (boardCard: BoardCardProps) => {
     deleteBoard(boardCard.id).then(() => {
       refetch();
@@ -99,8 +97,18 @@ const BoardContainer: React.FC = () => {
 
   return (
     <div className="relative flex flex-col mx-5 my-10 py-3 rounded-xl bg-white w-2/3 items-center">
-      <div className="mx-10 my-5 p-2 rounded-3xl shadow-md bg-slate-300 w-2/3 self-start">
-        Search...
+      <div className="mx-10 my-5 rounded-3xl shadow-md bg-slate-300 w-auto self-start">
+        <div className="flex justify-between items-center px-6">
+          <Search />
+          <div className="pb-1 ml-10">
+            <TextField
+              hiddenLabel
+              id="standard-basic"
+              variant="standard"
+              onChange={(s) => setSearchString(s.target?.value)}
+            />{' '}
+          </div>
+        </div>
       </div>
       {deleteError && (
         <Alert severity="error">

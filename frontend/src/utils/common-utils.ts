@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash';
+
 export const ColourLookup: { [key in GeneralColour]: string } = {
   yellow: '#FFCD29',
   orange: '#F5754F',
@@ -44,3 +46,7 @@ export function uuidv4() {
     return v.toString(16);
   });
 }
+
+//keyword match
+export const keywordFilter = (keyword: string) => (isMatch: string) =>
+  isEmpty(keyword) || !!isMatch.match(keyword);
