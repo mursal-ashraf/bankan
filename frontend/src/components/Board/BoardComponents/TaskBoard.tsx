@@ -24,7 +24,7 @@ export function TaskBoard({ board }: IBoardProp) {
       const { data } = await supabase
         .from('list')
         .select()
-        .match({ board_id: board.id, board_version: board.version })
+        .match({ board_id: board?.id, board_version: board?.version })
         .order('index', { ascending: true });
       setColumns(data);
     }
@@ -98,43 +98,31 @@ export function TaskBoard({ board }: IBoardProp) {
   };
 
   const onAddColumn = () => {
-    console.log(columns);
     setColumns((old_columns) => {
       let index = 0;
       if (!old_columns) {
         return old_columns;
-      }
-      if (old_columns.length === 0) {
-        old_columns.push({
-          id: uuidv4(),
-          board_id: board?._id,
-          board_version: board?.version,
-          created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
-          index: index,
-          name: 'New Column',
-          user_id: user?.id,
-        });
-        return [...old_columns];
       }
       if (old_columns?.length > 0) {
         index =
           old_columns?.reduce((prev, curr) => {
             return prev?.index > curr?.index ? prev : curr;
           })?.index + 1;
-
-        old_columns.push({
+      }
+      return [
+        ...old_columns,
+        {
           id: uuidv4(),
-          board_id: board?._id,
+          board_id: board?.id,
           board_version: board?.version,
           created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
           index: index,
           name: 'New Column',
           user_id: user?.id,
-        });
-        return [...old_columns];
-      }
+        },
+      ];
     });
-    console.log(columns);
+    // console.log({ columns });
   };
 
   const onEditColumn = (newName: string, col: Column) => {
@@ -179,19 +167,20 @@ export function TaskBoard({ board }: IBoardProp) {
           })?.index + 1;
       }
       setCards((old_cards) => {
-        old_cards.push({
-          id: uuidv4(),
-          list_id: col.id,
-          user_creator: user?.id,
-          user_assigned: null,
-          title: 'New Card',
-          description: 'New Card',
-          deadline: '',
-          created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
-          index: index,
-        });
-        console.log({ old_cards });
-        return [...old_cards];
+        return [
+          ...old_cards,
+          {
+            id: uuidv4(),
+            list_id: col.id,
+            user_creator: user?.id,
+            user_assigned: null,
+            title: 'New Card',
+            description: 'New Card',
+            deadline: '',
+            created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
+            index: index,
+          },
+        ];
       });
     };
 
@@ -208,8 +197,9 @@ export function TaskBoard({ board }: IBoardProp) {
     };
 
     setColumnElements(
-      columns?.map((col) => (
+      columns?.map((col, index) => (
         <TaskColumn
+          key={index}
           column={col}
           cards={cards
             ?.filter((card) => {
