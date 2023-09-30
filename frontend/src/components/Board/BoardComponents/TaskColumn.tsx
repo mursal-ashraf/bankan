@@ -25,7 +25,7 @@ export function TaskColumn({
         <div className="w-full flex flex-row items-center px-2 bg-gray-100 text-black font-bold text-xl rounded-md text-center border-2 border-gray-700">
           <input
             className="bg-gray-100 w-full rounded-md mx-2"
-            value={column.name}
+            defaultValue={column.name}
             onChange={(e) => onEditColumn(e.target.value, column)}
           />
           <Delete

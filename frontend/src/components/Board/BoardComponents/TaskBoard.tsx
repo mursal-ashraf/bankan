@@ -129,7 +129,7 @@ export function TaskBoard({ board }: IBoardProp) {
     // console.log("ON EDIT COLUMN")
     setColumns((old_columns) => {
       const index = old_columns?.indexOf(col);
-      if (!index || !old_columns) {
+      if (index == undefined || !old_columns) {
         return old_columns;
       }
       old_columns[index].name = newName;
