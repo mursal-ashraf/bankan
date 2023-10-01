@@ -40,9 +40,6 @@ export const NavBar: React.FC = () => {
               <a href={Routes.Dashboard} style={{ textDecoration: 'none' }}>
                 <Button color="inherit">Dashboard</Button>
               </a>
-              <a href={Routes.Board} style={{ textDecoration: 'none' }}>
-                <Button color="inherit">Board</Button>
-              </a>
               <a href={profileRoute} style={{ textDecoration: 'none' }}>
                 <Button color="inherit">Profile</Button>
               </a>

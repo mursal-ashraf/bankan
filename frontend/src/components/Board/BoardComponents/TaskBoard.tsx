@@ -24,15 +24,12 @@ export function TaskBoard({ board }: IBoardProp) {
       const { data } = await supabase
         .from('list')
         .select()
-        .match({ board_id: board.id, board_version: board.version })
+        .match({ board_id: board?.id, board_version: board?.version })
         .order('index', { ascending: true });
       setColumns(data);
     }
-
-    if (columns == null) {
-      getColumns();
-    }
-  }, [board, columns, supabase]);
+    getColumns();
+  }, [board, supabase]);
 
   // Get Cards of each Column
   useEffect(() => {
@@ -61,10 +58,8 @@ export function TaskBoard({ board }: IBoardProp) {
       });
     }
 
-    if (cards.length === 0) {
-      getColumnCards();
-    }
-  }, [columns, cards.length, supabase]);
+    getColumnCards();
+  }, [columns, supabase]);
 
   // Edit Card Modal
   const [currentEditCard, setCurrentEditCard] = useState<Card | null>();
@@ -98,50 +93,38 @@ export function TaskBoard({ board }: IBoardProp) {
   };
 
   const onAddColumn = () => {
-    console.log(columns);
     setColumns((old_columns) => {
       let index = 0;
       if (!old_columns) {
         return old_columns;
-      }
-      if (old_columns.length === 0) {
-        old_columns.push({
-          id: uuidv4(),
-          board_id: board?._id,
-          board_version: board?.version,
-          created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
-          index: index,
-          name: 'New Column',
-          user_id: user?.id,
-        });
-        return [...old_columns];
       }
       if (old_columns?.length > 0) {
         index =
           old_columns?.reduce((prev, curr) => {
             return prev?.index > curr?.index ? prev : curr;
           })?.index + 1;
-
-        old_columns.push({
+      }
+      return [
+        ...old_columns,
+        {
           id: uuidv4(),
-          board_id: board?._id,
+          board_id: board?.id,
           board_version: board?.version,
           created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
           index: index,
           name: 'New Column',
           user_id: user?.id,
-        });
-        return [...old_columns];
-      }
+        },
+      ];
     });
-    console.log(columns);
+    // console.log({ columns });
   };
 
   const onEditColumn = (newName: string, col: Column) => {
     // console.log("ON EDIT COLUMN")
     setColumns((old_columns) => {
       const index = old_columns?.indexOf(col);
-      if (!index || !old_columns) {
+      if (index == undefined || !old_columns) {
         return old_columns;
       }
       old_columns[index].name = newName;
@@ -179,19 +162,20 @@ export function TaskBoard({ board }: IBoardProp) {
           })?.index + 1;
       }
       setCards((old_cards) => {
-        old_cards.push({
-          id: uuidv4(),
-          list_id: col.id,
-          user_creator: user?.id,
-          user_assigned: null,
-          title: 'New Card',
-          description: 'New Card',
-          deadline: '',
-          created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
-          index: index,
-        });
-        console.log({ old_cards });
-        return [...old_cards];
+        return [
+          ...old_cards,
+          {
+            id: uuidv4(),
+            list_id: col.id,
+            user_creator: user?.id,
+            user_assigned: null,
+            title: 'New Card',
+            description: 'New Card',
+            deadline: '',
+            created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
+            index: index,
+          },
+        ];
       });
     };
 
@@ -208,8 +192,9 @@ export function TaskBoard({ board }: IBoardProp) {
     };
 
     setColumnElements(
-      columns?.map((col) => (
+      columns?.map((col, index) => (
         <TaskColumn
+          key={index}
           column={col}
           cards={cards
             ?.filter((card) => {
@@ -322,12 +307,14 @@ export function TaskBoard({ board }: IBoardProp) {
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="h-full flex flex-row">{columnElements}</div>
         </DragDropContext>
-        <button
-          className="bg-gray-500 rounded-sm mx-2 p-2 hover:bg-gray-700"
-          onClick={onAddColumn}
-        >
-          +
-        </button>
+        <div className="flex-none">
+          <button
+            className="bg-gray-500 rounded-md m-2 px-4 hover:bg-gray-700 text-white"
+            onClick={onAddColumn}
+          >
+            + Add Column
+          </button>
+        </div>
       </div>
       <EditCardModal
         card={currentEditCard}
