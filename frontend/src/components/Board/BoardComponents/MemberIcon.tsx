@@ -12,6 +12,7 @@ import { AccountCircle } from '@mui/icons-material';
 import { Database } from 'schema';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useTypedSupabaseMutation } from '@/hooks/utils';
+import { Routes } from '@/Router/AppRouter';
 
 interface IMemberIconProp {
   member: Database['public']['Tables']['member']['Row'];
@@ -41,6 +42,9 @@ export function MemberIcon({ member, team_id }: IMemberIconProp) {
         .eq('team_id', team_id),
     );
   };
+  const profileRoute = member?.id
+    ? `${Routes.Profile.replace(':user_id', member.id)}`
+    : Routes.Profile;
   return (
     <>
       <button
@@ -71,7 +75,9 @@ export function MemberIcon({ member, team_id }: IMemberIconProp) {
             </div>
           </CardContent>
           <CardActions>
-            <Button size="small">See Profile</Button>
+            <a href={profileRoute} style={{ textDecoration: 'none' }}>
+              <Button size="small">See Profile</Button>
+            </a>
             <IconButton aria-label="delete" onClick={deleteMember}>
               <DeleteIcon />
             </IconButton>

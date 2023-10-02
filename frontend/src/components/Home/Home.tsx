@@ -14,12 +14,15 @@ const InnerHome: React.FC = () => {
     <Stack spacing={2}>
       <Grid container style={{ backgroundColor: '#FFCD29' }}>
         <Grid xs={4} item>
-          <Typography variant="h5">Team Management</Typography>
-          <Typography paragraph>
-            Use Bankan to track, manage, complete, and bring tasks together like
-            the pieces of a puzzle, and make your team's projects a cohesive
-            success every time.
-          </Typography>
+          <div className="m-4">
+            <Typography variant="h5">Team Management</Typography>
+            <Typography paragraph>
+              Use Bankan to track, manage, complete, and bring tasks together
+              like the pieces of a puzzle, and make your team's projects a
+              cohesive success every time.
+            </Typography>
+          </div>
+
           {!isLoggedIn && (
             <>
               <Button
@@ -43,12 +46,15 @@ const InnerHome: React.FC = () => {
       </Grid>
       <Grid container>
         <Grid xs={4} item>
-          <Typography variant="h5">About Bankan</Typography>
-          <Typography>
-            Bankan is a versatile tool for managing work that allows teams to
-            generate ideas, work together on projects, arrange workflows, and
-            monitor progress using a visual, efficient, and satisfying approach.
-          </Typography>
+          <div className="m-4">
+            <Typography variant="h5">About Bankan</Typography>
+            <Typography>
+              Bankan is a versatile tool for managing work that allows teams to
+              generate ideas, work together on projects, arrange workflows, and
+              monitor progress using a visual, efficient, and satisfying
+              approach.
+            </Typography>
+          </div>
         </Grid>
         <Grid xs={4} item>
           <Typography variant="h5">Contact Us</Typography>

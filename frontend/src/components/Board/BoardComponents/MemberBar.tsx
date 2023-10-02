@@ -34,8 +34,8 @@ export function MemberBar() {
       <div className="flex flex-row items-center w-full h-16 bg-white m-4 p-2 rounded-md text-black font-bold">
         <p className="mx-2">Members</p>
         {(users || []).map((member) => (
-          <div className="mx-1">
-            <MemberIcon {...{ member, team_id }} />
+          <div key={member.id} className="mx-1">
+            <MemberIcon key={member.id} {...{ member, team_id }} />
           </div>
         ))}
         <IconButton onClick={() => navigateTo(`/Board/member/${board_id}`)}>
