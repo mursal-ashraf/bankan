@@ -63,11 +63,22 @@ const HandleSave = ({
     // now delete any cards & columns we do not have any more
 
     mutate((supabase) =>
-      supabase.from('card').delete().not('id', 'in', card_ids),
+      supabase
+        .from('card')
+        .delete()
+        .in(
+          'list_id',
+          columns.map((c) => c.id),
+        )
+        .not('id', 'in', card_ids),
     );
 
     mutate((supabase) =>
-      supabase.from('list').delete().not('id', 'in', col_ids),
+      supabase
+        .from('list')
+        .delete()
+        .eq('board_id', board.id)
+        .not('id', 'in', col_ids),
     );
   };
 
@@ -89,8 +100,13 @@ const HandleSave = ({
   return (
     <>
       {isDirty && <RefreshAlert />}
-      <Button variant="contained" onClick={updateCardsAndColumns}>
-        Save Changes
+
+      <Button
+        variant="contained"
+        onClick={updateCardsAndColumns}
+        disabled={isLoading}
+      >
+        {isLoading ? 'Saving...' : 'Save Changes'}
       </Button>
     </>
   );
