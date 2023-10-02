@@ -54,7 +54,7 @@ export function TaskBoard({ board, setBoardData }: IBoardProp) {
       }
       getCards(columns).then((res) => {
         const card_list: Card[] | null = res;
-        if (card_list) {
+        if (card_list && card_list.length >= cards.length) {
           setCards(card_list);
         }
       });
