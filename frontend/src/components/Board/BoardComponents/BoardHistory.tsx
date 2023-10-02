@@ -19,6 +19,7 @@ export default function BoardHistory({ boards, changeBoard }: IHistoryProp) {
     IMarks[] | undefined
   >(undefined);
   const [maxVersion, setMaxVersion] = React.useState(0);
+  const [minVersion, setMinVersion] = React.useState(0);
   const [slider, setSlider] = React.useState<JSX.Element>();
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -35,11 +36,12 @@ export default function BoardHistory({ boards, changeBoard }: IHistoryProp) {
     // console.log({ boards });
     if (boards && boardVersions === undefined) {
       const newMaxVersion = boards ? boards[boards.length - 1]?.version : 0;
+      const newMinVersion = boards ? boards[0]?.version : 0;
       const newBoardVersion =
         boards?.map((board, index) => {
           return {
             value: board?.version,
-            label: '', //(index === boards?.length - 1) ? "Present" : board?.version?.toString(),
+            label: '', //(newMinVersion - board?.version).toString(),//'', //(index === boards?.length - 1) ? "Present" : board?.version?.toString(),
             name:
               index === boards?.length - 1
                 ? 'Present'
@@ -48,6 +50,7 @@ export default function BoardHistory({ boards, changeBoard }: IHistoryProp) {
         }) || [];
       setBoardVersions([...newBoardVersion]);
       setMaxVersion(newMaxVersion);
+      setMinVersion(newMinVersion);
       // console.log({ boardVersions, newBoardVersion, maxVersion });
     }
   }, [boards, boardVersions, maxVersion]);
@@ -73,8 +76,8 @@ export default function BoardHistory({ boards, changeBoard }: IHistoryProp) {
         <Slider
           aria-label="Restricted values"
           defaultValue={maxVersion}
-          min={0}
-          max={maxVersion}
+          min={minVersion}
+          max={maxVersion} //{boards ? (minVersion - boards[boards?.length - 1]?.version) : 0}
           valueLabelFormat={valueLabelFormat}
           step={null}
           valueLabelDisplay="auto"
@@ -83,7 +86,7 @@ export default function BoardHistory({ boards, changeBoard }: IHistoryProp) {
         />,
       );
     }
-  }, [boardVersions, maxVersion]);
+  }, [boardVersions, maxVersion, minVersion]);
 
   return (
     <>
