@@ -173,18 +173,20 @@ export function TaskBoard({
           })?.index + 1;
       }
       setCards((old_cards) => {
-        old_cards.push({
-          id: uuidv4(),
-          list_id: col?.id,
-          user_creator: user?.id,
-          user_assigned: null,
-          title: 'New Card',
-          description: 'New Card',
-          deadline: null,
-          created_at: new Date().toISOString(),
-          index: index,
-        });
-        return [...old_cards];
+        return [
+          ...old_cards,
+          {
+            id: uuidv4(),
+            list_id: col?.id,
+            user_creator: user?.id,
+            user_assigned: null,
+            title: 'New Card',
+            description: 'New Card',
+            deadline: null,
+            created_at: new Date().toISOString(),
+            index: index,
+          },
+        ];
       });
     };
 
