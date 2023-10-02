@@ -20,9 +20,14 @@ export function TaskCard({ item, onEditCardSelect }: ITaskCardProp) {
           <Typography gutterBottom variant="h6" component="div">
             {item.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            display="inline"
+            sx={{ textDecoration: 'underline' }}
+          >
             {item?.deadline
-              ? 'Deadline:' +
+              ? 'DEADLINE ' +
                 dayjs(new Date(item?.deadline)).format('D/MMM/YY, hh:ss A')
               : ''}
           </Typography>
