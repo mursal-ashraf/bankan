@@ -116,8 +116,10 @@ export default function BoardHistory({
           onClick={toggleDrawer(true)}
         >
           <div className="flex gap-2">
-            <HistoryIcon></HistoryIcon>
-            <p className="italic font-bold whitespace-nowrap">Board History</p>
+            <HistoryIcon className="text-black"></HistoryIcon>
+            <p className="italic font-bold whitespace-nowrap text-black">
+              Board History
+            </p>
           </div>
         </button>
         <Drawer
