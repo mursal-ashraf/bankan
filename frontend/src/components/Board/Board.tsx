@@ -71,7 +71,7 @@ const InnerBoard: React.FC = () => {
               <TaskBoard {...{ board, setBoardData }} />
             </div>
           </div>
-          <div className="my-10">
+          <div className="my-10 w-full flex justify-end">
             {boardData && <HandleSave {...{ boardData, board }} />}
           </div>
         </div>
