@@ -1,5 +1,5 @@
 import HistoryIcon from '@mui/icons-material/History';
-import { Button, Drawer, Slider } from '@mui/material';
+import { Drawer, Slider } from '@mui/material';
 import React, { useEffect } from 'react';
 
 type IMarks = {
@@ -10,10 +10,19 @@ type IMarks = {
 
 interface IHistoryProp {
   boards: Board[] | undefined | null;
+  board: Board;
+  refreshHistory: boolean;
+  setRefreshHistory: React.Dispatch<React.SetStateAction<boolean>>;
   changeBoard: (version: number) => void;
 }
 
-export default function BoardHistory({ boards, changeBoard }: IHistoryProp) {
+export default function BoardHistory({
+  boards,
+  board,
+  changeBoard,
+  refreshHistory,
+  setRefreshHistory,
+}: IHistoryProp) {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [boardVersions, setBoardVersions] = React.useState<
     IMarks[] | undefined
@@ -21,6 +30,7 @@ export default function BoardHistory({ boards, changeBoard }: IHistoryProp) {
   const [maxVersion, setMaxVersion] = React.useState(0);
   const [minVersion, setMinVersion] = React.useState(0);
   const [slider, setSlider] = React.useState<JSX.Element>();
+
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -32,28 +42,38 @@ export default function BoardHistory({ boards, changeBoard }: IHistoryProp) {
       }
       setIsDrawerOpen(open);
     };
+
+  const closeButtonClicked = () => {
+    // toggleDrawer(false);
+    setIsDrawerOpen(false);
+    if (boards) {
+      changeBoard(boards[boards?.length - 1].version);
+    }
+  };
+
   useEffect(() => {
     // console.log({ boards });
-    if (boards && boardVersions === undefined) {
+    if (boards && (boardVersions === undefined || refreshHistory)) {
       const newMaxVersion = boards ? boards[boards.length - 1]?.version : 0;
       const newMinVersion = boards ? boards[0]?.version : 0;
       const newBoardVersion =
         boards?.map((board, index) => {
           return {
             value: board?.version,
-            label: '', //(newMinVersion - board?.version).toString(),//'', //(index === boards?.length - 1) ? "Present" : board?.version?.toString(),
+            label: board?.version.toString(), //'', //(index === boards?.length - 1) ? "Present" : board?.version?.toString(),
             name:
               index === boards?.length - 1
                 ? 'Present'
                 : board?.version?.toString(),
           };
         }) || [];
+      setRefreshHistory(false);
       setBoardVersions([...newBoardVersion]);
       setMaxVersion(newMaxVersion);
       setMinVersion(newMinVersion);
       // console.log({ boardVersions, newBoardVersion, maxVersion });
     }
-  }, [boards, boardVersions, maxVersion]);
+  }, [boards, refreshHistory, boardVersions, maxVersion, setRefreshHistory]);
 
   useEffect(() => {
     function valueLabelFormat(value: number) {
@@ -62,7 +82,7 @@ export default function BoardHistory({ boards, changeBoard }: IHistoryProp) {
         : 'N/A';
     }
 
-    const handleChange = (event: Event, newValue: number | number[]) => {
+    const handleChange = (_event: Event, newValue: number | number[]) => {
       if (typeof newValue == 'number') {
         changeBoard(newValue);
       } else {
@@ -86,7 +106,7 @@ export default function BoardHistory({ boards, changeBoard }: IHistoryProp) {
         />,
       );
     }
-  }, [boardVersions, maxVersion, minVersion]);
+  }, [boardVersions, changeBoard, maxVersion, minVersion]);
 
   return (
     <>
@@ -97,17 +117,38 @@ export default function BoardHistory({ boards, changeBoard }: IHistoryProp) {
         >
           <div className="flex gap-2">
             <HistoryIcon></HistoryIcon>
-            <p className="italic font-bold">Board History</p>
+            <p className="italic font-bold whitespace-nowrap">Board History</p>
           </div>
         </button>
         <Drawer
           anchor={'top'}
           open={isDrawerOpen}
           onClose={toggleDrawer(false)}
+          hideBackdrop
         >
           <div className="w-full p-2 flex flex-col items-center justify-center">
-            <p className="font-bold text-lg">History Tracking</p>
+            <p className="font-bold text-xl">History Tracking</p>
+            <p className="italic text-md">
+              Please save before checking history, or you will lose your
+              changes.
+            </p>
             <div className="w-[80%] pt-6">{slider}</div>
+          </div>
+          <div className="w-full flex items-center justify-center px-4">
+            <div className="w-1/3 items-center justify-center" />
+            <div className="w-1/3 items-center justify-center">
+              <p className="text-black text-bold text-3xl my-2 font-mono font-bold text-center">
+                {board?.name}
+              </p>
+            </div>
+            <div className="w-1/3 flex items-center justify-end">
+              <button
+                className="rounded-md p-2 px-4 border border-black bg-gray-600 hover:bg-gray-700 text-white font-bold"
+                onClick={closeButtonClicked}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </Drawer>
       </React.Fragment>

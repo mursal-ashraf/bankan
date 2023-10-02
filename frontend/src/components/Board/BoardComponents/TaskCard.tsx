@@ -5,6 +5,7 @@ import {
   CardActions,
   Button,
 } from '@mui/material';
+import dayjs from 'dayjs';
 
 interface ITaskCardProp {
   item: Card;
@@ -18,6 +19,12 @@ export function TaskCard({ item, onEditCardSelect }: ITaskCardProp) {
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
             {item.title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {item?.deadline
+              ? 'Deadline:' +
+                dayjs(new Date(item?.deadline)).format('D/MMM/YY, hh:ss A')
+              : ''}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {item.description}

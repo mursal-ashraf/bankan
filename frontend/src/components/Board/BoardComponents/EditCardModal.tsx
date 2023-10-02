@@ -84,7 +84,7 @@ export default function EditCardModal({
                   cardToEdit?.deadline ? dayjs(cardToEdit?.deadline) : null
                 }
                 onChange={(event) => {
-                  setDeadline(event?.format('DD-MM-YYYY HH:mm A') || '');
+                  setDeadline(event?.toISOString() || '');
                 }}
                 className="w-full"
                 format="LLL"
