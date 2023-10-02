@@ -6,6 +6,7 @@ import useBoard from '@/hooks/useBoard';
 import { useParams } from 'react-router-dom';
 import { Button, LinearProgress } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
+import HandleSave from './BoardComponents/SaveManager';
 import BoardHistory from './BoardComponents/BoardHistory';
 import { useEffect, useState } from 'react';
 
@@ -17,6 +18,10 @@ const InnerBoard: React.FC = () => {
     useBoard(board_id);
   const [board, setBoard] = useState<Board>();
 
+  const [boardData, setBoardData] = useState<BoardData | null>(null);
+
+  // const [currentEditCard, setCurrentEditCard] = useState<ICard>();
+  // const [editModalVisibility, setEditModalVisibility] = useState(false);
   useEffect(() => {
     // console.log({ data })
     setBoard((data || []).slice(-1)[0]);
@@ -63,8 +68,11 @@ const InnerBoard: React.FC = () => {
 
             <MemberBar />
             <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full overflow-auto">
-              <TaskBoard board={board} />
+              <TaskBoard {...{ board, setBoardData }} />
             </div>
+          </div>
+          <div className="my-10">
+            {boardData && <HandleSave {...{ boardData, board }} />}
           </div>
         </div>
       </Tile>

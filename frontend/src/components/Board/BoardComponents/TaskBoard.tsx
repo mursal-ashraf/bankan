@@ -6,12 +6,14 @@ import EditCardModal from './EditCardModal';
 import dayjs from 'dayjs';
 import { useUser } from '@/hooks';
 import { uuidv4 } from '@/utils/common-utils';
+import { Board } from 'schema';
 
 interface IBoardProp {
   board: Board;
+  setBoardData: (val: BoardData | null) => void;
 }
 
-export function TaskBoard({ board }: IBoardProp) {
+export function TaskBoard({ board, setBoardData }: IBoardProp) {
   // Get Columns/Cards from Supabase
   const supabase = useClient();
   const [columns, setColumns] = useState<Column[] | undefined | null>(null);
@@ -207,9 +209,12 @@ export function TaskBoard({ board }: IBoardProp) {
           onAddCardClick={onAddCardClick}
           onEditColumn={onEditColumn}
           onDeleteColumn={onDeleteColumn}
+          key={col.id}
         />
       )),
     );
+    // console.log("Change event", cards, columns);
+    setBoardData({ cards, columns: columns || [] });
     // console.log({ cards, columns })
   }, [columns, cards, editModalVisibility, user?.id]);
 

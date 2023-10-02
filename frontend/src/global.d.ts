@@ -41,3 +41,8 @@ interface fetchReturn<Data> {
   refetch: () => void;
   isLoading: boolean;
 }
+
+interface BoardData {
+  cards: Card[];
+  columns: Column[];
+}
