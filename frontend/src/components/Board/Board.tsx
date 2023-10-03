@@ -9,6 +9,7 @@ import { Refresh } from '@mui/icons-material';
 import HandleSave from './BoardComponents/SaveManager';
 import BoardHistory from './BoardComponents/BoardHistory';
 import { useEffect, useState } from 'react';
+import { SaveVersion } from './BoardComponents/VersionSaveManager';
 
 const InnerBoard: React.FC = () => {
   // Example Board
@@ -17,19 +18,30 @@ const InnerBoard: React.FC = () => {
   const { data, isLoading, isError, refetch, isRefetching } =
     useBoard(board_id);
   const [board, setBoard] = useState<Board>();
-
+  const [boards, setBoards] = useState<any>();
   const [boardData, setBoardData] = useState<BoardData | null>(null);
-
+  const [refreshHistory, setRefreshHistory] = useState(false);
+  const [refreshCards, setRefreshCards] = useState(false);
   // const [currentEditCard, setCurrentEditCard] = useState<ICard>();
   // const [editModalVisibility, setEditModalVisibility] = useState(false);
   useEffect(() => {
     // console.log({ data })
     setBoard((data || []).slice(-1)[0]);
+    setBoards(data);
+    setRefreshHistory(true);
   }, [data]);
+
+  const refetchBoards = (newBoard: Board) => {
+    console.log('REFETCHING');
+    refetch().then(() => {
+      setBoard(newBoard);
+    });
+  };
 
   const changeBoard = (version: number) => {
     const newBoard = data?.find((board) => board.version == version);
-    console.log('Board changed to: ', newBoard);
+    // console.log('Board changed to: ', newBoard);
+    setRefreshCards(true);
     setBoard(newBoard);
   };
 
@@ -54,25 +66,43 @@ const InnerBoard: React.FC = () => {
             )}
           </div>
           <div className="w-full h-full flex flex-col items-center justify-center">
-            <div className="w-full flex items-center justify-center relative">
-              <p className="bg-white text-black text-bold px-10 text-4xl font-mono font-bold m-2 rounded-md">
-                {board?.name}
-              </p>
-              <div className="absolute right-0">
+            <div className="w-full flex flex-col md:flex-row items-center justify-center">
+              <div className="w-full lg:w-1/3" />
+              <div className="w-full lg:w-1/3 m-2 flex flex-col items-center justify-center">
+                <p className="text-black text-bold text-4xl font-mono font-bold bg-white m-1 rounded-md px-10">
+                  {board?.name}
+                </p>
+                <p className="text-black text-bold text-sm font-mono text-center">
+                  V.{board?.version}
+                </p>
+              </div>
+
+              <div className="w-full lg:w-1/3 flex items-center justify-center lg:justify-end">
+                <div className="mr-2">
+                  {boardData && <HandleSave {...{ boardData, board }} />}
+                </div>
+                <div className="mr-2">
+                  {boardData && (
+                    <SaveVersion {...{ boardData, board, refetchBoards }} />
+                  )}
+                </div>
+
                 <BoardHistory
-                  boards={data}
+                  boards={boards}
+                  board={board}
                   changeBoard={changeBoard}
+                  refreshHistory={refreshHistory}
+                  setRefreshHistory={setRefreshHistory}
                 ></BoardHistory>
               </div>
             </div>
 
             <MemberBar />
             <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full overflow-auto">
-              <TaskBoard {...{ board, setBoardData }} />
+              <TaskBoard
+                {...{ board, setBoardData, refreshCards, setRefreshCards }}
+              />
             </div>
-          </div>
-          <div className="my-10 w-full flex justify-end">
-            {boardData && <HandleSave {...{ boardData, board }} />}
           </div>
         </div>
       </Tile>

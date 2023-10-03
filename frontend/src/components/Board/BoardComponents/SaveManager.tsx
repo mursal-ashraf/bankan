@@ -31,7 +31,7 @@ const HandleSave = ({
     [columns],
   );
 
-  console.log('ids', card_ids, col_ids);
+  // console.log('ids', card_ids, col_ids);
 
   const updateCardsAndColumns = () => {
     // Insert / Update the new/changed cards & columns
@@ -93,7 +93,7 @@ const HandleSave = ({
   }, [isSuccess, isError]);
 
   useEffect(() => {
-    console.log('Dirty data present');
+    // console.log('Dirty data present');
     setIsDirty(true);
   }, [cards, columns]);
 

@@ -10,10 +10,17 @@ import { Board } from 'schema';
 
 interface IBoardProp {
   board: Board;
+  refreshCards: boolean;
+  setRefreshCards: React.Dispatch<React.SetStateAction<boolean>>;
   setBoardData: (val: BoardData | null) => void;
 }
 
-export function TaskBoard({ board, setBoardData }: IBoardProp) {
+export function TaskBoard({
+  board,
+  setBoardData,
+  refreshCards,
+  setRefreshCards,
+}: IBoardProp) {
   // Get Columns/Cards from Supabase
   const supabase = useClient();
   const [columns, setColumns] = useState<Column[] | undefined | null>(null);
@@ -35,13 +42,13 @@ export function TaskBoard({ board, setBoardData }: IBoardProp) {
 
   // Get Cards of each Column
   useEffect(() => {
-    async function getCards(col: Column) {
+    async function getCards(cols: Column[]) {
       const { data } = await supabase
         .from('card')
         .select()
         .in(
           'list_id',
-          col.map((col: Column) => col.id),
+          cols.map((col: Column) => col.id),
         )
         .order('index', { ascending: true });
 
@@ -54,13 +61,16 @@ export function TaskBoard({ board, setBoardData }: IBoardProp) {
       }
       getCards(columns).then((res) => {
         const card_list: Card[] | null = res;
-        if (card_list && card_list.length >= cards.length) {
+        if (card_list && (card_list.length >= cards.length || refreshCards)) {
           setCards(card_list);
+          setRefreshCards(false);
         }
       });
     }
 
     getColumnCards();
+    // console.log({ board, columns, cards })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns, supabase]);
 
   // Edit Card Modal
@@ -138,7 +148,6 @@ export function TaskBoard({ board, setBoardData }: IBoardProp) {
   const onDeleteColumn = (col: Column) => {
     // console.log("ON DELETE COLUMN");
     setColumns((old_columns) => {
-      // console.log(old_columns?.filter((c) => c.id != col.id))
       return old_columns?.filter((c) => c.id != col.id);
     });
     setCards((old_cards) => {
@@ -168,13 +177,13 @@ export function TaskBoard({ board, setBoardData }: IBoardProp) {
           ...old_cards,
           {
             id: uuidv4(),
-            list_id: col.id,
+            list_id: col?.id,
             user_creator: user?.id,
             user_assigned: null,
             title: 'New Card',
             description: 'New Card',
-            deadline: '',
-            created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
+            deadline: null,
+            created_at: new Date().toISOString(),
             index: index,
           },
         ];
@@ -209,13 +218,11 @@ export function TaskBoard({ board, setBoardData }: IBoardProp) {
           onAddCardClick={onAddCardClick}
           onEditColumn={onEditColumn}
           onDeleteColumn={onDeleteColumn}
-          key={col.id}
         />
       )),
     );
-    // console.log("Change event", cards, columns);
     setBoardData({ cards, columns: columns || [] });
-    // console.log({ cards, columns })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns, cards, editModalVisibility, user?.id]);
 
   if (!columns) {
@@ -302,7 +309,6 @@ export function TaskBoard({ board, setBoardData }: IBoardProp) {
 
       return res;
     });
-    // console.log({ newCards });
     setCards(newCards);
   }
 
