@@ -157,7 +157,7 @@ declare module 'schema' {
             address: string | null;
             company: string | null;
             created_at: string;
-            description: string | null;
+            expertise: string | null;
             email: string | null;
             id: string;
             name: string | null;
@@ -167,7 +167,7 @@ declare module 'schema' {
             address?: string | null;
             company?: string | null;
             created_at?: string;
-            description?: string | null;
+            expertise?: string | null;
             email?: string | null;
             id?: string;
             name?: string | null;
@@ -177,7 +177,7 @@ declare module 'schema' {
             address?: string | null;
             company?: string | null;
             created_at?: string;
-            description?: string | null;
+            expertise?: string | null;
             email?: string | null;
             id?: string;
             name?: string | null;
