@@ -122,7 +122,7 @@ export function TaskBoard({
           id: uuidv4(),
           board_id: board?.id,
           board_version: board?.version,
-          created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
+          created_at: new Date().toISOString(),
           index: index,
           name: 'New Column',
           user_id: user?.id,
