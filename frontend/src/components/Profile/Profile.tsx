@@ -49,7 +49,30 @@ const InnerProfile: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleUploadClick = () => {
+  function dataURItoBlob(dataURI: string): Blob {
+    const byteString = atob(dataURI.split(',')[1]);
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: mimeString });
+  }
+  const handleUploadClick = async () => {
+    if (image) {
+      const file = dataURItoBlob(image);
+      const filePath = `profile_pictures/${user_id}.jpg`; // This creates a file path like 'profile_pictures/userId.jpg'
+
+      const { data, error } = await client.storage
+        .from('User_images')
+        .upload(filePath, file);
+      if (error) {
+        console.error('Failed to upload image:', error);
+      } else {
+        console.log('Image uploaded successfully:', data);
+      }
+    }
     setOpen(false);
   };
 
@@ -65,6 +88,18 @@ const InnerProfile: React.FC = () => {
         description: profile.description || '',
       }));
     }
+    const fetchImage = async () => {
+      const filePath = `profile_pictures/${user_id}.jpg`;
+      try {
+        const imageUrl = client.storage
+          .from('User_images')
+          .getPublicUrl(filePath);
+        setImage(imageUrl.data.publicUrl);
+      } catch (error) {
+        console.error('Failed to fetch image:', error);
+      }
+    };
+    fetchImage();
   }, [profile]);
 
   const handleSave = async () => {
@@ -90,6 +125,7 @@ const InnerProfile: React.FC = () => {
     const { data: userData, error: userError } = await client.auth.updateUser({
       data: formData,
     });
+
     if (userData) {
       setIsEditing(false);
       sendEmailNotification(
@@ -98,11 +134,6 @@ const InnerProfile: React.FC = () => {
         'Profile Updated',
         'Your profile has been updated',
       );
-    }
-    if (userError) {
-      console.error('Error updating auth.users:', userError);
-      setIsEditing(true);
-      return;
     }
     if (userError) {
       console.error('Error updating auth.users:', userError);
