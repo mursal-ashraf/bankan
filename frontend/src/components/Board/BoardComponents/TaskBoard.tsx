@@ -6,12 +6,21 @@ import EditCardModal from './EditCardModal';
 import dayjs from 'dayjs';
 import { useUser } from '@/hooks';
 import { uuidv4 } from '@/utils/common-utils';
+import { Board } from 'schema';
 
 interface IBoardProp {
   board: Board;
+  refreshCards: boolean;
+  setRefreshCards: React.Dispatch<React.SetStateAction<boolean>>;
+  setBoardData: (val: BoardData | null) => void;
 }
 
-export function TaskBoard({ board }: IBoardProp) {
+export function TaskBoard({
+  board,
+  setBoardData,
+  refreshCards,
+  setRefreshCards,
+}: IBoardProp) {
   // Get Columns/Cards from Supabase
   const supabase = useClient();
   const [columns, setColumns] = useState<Column[] | undefined | null>(null);
@@ -24,25 +33,22 @@ export function TaskBoard({ board }: IBoardProp) {
       const { data } = await supabase
         .from('list')
         .select()
-        .match({ board_id: board.id, board_version: board.version })
+        .match({ board_id: board?.id, board_version: board?.version })
         .order('index', { ascending: true });
       setColumns(data);
     }
-
-    if (columns == null) {
-      getColumns();
-    }
-  }, [board, columns, supabase]);
+    getColumns();
+  }, [board, supabase]);
 
   // Get Cards of each Column
   useEffect(() => {
-    async function getCards(col: Column) {
+    async function getCards(cols: Column[]) {
       const { data } = await supabase
         .from('card')
         .select()
         .in(
           'list_id',
-          col.map((col: Column) => col.id),
+          cols.map((col: Column) => col.id),
         )
         .order('index', { ascending: true });
 
@@ -55,16 +61,17 @@ export function TaskBoard({ board }: IBoardProp) {
       }
       getCards(columns).then((res) => {
         const card_list: Card[] | null = res;
-        if (card_list) {
+        if (card_list && (card_list.length >= cards.length || refreshCards)) {
           setCards(card_list);
+          setRefreshCards(false);
         }
       });
     }
 
-    if (cards.length === 0) {
-      getColumnCards();
-    }
-  }, [columns, cards.length, supabase]);
+    getColumnCards();
+    // console.log({ board, columns, cards })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columns, supabase]);
 
   // Edit Card Modal
   const [currentEditCard, setCurrentEditCard] = useState<Card | null>();
@@ -98,50 +105,38 @@ export function TaskBoard({ board }: IBoardProp) {
   };
 
   const onAddColumn = () => {
-    console.log(columns);
     setColumns((old_columns) => {
       let index = 0;
       if (!old_columns) {
         return old_columns;
-      }
-      if (old_columns.length === 0) {
-        old_columns.push({
-          id: uuidv4(),
-          board_id: board?._id,
-          board_version: board?.version,
-          created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
-          index: index,
-          name: 'New Column',
-          user_id: user?.id,
-        });
-        return [...old_columns];
       }
       if (old_columns?.length > 0) {
         index =
           old_columns?.reduce((prev, curr) => {
             return prev?.index > curr?.index ? prev : curr;
           })?.index + 1;
-
-        old_columns.push({
+      }
+      return [
+        ...old_columns,
+        {
           id: uuidv4(),
-          board_id: board?._id,
+          board_id: board?.id,
           board_version: board?.version,
           created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
           index: index,
           name: 'New Column',
           user_id: user?.id,
-        });
-        return [...old_columns];
-      }
+        },
+      ];
     });
-    console.log(columns);
+    // console.log({ columns });
   };
 
   const onEditColumn = (newName: string, col: Column) => {
     // console.log("ON EDIT COLUMN")
     setColumns((old_columns) => {
       const index = old_columns?.indexOf(col);
-      if (!index || !old_columns) {
+      if (index == undefined || !old_columns) {
         return old_columns;
       }
       old_columns[index].name = newName;
@@ -153,7 +148,6 @@ export function TaskBoard({ board }: IBoardProp) {
   const onDeleteColumn = (col: Column) => {
     // console.log("ON DELETE COLUMN");
     setColumns((old_columns) => {
-      // console.log(old_columns?.filter((c) => c.id != col.id))
       return old_columns?.filter((c) => c.id != col.id);
     });
     setCards((old_cards) => {
@@ -179,19 +173,20 @@ export function TaskBoard({ board }: IBoardProp) {
           })?.index + 1;
       }
       setCards((old_cards) => {
-        old_cards.push({
-          id: uuidv4(),
-          list_id: col.id,
-          user_creator: user?.id,
-          user_assigned: null,
-          title: 'New Card',
-          description: 'New Card',
-          deadline: '',
-          created_at: dayjs().format('DD-MM-YYYY HH:mm A'),
-          index: index,
-        });
-        console.log({ old_cards });
-        return [...old_cards];
+        return [
+          ...old_cards,
+          {
+            id: uuidv4(),
+            list_id: col?.id,
+            user_creator: user?.id,
+            user_assigned: null,
+            title: 'New Card',
+            description: 'New Card',
+            deadline: null,
+            created_at: new Date().toISOString(),
+            index: index,
+          },
+        ];
       });
     };
 
@@ -208,8 +203,9 @@ export function TaskBoard({ board }: IBoardProp) {
     };
 
     setColumnElements(
-      columns?.map((col) => (
+      columns?.map((col, index) => (
         <TaskColumn
+          key={index}
           column={col}
           cards={cards
             ?.filter((card) => {
@@ -225,7 +221,8 @@ export function TaskBoard({ board }: IBoardProp) {
         />
       )),
     );
-    // console.log({ cards, columns })
+    setBoardData({ cards, columns: columns || [] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns, cards, editModalVisibility, user?.id]);
 
   if (!columns) {
@@ -312,7 +309,6 @@ export function TaskBoard({ board }: IBoardProp) {
 
       return res;
     });
-    // console.log({ newCards });
     setCards(newCards);
   }
 
@@ -322,12 +318,14 @@ export function TaskBoard({ board }: IBoardProp) {
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="h-full flex flex-row">{columnElements}</div>
         </DragDropContext>
-        <button
-          className="bg-gray-500 rounded-sm mx-2 p-2 hover:bg-gray-700"
-          onClick={onAddColumn}
-        >
-          +
-        </button>
+        <div className="flex-none">
+          <button
+            className="bg-gray-500 rounded-md m-2 px-4 hover:bg-gray-700 text-white"
+            onClick={onAddColumn}
+          >
+            + Add Column
+          </button>
+        </div>
       </div>
       <EditCardModal
         card={currentEditCard}

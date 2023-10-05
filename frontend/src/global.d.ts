@@ -18,6 +18,7 @@ interface Member {
 // Board Types
 type Column = Database['public']['Tables']['list']['Row'];
 type Card = Database['public']['Tables']['card']['Row'];
+type Board = Database['public']['Tables']['board']['Row'];
 
 interface IColumn {
   id: string;
@@ -39,4 +40,9 @@ interface fetchReturn<Data> {
   error: any;
   refetch: () => void;
   isLoading: boolean;
+}
+
+interface BoardData {
+  cards: Card[];
+  columns: Column[];
 }

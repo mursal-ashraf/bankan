@@ -15,6 +15,7 @@ declare module 'schema' {
       Tables: {
         board: {
           Row: {
+            _id?: any;
             created_at: string | null;
             description: string | null;
             id: string;
