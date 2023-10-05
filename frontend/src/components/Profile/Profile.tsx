@@ -38,7 +38,7 @@ const InnerProfile: React.FC = () => {
         phone: '',
         address: '',
         company: '',
-        description: '',
+        expertise: '',
       };
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
@@ -62,7 +62,7 @@ const InnerProfile: React.FC = () => {
         phone: profile.phone || '',
         address: profile.address || '',
         company: profile.company || '',
-        description: profile.description || '',
+        expertise: profile.expertise || '',
       }));
     }
   }, [profile]);
@@ -75,7 +75,7 @@ const InnerProfile: React.FC = () => {
         email: formData.email,
         address: formData.address,
         phone: formData.phone,
-        description: formData.description,
+        expertise: formData.expertise,
         company: formData.company,
       })
       .eq('id', user_id);
@@ -113,17 +113,16 @@ const InnerProfile: React.FC = () => {
 
   return (
     <div
-      className="flex justify-center items-center"
+      className="flex justify-center items-center p-4"
       style={{
         backgroundColor: '#FFCD29',
         flexGrow: 1,
-        padding: '50px 0',
         height: '90vh',
       }}
     >
       <div
-        className="bg-white p-8 rounded-lg shadow-md flex"
-        style={{ width: '85%', height: '100%' }}
+        className="bg-white p-8 rounded-lg shadow-md flex max-w-5xl w-full overflow-y-auto"
+        style={{ height: '100%' }}
       >
         <div className="flex flex-col items-center justify-center w-1/3">
           <div className="w-40 h-40 rounded-full bg-gray-300 flex items-center justify-center mb-6">
@@ -248,12 +247,12 @@ const InnerProfile: React.FC = () => {
             disabled={!isEditing}
             InputProps={{ style: { fontSize: 20, height: '3rem' } }}
           />
-          <label className="text-2xl font-bold text-black">Description</label>
+          <label className="text-2xl font-bold text-black">Expertise</label>
           <TextField
-            name="description"
-            value={formData.description}
+            name="expertise"
+            value={formData.expertise}
             onChange={handleInputChange}
-            label="Description"
+            label="Expertise"
             variant="filled"
             fullWidth
             disabled={!isEditing}
