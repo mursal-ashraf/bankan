@@ -12,7 +12,7 @@ export function MemberBar() {
     supabase
       .from('board')
       .select(
-        'id, version, name, team_id, team (id, user_team (user_id, member(*)))',
+        'id, version, name, created_at, saved_date, team_id, team (id, user_team (user_id, member(*)))',
       )
       .eq('id', board_id)
       .order('version', { ascending: true }),
