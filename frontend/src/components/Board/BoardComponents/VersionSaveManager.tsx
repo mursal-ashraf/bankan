@@ -21,6 +21,16 @@ export function SaveVersion({
   const [loadingCount, setLoadingCount] = useState(0);
   const [newBoard, setNewBoard] = useState<Board | undefined>(undefined);
 
+  async function createColumns(newColumns: Column[]) {
+    const { data } = await supabase.from('list').insert(newColumns).select();
+    return data;
+  }
+
+  async function createCards(newCards: Card[]) {
+    const { data } = await supabase.from('card').insert(newCards).select();
+    return data;
+  }
+
   useEffect(() => {
     if (loadingCount >= 3) {
       setIsLoading(false);
@@ -96,8 +106,20 @@ export function SaveVersion({
         });
     });
 
-    // refresh page
-    window.location.reload();
+    const updatedColumns = createColumns(newColumns).then((res) => {
+      setLoadingCount((prev) => {
+        return prev + 1;
+      });
+      const updatedCards = createCards(newCards).then((res) => {
+        setLoadingCount((prev) => {
+          return prev + 1;
+        });
+        return res;
+      });
+      // console.log({ updatedCards });
+      return res;
+    });
+    // console.log({ updatedColumns });
   }
 
   return (
