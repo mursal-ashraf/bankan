@@ -1,13 +1,16 @@
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
-import { MemberIcon } from './MemberIcon';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useTypedSupabaseQuery } from '@/hooks/utils';
+import { useTypedSupabaseMutation, useTypedSupabaseQuery } from '@/hooks/utils';
 import { flatten } from 'lodash';
+import { Chip, Stack } from '@mui/material';
 
 export function MemberBar() {
   const { board_id } = useParams() as { board_id: string };
   const navigateTo = useNavigate();
+  const { mutate, error } = useTypedSupabaseMutation({
+    onSuccess: () => window.location.reload(),
+  });
   const { data, isLoading, isError } = useTypedSupabaseQuery((supabase) =>
     supabase
       .from('board')
@@ -27,24 +30,44 @@ export function MemberBar() {
       ?.team?.user_team?.map((user_team) => user_team.member),
   );
 
-  const owner = data?.find((board) => board.id === board_id)?.member as any;
+  const owner = data?.find((board) => board.id === board_id)?.member;
+  const deleteMember = (id: string) => {
+    mutate((supabase) =>
+      supabase
+        .from('user_team')
+        .delete()
+        .eq('user_id', id)
+        .eq('team_id', team_id),
+    );
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading board</div>;
   return (
-    <>
-      <div className="flex flex-row items-center w-full h-16 bg-white m-4 p-2 rounded-md text-black font-bold">
-        <p className="mx-2">Created by: {owner?.name}</p>
-        <p className="mx-2">Members</p>
-        {(users || []).map((member) => (
-          <div key={member.id} className="mx-1">
-            <MemberIcon key={member.id} {...{ member, team_id }} />
-          </div>
-        ))}
+    <div className="flex flex-row items-center w-full h-16 bg-white m-4 p-2 rounded-md text-black font-bold">
+      {!!error && <div>Error deleting member</div>}
+      <Stack direction="row" spacing={1}>
+        <Chip
+          label={owner?.name}
+          onClick={() => navigateTo(`/Profile/${owner?.id}`)}
+        />
+        {(users || [])
+          .filter(Boolean)
+          .map(
+            (member) =>
+              !!member && (
+                <Chip
+                  label={member?.name}
+                  variant="outlined"
+                  onClick={() => navigateTo(`/Profile/${member.id}`)}
+                  onDelete={() => deleteMember(member.id)}
+                />
+              ),
+          )}
         <IconButton onClick={() => navigateTo(`/Board/member/${board_id}`)}>
           <AddIcon />
         </IconButton>
-      </div>
-    </>
+      </Stack>
+    </div>
   );
 }
