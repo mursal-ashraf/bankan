@@ -32,7 +32,7 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
   );
 
   const [localUser, setLocalUser] = useState(
-    users.find((user) => user.id === card?.user_assigned),
+    users.find((user) => user?.id === card?.user_assigned),
   );
 
   if (isLoading) return <div>Loading...</div>;
@@ -41,7 +41,7 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
     return (
       <p>
         Assigned To:{' '}
-        {users.find((user) => user.id === card?.user_assigned)?.name}
+        {users.find((user) => user?.id === card?.user_assigned)?.name}
       </p>
     );
   return (
@@ -53,12 +53,12 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
         label="Assigned to"
         value={localUser?.id || ''}
         onChange={(e) => {
-          setLocalUser(users.find((user) => user.id === e.target.value));
+          setLocalUser(users.find((user) => user?.id === e.target.value));
           onMemberChange(e);
         }}
       >
         {users.map((user) => {
-          return <MenuItem value={user.id}>{user.name}</MenuItem>;
+          return <MenuItem value={user?.id}>{user?.name}</MenuItem>;
         })}
       </Select>
     </FormControl>

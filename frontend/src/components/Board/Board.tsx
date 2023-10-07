@@ -6,7 +6,6 @@ import useBoard from '@/hooks/useBoard';
 import { useParams } from 'react-router-dom';
 import { Button, LinearProgress } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
-import HandleSave from './BoardComponents/SaveManager';
 import BoardHistory from './BoardComponents/BoardHistory';
 import { useEffect, useState } from 'react';
 import { SaveVersion } from './BoardComponents/VersionSaveManager';

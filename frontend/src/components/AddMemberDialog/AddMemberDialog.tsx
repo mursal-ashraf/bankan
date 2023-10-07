@@ -34,7 +34,6 @@ export const AddMemberDialog: React.FC<AddMemberDialog> = ({
     isLoading: isPosting,
     isError,
     isSuccess,
-    error,
   } = useTypedSupabaseMutation();
 
   const addMembers = () => {
@@ -52,7 +51,6 @@ export const AddMemberDialog: React.FC<AddMemberDialog> = ({
       {isError && (
         <Alert severity="error">
           <AlertTitle>Error adding member</AlertTitle>
-          <>{(error as any).message}</>
         </Alert>
       )}
       <DialogTitle id="alert-dialog-title">Add members to board</DialogTitle>
