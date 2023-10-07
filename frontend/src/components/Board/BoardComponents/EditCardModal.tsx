@@ -10,7 +10,7 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { Delete } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
-import { Card } from 'schema';
+import { Card } from 'schema-v2';
 import { MemberDropdown } from './MemberDropdown';
 
 interface IEditCardModalProp {

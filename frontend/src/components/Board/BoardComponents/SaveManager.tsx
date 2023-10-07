@@ -7,7 +7,7 @@ import {
 } from '@/utils/common-utils';
 import { Button } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
-import { Board } from 'schema';
+import { Board } from 'schema-v2';
 
 interface HandleSaveProps {
   boardData: BoardData;

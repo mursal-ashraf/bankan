@@ -1,4 +1,4 @@
-import { Database } from 'schema';
+import { Database } from 'schema-v2';
 import {
   useSupabaseQuery,
   TypedUseSupabaseQuery,

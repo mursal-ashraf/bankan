@@ -9,7 +9,7 @@ import {
   Popover,
 } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
-import { Database } from 'schema';
+import { Database } from 'schema-v2';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useTypedSupabaseMutation } from '@/hooks/utils';
 import { Routes } from '@/Router/AppRouter';

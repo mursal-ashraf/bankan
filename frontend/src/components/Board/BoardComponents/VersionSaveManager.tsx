@@ -2,7 +2,7 @@ import { useClient } from '@/contexts/AppContext';
 import { uuidv4 } from '@/utils/common-utils';
 import { CircularProgress } from '@mui/material';
 import { Save } from '@mui/icons-material';
-import { Board } from 'schema';
+import { Board } from 'schema-v2';
 import { useEffect, useState } from 'react';
 
 interface VersionSaveProps {

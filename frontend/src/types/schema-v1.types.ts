@@ -1,4 +1,4 @@
-declare module 'schema' {
+declare module 'schema-v1' {
   export type Json =
     | string
     | number

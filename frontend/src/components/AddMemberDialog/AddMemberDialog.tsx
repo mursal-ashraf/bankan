@@ -13,7 +13,7 @@ import {
   AlertTitle,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { Board, Member } from 'schema';
+import { Board, Member } from 'schema-v2';
 import { useTypedSupabaseMutation } from '@/hooks/utils';
 import { Navigate } from 'react-router-dom';
 

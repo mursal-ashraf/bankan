@@ -3,7 +3,7 @@ import useBoard from '@/hooks/useBoard';
 import { useTypedSupabaseQuery } from '@/hooks/utils';
 import { Alert, AlertTitle } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { Board, Member } from 'schema';
+import { Board, Member } from 'schema-v2';
 
 interface WithUsersAndBoardProps {
   users: Member[];

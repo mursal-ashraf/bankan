@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSupabaseQuery, TypedUseSupabaseQuery } from 'supabase-query';
-import { Database } from 'schema';
+import { Database } from 'schema-v2';
 import { useClient } from '@/contexts/AppContext'; // Assuming you have this import for useClient
 
 const useUserEmial = (email: string) => {

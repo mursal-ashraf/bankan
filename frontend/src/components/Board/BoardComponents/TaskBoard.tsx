@@ -6,7 +6,7 @@ import EditCardModal from './EditCardModal';
 import dayjs from 'dayjs';
 import { useUser } from '@/hooks';
 import { uuidv4 } from '@/utils/common-utils';
-import { Board } from 'schema';
+import { Board } from 'schema-v2';
 
 interface IBoardProp {
   board: Board;

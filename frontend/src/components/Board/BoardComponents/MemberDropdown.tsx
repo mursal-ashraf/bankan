@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useTypedSupabaseQuery } from '@/hooks/utils';
 import { flatten } from 'lodash';
 import { useParams } from 'react-router-dom';
-import { Card } from 'schema';
+import { Card } from 'schema-v2';
 
 interface MemberDropdownProps {
   card: Card | null;

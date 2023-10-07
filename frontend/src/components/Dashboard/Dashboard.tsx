@@ -4,9 +4,8 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Search } from '@mui/icons-material';
 import Repeater from '@/components/common/Repeater';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ComponentContainer from '../common/ComponentContainer';
-import useBoardOverview from '@/hooks/useBoardOverview';
 import { useUser } from '@/hooks';
 import WithLoader from '../common/WithLoader/WithLoader';
 import { CreateNewBoard } from './DashboardUtils';
@@ -15,6 +14,7 @@ import { Alert, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from '@/Router/AppRouter';
 import { keywordFilter } from '@/utils/common-utils';
+import { useTypedSupabaseQuery } from '@/hooks/utils';
 
 interface BoardCardProps {
   id: string;
@@ -47,52 +47,53 @@ const BoardCardElement: React.FC<BoardCardProps> = ({
 const BoardContainer: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const [searchString, setSearchString] = useState('');
+  const user = useUser();
 
-  const { data, isLoading, error, refetch } = useBoardOverview();
+  const [searchString, setSearchString] = useState('');
+  const {
+    data: nData,
+    isLoading,
+    refetch,
+    error,
+  } = useTypedSupabaseQuery((supabase) =>
+    supabase
+      .from('board')
+      .select(
+        'id, version, name, created_at, description, saved_date, team_id, team (id, user_team (user_id, member(*))), user_id, member (id, name, email)',
+      )
+      .order('version', { ascending: true }),
+  );
+
+  const userAsOwnerBoards =
+    nData?.filter((board) => board.member?.id === user?.id) || [];
+  const userAsMemberBoards =
+    nData?.filter(
+      (board) => board.team?.user_team?.some((ut) => ut.user_id === user?.id),
+    ) || [];
+
   const {
     isLoading: deleteLoading,
     error: deleteError,
     deleteBoard,
-    success,
   } = UseDeleteBoard();
 
-  useEffect(() => {
-    setBoardCards(
-      (data || [])
-        ?.map(
-          (d: { id: any; name: any; description: any; saved_date: any }) => ({
-            id: d.id,
-            project: d.name,
-            description: d.description,
-            lastModified: d.saved_date,
-          }),
-        )
-        .filter((board) =>
-          keywordFilter(searchString.toLowerCase())(
-            ((board.project || '') + (board.description || '')).toLowerCase(),
-          ),
-        ) as unknown as BoardCardProps[],
-    );
-  }, [data, searchString]);
-
-  const [boardCards, setBoardCards] = useState(
-    (data || [])?.map(
-      (d: { id: any; name: any; description: any; saved_date: any }) => ({
-        id: d.id,
-        project: d.name,
-        description: d.description,
-        lastModified: d.saved_date,
-      }),
-    ) as unknown as BoardCardProps[],
-  );
+  const filteredBoards = [...userAsMemberBoards, ...userAsOwnerBoards]
+    ?.map((board) => ({
+      id: board.id,
+      project: board.name,
+      description: board.description,
+      lastModified: board.saved_date,
+    }))
+    .filter((board) =>
+      keywordFilter(searchString.toLowerCase())(
+        ((board.project || '') + (board.description || '')).toLowerCase(),
+      ),
+    ) as unknown as BoardCardProps[];
 
   const elementOnDelete = (boardCard: BoardCardProps) => {
     deleteBoard(boardCard.id).then(() => {
       refetch();
     });
-
-    // setBoardCards(boardCards.filter((bc) => bc.id !== boardCard.id));
   };
 
   return (
@@ -131,7 +132,7 @@ const BoardContainer: React.FC = () => {
         >
           <Repeater
             Component={BoardCardElement}
-            feedList={boardCards}
+            feedList={filteredBoards}
             defaultMsg="No Bankan Boards here... try creating one!"
             ActionIcon={{
               icon: <DeleteIcon />,
