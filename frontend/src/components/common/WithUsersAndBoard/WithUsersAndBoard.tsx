@@ -7,7 +7,7 @@ import { Board, Member } from 'schema';
 
 interface WithUsersAndBoardProps {
   users: Member[];
-  board: Board;
+  board?: Board;
 }
 
 export const WithUsersAndBoard =

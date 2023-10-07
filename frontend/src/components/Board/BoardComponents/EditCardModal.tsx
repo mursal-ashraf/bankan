@@ -10,9 +10,11 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { Delete } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { Card } from 'schema';
+import { MemberDropdown } from './MemberDropdown';
 
 interface IEditCardModalProp {
-  card: Card | null;
+  card: Card;
   onSaveCardClick: (card: Card) => void;
   onDeleteCardClick: (card: Card) => void;
   isVisible: boolean;
@@ -33,14 +35,17 @@ export default function EditCardModal({
   }, [card]);
 
   const setTitle = (newTitle: string) => {
-    setCardToEdit({ ...cardToEdit.valueOf(), title: newTitle });
+    setCardToEdit({ ...cardToEdit, title: newTitle });
   };
   const setDescription = (newDescription: string) => {
-    setCardToEdit({ ...cardToEdit.valueOf(), description: newDescription });
+    setCardToEdit({ ...cardToEdit, description: newDescription });
   };
   const setDeadline = (newDeadline: string) => {
-    setCardToEdit({ ...cardToEdit.valueOf(), deadline: newDeadline });
+    setCardToEdit({ ...cardToEdit, deadline: newDeadline });
   };
+
+  const handleMemberChange = (e: any) =>
+    setCardToEdit({ ...cardToEdit, user_assigned: e.target.value });
 
   return (
     <div>
@@ -102,6 +107,7 @@ export default function EditCardModal({
               }}
             />
           </div>
+          <MemberDropdown card={card} onMemberChange={handleMemberChange} />
         </DialogContent>
         <DialogActions>
           <Button

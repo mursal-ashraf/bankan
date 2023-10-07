@@ -9,6 +9,7 @@ declare module 'schema' {
 
   export type Board = Database['public']['Tables']['board']['Row'];
   export type Member = Database['public']['Tables']['member']['Row'];
+  export type Card = Database['public']['Tables']['card']['Row'];
 
   export interface Database {
     public: {

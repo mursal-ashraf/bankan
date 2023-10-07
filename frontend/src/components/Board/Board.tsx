@@ -40,7 +40,6 @@ const InnerBoard: React.FC = () => {
 
   const changeBoard = (version: number) => {
     const newBoard = data?.find((board) => board.version == version);
-    // console.log('Board changed to: ', newBoard);
     setRefreshCards(true);
     setBoard(newBoard);
   };

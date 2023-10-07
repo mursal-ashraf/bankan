@@ -89,18 +89,14 @@ export function TaskBoard({
     });
   };
 
-  const onSaveCardClick = (card: Card) => {
-    if (!card) {
+  const onSaveCardClick = (newCard: Card) => {
+    if (!newCard) {
       return;
     }
     setCards((old_cards) => {
-      const index = old_cards.findIndex((c) => {
-        return c.id == card.id;
-      });
-      if (index >= 0) {
-        old_cards[index] = card;
-      }
-      return [...old_cards];
+      return old_cards.map((old_card) =>
+        old_card.id === newCard.id ? { ...newCard } : { ...old_card },
+      );
     });
   };
 

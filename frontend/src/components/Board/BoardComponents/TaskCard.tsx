@@ -6,6 +6,7 @@ import {
   Button,
 } from '@mui/material';
 import dayjs from 'dayjs';
+import { MemberDropdown } from './MemberDropdown';
 
 interface ITaskCardProp {
   item: Card;
@@ -42,7 +43,9 @@ export function TaskCard({ item, onEditCardSelect }: ITaskCardProp) {
           <Typography variant="body2" color="text.secondary">
             {item.description}
           </Typography>
-          {/* <Typography className="text-center">{item.index}</Typography> */}
+          <div>
+            <MemberDropdown card={item} />
+          </div>
         </CardContent>
         <CardActions className="flex flex-col">
           <Button
