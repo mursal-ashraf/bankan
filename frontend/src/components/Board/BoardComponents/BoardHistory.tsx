@@ -52,7 +52,6 @@ export default function BoardHistory({
   };
 
   useEffect(() => {
-    // console.log({ boards });
     if (boards && (boardVersions === undefined || refreshHistory)) {
       const newMaxVersion = boards ? boards[boards.length - 1]?.version : 0;
       const newMinVersion = boards ? boards[0]?.version : 0;
@@ -71,7 +70,6 @@ export default function BoardHistory({
       setBoardVersions([...newBoardVersion]);
       setMaxVersion(newMaxVersion);
       setMinVersion(newMinVersion);
-      // console.log({ boardVersions, newBoardVersion, maxVersion });
     }
   }, [boards, refreshHistory, boardVersions, maxVersion, setRefreshHistory]);
 
@@ -90,7 +88,6 @@ export default function BoardHistory({
       }
     };
 
-    // console.log({ boardVersions });
     if (boardVersions) {
       setSlider(
         <Slider

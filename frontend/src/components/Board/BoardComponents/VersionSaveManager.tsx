@@ -72,12 +72,10 @@ export function SaveVersion({
         setLoadingCount((prev) => {
           return prev + 1;
         });
-        // console.log({ updatedBoard: res })
         return res;
       });
 
     const newBoard = data ? data[0] : undefined;
-    // console.log({ newBoard })
     const newColumns: Column[] = [];
     const newCards: Card[] = [];
 
@@ -116,10 +114,8 @@ export function SaveVersion({
         });
         return res;
       });
-      // console.log({ updatedCards });
       return res;
     });
-    // console.log({ updatedColumns });
   }
 
   return (

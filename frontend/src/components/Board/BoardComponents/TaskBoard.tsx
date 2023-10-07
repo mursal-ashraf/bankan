@@ -69,7 +69,6 @@ export function TaskBoard({
     }
 
     getColumnCards();
-    // console.log({ board, columns, cards })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns, supabase]);
 
@@ -125,24 +124,20 @@ export function TaskBoard({
         },
       ];
     });
-    // console.log({ columns });
   };
 
   const onEditColumn = (newName: string, col: Column) => {
-    // console.log("ON EDIT COLUMN")
     setColumns((old_columns) => {
       const index = old_columns?.indexOf(col);
       if (index == undefined || !old_columns) {
         return old_columns;
       }
       old_columns[index].name = newName;
-      // console.log([...old_columns])
       return [...old_columns];
     });
   };
 
   const onDeleteColumn = (col: Column) => {
-    // console.log("ON DELETE COLUMN");
     setColumns((old_columns) => {
       return old_columns?.filter((c) => c.id != col.id);
     });
@@ -233,7 +228,6 @@ export function TaskBoard({
 
   // Handles moving cards
   function onDragEnd(result: DropResult) {
-    // console.log('drag ended ', result);
     const isDragInvalid =
       !result?.destination?.droppableId || !result.draggableId;
     if (isDragInvalid) {

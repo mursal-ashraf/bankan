@@ -12,8 +12,6 @@ import { useEffect, useState } from 'react';
 import { SaveVersion } from './BoardComponents/VersionSaveManager';
 
 const InnerBoard: React.FC = () => {
-  // Example Board
-  // http://localhost:5173/Board/40fd3751-f04a-41ab-9772-0b70b7024c5b
   const { board_id } = useParams() as { board_id: string };
   const { data, isLoading, isError, refetch, isRefetching } =
     useBoard(board_id);
@@ -22,17 +20,14 @@ const InnerBoard: React.FC = () => {
   const [boardData, setBoardData] = useState<BoardData | null>(null);
   const [refreshHistory, setRefreshHistory] = useState(false);
   const [refreshCards, setRefreshCards] = useState(false);
-  // const [currentEditCard, setCurrentEditCard] = useState<ICard>();
-  // const [editModalVisibility, setEditModalVisibility] = useState(false);
+
   useEffect(() => {
-    // console.log({ data })
     setBoard((data || []).slice(-1)[0]);
     setBoards(data);
     setRefreshHistory(true);
   }, [data]);
 
   const refetchBoards = (newBoard: Board) => {
-    console.log('REFETCHING');
     refetch().then(() => {
       setBoard(newBoard);
     });
