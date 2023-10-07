@@ -73,9 +73,6 @@ const InnerBoard: React.FC = () => {
 
               <div className="w-full lg:w-1/3 flex items-center justify-center lg:justify-end">
                 <div className="mr-2">
-                  {boardData && <HandleSave {...{ boardData, board }} />}
-                </div>
-                <div className="mr-2">
                   {boardData && (
                     <SaveVersion {...{ boardData, board, refetchBoards }} />
                   )}
