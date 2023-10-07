@@ -1,3 +1,4 @@
+import { DarkModeContext } from '@/components/common/navbar/DarkModeContext';
 import HistoryIcon from '@mui/icons-material/History';
 import { Drawer, Slider } from '@mui/material';
 import React, { useEffect } from 'react';
@@ -104,7 +105,10 @@ export default function BoardHistory({
       );
     }
   }, [boardVersions, changeBoard, maxVersion, minVersion]);
+  const darkModeContext = React.useContext(DarkModeContext);
+  if (!darkModeContext) throw new Error("Profile must be used within a DarkModeProvider");
 
+  const { darkMode } = darkModeContext;
   return (
     <>
       <React.Fragment key={'top'}>
@@ -113,8 +117,13 @@ export default function BoardHistory({
           onClick={toggleDrawer(true)}
         >
           <div className="flex gap-2">
-            <HistoryIcon className="text-black"></HistoryIcon>
-            <p className="italic font-bold whitespace-nowrap text-black">
+            <HistoryIcon
+              style={{ color: darkMode ? 'white' : 'black' }}
+            />
+            <p
+              className="italic font-bold whitespace-nowrap"
+              style={{ color: darkMode ? 'white' : 'black' }}
+            >
               Board History
             </p>
           </div>

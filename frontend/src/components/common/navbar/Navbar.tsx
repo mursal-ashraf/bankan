@@ -8,8 +8,17 @@ import { useIsLoggedIn, useUser } from '@/hooks';
 import { useLogOut } from '@/hooks/useLogOut';
 import { Routes } from '@/Router/AppRouter';
 import AuthErrorAlert from '@/components/common/AuthDialog/AuthErrorAlert';
+import { FormControlLabel, FormGroup } from '@mui/material';
+import { DarkModeContext } from './DarkModeContext';
+import MaterialUISwitch from './MaterialUISwitch ';
 
 export const NavBar: React.FC = () => {
+  const darkModeContext = React.useContext(DarkModeContext);
+  if (!darkModeContext) {
+    console.error("NavBar must be used within a DarkModeProvider");
+    return null;
+  }
+  const { darkMode, toggleDarkMode } = darkModeContext;
   const isLoggedIn = useIsLoggedIn();
   const [performLogOut, { error }] = useLogOut();
   const navigateTo = useNavigate();
@@ -23,14 +32,26 @@ export const NavBar: React.FC = () => {
   const profileRoute = user?.id
     ? `${Routes.Profile.replace(':user_id', user.id)}`
     : Routes.Profile;
+
+
   return (
     <>
       <AppBar position="sticky">
-        <Toolbar>
+        <Toolbar style={{ backgroundColor: darkMode ? '#273c75' : 'var(--custom-blue)' }}>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             KanBan
           </Typography>
-
+          <FormGroup>
+            <FormControlLabel
+              label={darkMode ? 'Dark Mode' : 'Light Mode'}
+              control={
+                <MaterialUISwitch
+                  checked={darkMode}
+                  onChange={toggleDarkMode}
+                />
+              }
+            />
+          </FormGroup>
           {/* If the user is logged in, show dashboard, board, and profile links */}
           {isLoggedIn && (
             <>
@@ -60,6 +81,7 @@ export const NavBar: React.FC = () => {
               </Button>
             </>
           )}
+
         </Toolbar>
       </AppBar>
       {!!error && <AuthErrorAlert {...{ error }} />}

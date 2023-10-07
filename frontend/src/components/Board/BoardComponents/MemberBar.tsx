@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useTypedSupabaseMutation, useTypedSupabaseQuery } from '@/hooks/utils';
 import { flatten } from 'lodash';
 import { Chip, Stack } from '@mui/material';
+import { DarkModeContext } from '@/components/common/navbar/DarkModeContext';
+import React from 'react';
 
 export function MemberBar() {
   const { board_id } = useParams() as { board_id: string };
@@ -40,11 +42,15 @@ export function MemberBar() {
         .eq('team_id', team_id),
     );
   };
+  const darkModeContext = React.useContext(DarkModeContext);
+  if (!darkModeContext) throw new Error("Profile must be used within a DarkModeProvider");
 
+  const { darkMode } = darkModeContext;
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading board</div>;
   return (
-    <div className="flex flex-row items-center w-full h-16 bg-white m-4 p-2 rounded-md text-black font-bold">
+    <div className="flex flex-row items-center w-full h-16 bg-white m-4 p-2 rounded-md text-black font-bold"
+      style={{ backgroundColor: darkMode ? '#dcdde1' : 'white' }}>
       {!!error && <div>Error deleting member</div>}
       <Stack direction="row" spacing={1}>
         <Chip
