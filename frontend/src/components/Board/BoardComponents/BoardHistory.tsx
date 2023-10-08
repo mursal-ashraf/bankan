@@ -1,6 +1,7 @@
 import { DarkModeContext } from '@/components/common/navbar/DarkModeContext';
 import HistoryIcon from '@mui/icons-material/History';
 import { Drawer, Slider } from '@mui/material';
+import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 
 type IMarks = {
@@ -59,12 +60,13 @@ export default function BoardHistory({
       const newBoardVersion =
         boards?.map((board, index) => {
           return {
-            value: board?.version,
-            label: board?.version.toString(), //'', //(index === boards?.length - 1) ? "Present" : board?.version?.toString(),
+            value: index + 1,
+            label:
+              index === boards?.length - 1 ? 'Present' : (index + 1).toString(), //'', //(index === boards?.length - 1) ? "Present" : board?.version?.toString(),
             name:
               index === boards?.length - 1
                 ? 'Present'
-                : board?.version?.toString(),
+                : dayjs(board?.saved_date).format('DD-MM-YY h:mm A') || 'N/A',
           };
         }) || [];
       setRefreshHistory(false);
@@ -82,10 +84,13 @@ export default function BoardHistory({
     }
 
     const handleChange = (_event: Event, newValue: number | number[]) => {
+      if (!boards) {
+        return;
+      }
       if (typeof newValue == 'number') {
-        changeBoard(newValue);
+        changeBoard(boards[newValue - 1]?.version);
       } else {
-        changeBoard(newValue[0]);
+        changeBoard(boards[0]?.version);
       }
     };
 
@@ -93,9 +98,9 @@ export default function BoardHistory({
       setSlider(
         <Slider
           aria-label="Restricted values"
-          defaultValue={maxVersion}
-          min={minVersion}
-          max={maxVersion} //{boards ? (minVersion - boards[boards?.length - 1]?.version) : 0}
+          defaultValue={maxVersion - minVersion + 1}
+          min={1}
+          max={maxVersion - minVersion + 1} //{boards ? (minVersion - boards[boards?.length - 1]?.version) : 0}
           valueLabelFormat={valueLabelFormat}
           step={null}
           valueLabelDisplay="auto"
@@ -106,7 +111,8 @@ export default function BoardHistory({
     }
   }, [boardVersions, changeBoard, maxVersion, minVersion]);
   const darkModeContext = React.useContext(DarkModeContext);
-  if (!darkModeContext) throw new Error("Profile must be used within a DarkModeProvider");
+  if (!darkModeContext)
+    throw new Error('Profile must be used within a DarkModeProvider');
 
   const { darkMode } = darkModeContext;
   return (
@@ -117,9 +123,7 @@ export default function BoardHistory({
           onClick={toggleDrawer(true)}
         >
           <div className="flex gap-2">
-            <HistoryIcon
-              style={{ color: darkMode ? 'white' : 'black' }}
-            />
+            <HistoryIcon style={{ color: darkMode ? 'white' : 'black' }} />
             <p
               className="italic font-bold whitespace-nowrap"
               style={{ color: darkMode ? 'white' : 'black' }}
