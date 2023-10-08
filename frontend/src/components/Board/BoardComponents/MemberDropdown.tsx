@@ -15,14 +15,16 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
   onMemberChange,
 }) => {
   const { board_id } = useParams() as { board_id: string };
-  const { data, isLoading, isError } = useTypedSupabaseQuery((supabase) =>
-    supabase
-      .from('board')
-      .select(
-        'id, version, name, team_id, team (id, user_team (user_id, member(*)))',
-      )
-      .eq('id', board_id)
-      .order('version', { ascending: true }),
+  const { data, isLoading, isError } = useTypedSupabaseQuery(
+    (supabase) =>
+      supabase
+        .from('board')
+        .select(
+          'id, version, name, team_id, team (id, user_team (user_id, member(*)))',
+        )
+        .eq('id', board_id)
+        .order('version', { ascending: true }),
+    { enabled: !!onMemberChange },
   );
 
   const users = flatten(
