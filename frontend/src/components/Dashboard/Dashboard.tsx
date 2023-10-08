@@ -66,10 +66,17 @@ const BoardContainer: React.FC = () => {
       .order('version', { ascending: true }),
   );
 
+  const uniqueBoards = [...new Set(nData?.map((board) => board.id))].map(
+    (id) => {
+      const boards = nData?.filter((board) => board.id === id) || [];
+      return boards[boards.length - 1];
+    },
+  );
+
   const userAsOwnerBoards =
-    nData?.filter((board) => board.member?.id === user?.id) || [];
+    uniqueBoards?.filter((board) => board.member?.id === user?.id) || [];
   const userAsMemberBoards =
-    nData?.filter(
+    uniqueBoards?.filter(
       (board) => board.team?.user_team?.some((ut) => ut.user_id === user?.id),
     ) || [];
 
@@ -98,12 +105,15 @@ const BoardContainer: React.FC = () => {
     });
   };
   const darkModeContext = React.useContext(DarkModeContext);
-  if (!darkModeContext) throw new Error("Profile must be used within a DarkModeProvider");
+  if (!darkModeContext)
+    throw new Error('Profile must be used within a DarkModeProvider');
 
   const { darkMode } = darkModeContext;
   return (
-    <div className="relative flex flex-col mx-5 my-10 py-3 rounded-xl bg-white w-2/3 items-center"
-      style={{ backgroundColor: darkMode ? '#dcdde1' : 'white' }}>
+    <div
+      className="relative flex flex-col mx-5 my-10 py-3 rounded-xl bg-white w-2/3 items-center"
+      style={{ backgroundColor: darkMode ? '#dcdde1' : 'white' }}
+    >
       <div className="mx-10 my-5 rounded-3xl shadow-md bg-slate-300 w-auto self-start">
         <div className="flex justify-between items-center px-6">
           <Search />
@@ -167,11 +177,15 @@ const BoardContainer: React.FC = () => {
 
 const InnerDashboard: React.FC = () => {
   const darkModeContext = React.useContext(DarkModeContext);
-  if (!darkModeContext) throw new Error("Profile must be used within a DarkModeProvider");
+  if (!darkModeContext)
+    throw new Error('Profile must be used within a DarkModeProvider');
 
   const { darkMode } = darkModeContext;
   return (
-    <Tile style={{ backgroundColor: darkMode ? '#192a56' : '#FFCD29' }} height={100}>
+    <Tile
+      style={{ backgroundColor: darkMode ? '#192a56' : '#FFCD29' }}
+      height={100}
+    >
       <BoardContainer />
     </Tile>
   );
