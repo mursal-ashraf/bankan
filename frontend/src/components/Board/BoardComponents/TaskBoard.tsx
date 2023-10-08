@@ -3,7 +3,6 @@ import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { TaskColumn } from './TaskColumn';
 import { useClient } from '@/contexts/AppContext';
 import EditCardModal from './EditCardModal';
-import dayjs from 'dayjs';
 import { useUser } from '@/hooks';
 import { uuidv4 } from '@/utils/common-utils';
 import { Board } from 'schema-v2';
@@ -174,7 +173,6 @@ export function TaskBoard({
             title: 'New Card',
             description: 'New Card',
             deadline: null,
-            created_at: new Date().toISOString(),
             index: index,
           },
         ];

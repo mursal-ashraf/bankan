@@ -30,11 +30,6 @@ export function SaveVersion({
     const { data } = await supabase.from('card').insert(newCards).select();
     return data;
   }
-
-  useEffect(() => {
-    console.log({ board });
-  });
-
   useEffect(() => {
     if (loadingCount >= 3) {
       setIsLoading(false);

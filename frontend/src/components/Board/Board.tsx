@@ -23,7 +23,6 @@ const InnerBoard: React.FC = () => {
   const [refreshCards, setRefreshCards] = useState(false);
 
   useEffect(() => {
-    console.log({ data });
     setBoard((data || []).slice(-1)[0]);
     setBoards(data);
     setRefreshHistory(true);

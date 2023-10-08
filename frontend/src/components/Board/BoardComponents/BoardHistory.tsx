@@ -66,7 +66,9 @@ export default function BoardHistory({
             name:
               index === boards?.length - 1
                 ? 'Present'
-                : dayjs(board?.saved_date).format('DD-MM-YY h:mm A') || 'N/A',
+                : board?.saved_date
+                ? dayjs(new Date(board?.saved_date)).format('DD-MM-YY h:mm A')
+                : 'N/A',
           };
         }) || [];
       setRefreshHistory(false);
