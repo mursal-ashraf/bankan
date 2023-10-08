@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Search } from '@mui/icons-material';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import Repeater from '@/components/common/Repeater';
 import { useState } from 'react';
 import ComponentContainer from '../common/ComponentContainer';
@@ -10,7 +11,7 @@ import { useUser } from '@/hooks';
 import WithLoader from '../common/WithLoader/WithLoader';
 import { CreateNewBoard } from './DashboardUtils';
 import UseDeleteBoard from '@/hooks/useDeleteBoard';
-import { Alert, TextField } from '@mui/material';
+import { Alert, Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from '@/Router/AppRouter';
 import { keywordFilter } from '@/utils/common-utils';
@@ -23,6 +24,7 @@ interface BoardCardProps {
   project: string;
   description: string;
   lastModified: string;
+  userId: string;
 }
 
 const BoardCardElement: React.FC<BoardCardProps> = ({
@@ -30,15 +32,20 @@ const BoardCardElement: React.FC<BoardCardProps> = ({
   project,
   description,
   lastModified,
+  userId,
 }) => {
   const navigate = useNavigate();
+  const user = useUser();
 
   return (
     <div
       style={{ cursor: 'pointer' }}
-      className="relative rounded-lg shadow-md bg-slate-300 p-6"
+      className={`relative rounded-lg shadow-md  ${
+        user?.id === userId ? 'bg-slate-400' : 'bg-slate-300'
+      } p-6`}
       onClick={() => navigate(Routes.Board.replace(':board_id', id))}
     >
+      {user?.id === userId && <ManageAccountsIcon />}
       <h2 className="text-xl font-semibold mb-2">{project}</h2>
       <p className="text-gray-700">{description}</p>
       <p className="text-gray-500 mt-2">Last Modified: {lastModified}</p>
@@ -50,6 +57,7 @@ const BoardContainer: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const user = useUser();
+  const [showUserBoards, setShowUserBoards] = useState(false);
 
   const [searchString, setSearchString] = useState('');
   const {
@@ -86,12 +94,17 @@ const BoardContainer: React.FC = () => {
     deleteBoard,
   } = UseDeleteBoard();
 
-  const filteredBoards = [...userAsMemberBoards, ...userAsOwnerBoards]
+  const boardsToShow = showUserBoards
+    ? [...userAsOwnerBoards]
+    : [...userAsMemberBoards, ...userAsOwnerBoards];
+
+  const filteredBoards = boardsToShow
     ?.map((board) => ({
       id: board.id,
       project: board.name,
       description: board.description,
       lastModified: board.saved_date,
+      userId: board.user_id,
     }))
     .filter((board) =>
       keywordFilter(searchString.toLowerCase())(
@@ -124,6 +137,21 @@ const BoardContainer: React.FC = () => {
               variant="standard"
               onChange={(s) => setSearchString(s.target?.value)}
             />{' '}
+          </div>
+          <div>
+            <div className="pb-1 ml-10">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={showUserBoards}
+                    onChange={() => {
+                      setShowUserBoards(!showUserBoards);
+                    }}
+                  />
+                }
+                label="Show only my boards"
+              />
+            </div>
           </div>
         </div>
       </div>
