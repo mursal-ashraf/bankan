@@ -1,8 +1,10 @@
 import { DarkModeContext } from '@/components/common/navbar/DarkModeContext';
+import { uuidv4 } from '@/utils/common-utils';
 import HistoryIcon from '@mui/icons-material/History';
 import { Drawer, Slider } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
+import BoardFuture from './BoardFuture';
 
 type IMarks = {
   value: number;
@@ -16,6 +18,9 @@ interface IHistoryProp {
   refreshHistory: boolean;
   setRefreshHistory: React.Dispatch<React.SetStateAction<boolean>>;
   changeBoard: (version: number) => void;
+  boardData: BoardData | null;
+  setRefreshCards: React.Dispatch<React.SetStateAction<boolean>>;
+  setCards: React.Dispatch<React.SetStateAction<Card[]>>;
 }
 
 export default function BoardHistory({
@@ -24,13 +29,19 @@ export default function BoardHistory({
   changeBoard,
   refreshHistory,
   setRefreshHistory,
+  boardData,
+  setRefreshCards,
+  setCards,
 }: IHistoryProp) {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [boardVersions, setBoardVersions] = React.useState<
     IMarks[] | undefined
   >(undefined);
+  const [presentBoardData, setPresentBoardData] = React.useState<
+    BoardData | undefined
+  >();
+  const [isFuture, setIsFuture] = React.useState<boolean>(false);
   const [maxVersion, setMaxVersion] = React.useState(0);
-  const [minVersion, setMinVersion] = React.useState(0);
   const [slider, setSlider] = React.useState<JSX.Element>();
 
   const toggleDrawer =
@@ -51,32 +62,74 @@ export default function BoardHistory({
     if (boards) {
       changeBoard(boards[boards?.length - 1].version);
     }
+    setIsFuture(false);
   };
 
   useEffect(() => {
-    if (boards && (boardVersions === undefined || refreshHistory)) {
-      const newMaxVersion = boards ? boards[boards.length - 1]?.version : 0;
-      const newMinVersion = boards ? boards[0]?.version : 0;
-      const newBoardVersion =
-        boards?.map((board, index) => {
-          return {
-            value: index + 1,
-            label:
-              index === boards?.length - 1 ? 'Present' : (index + 1).toString(), //'', //(index === boards?.length - 1) ? "Present" : board?.version?.toString(),
-            name:
-              index === boards?.length - 1
-                ? 'Present'
-                : board?.saved_date
-                ? dayjs(new Date(board?.saved_date)).format('DD-MM-YY h:mm A')
-                : 'N/A',
-          };
-        }) || [];
-      setRefreshHistory(false);
-      setBoardVersions([...newBoardVersion]);
-      setMaxVersion(newMaxVersion);
-      setMinVersion(newMinVersion);
+    // not a valid Board Data, then return
+    const validBoardData =
+      boardData &&
+      boardData?.columns?.length > 0 &&
+      boardData?.cards?.length > 0;
+    if (!validBoardData) {
+      return;
     }
-  }, [boards, refreshHistory, boardVersions, maxVersion, setRefreshHistory]);
+    // present board data not be set and not refreshing, then return
+    if (presentBoardData != undefined && !refreshHistory) {
+      return;
+    }
+
+    setPresentBoardData(boardData);
+
+    if (!boards || (boardVersions != undefined && !refreshHistory)) {
+      return;
+    }
+
+    // Calculate the board versions to display on the board history bar
+    // History Board versions
+    const newMaxVersion = boards ? boards[boards.length - 1]?.version : 0;
+    const newBoardVersion =
+      boards?.map((board, index) => {
+        return {
+          value: index + 1,
+          label:
+            index === boards?.length - 1 ? 'Present' : (index + 1).toString(), //'', //(index === boards?.length - 1) ? "Present" : board?.version?.toString(),
+          name:
+            index === boards?.length - 1
+              ? 'Present'
+              : board?.saved_date
+              ? dayjs(new Date(board?.saved_date)).format('DD-MM-YY h:mm A')
+              : 'N/A',
+        };
+      }) || [];
+
+    // Future Board versions
+    // const final_column = boardData?.columns[boardData?.columns.length - 1];
+    // const cardsWithDeadlines = boardData?.cards.filter((card) => {
+    //   return card.deadline && card.list_id != final_column.id
+    // })
+    // setCards((prev) => {
+    //   return [...prev, { ...cardsWithDeadlines[0], id: uuidv4(), isGhost: true }]
+    // })
+    // console.log({ cardsWithDeadlines, boardData })
+    newBoardVersion.push({
+      value: boards.length + 1,
+      label: 'Future',
+      name: 'Future',
+    });
+
+    // console.log({ newBoardVersion })
+    setRefreshHistory(false);
+    setBoardVersions([...newBoardVersion]);
+    setMaxVersion(newMaxVersion);
+  }, [
+    boards,
+    refreshHistory,
+    boardData,
+    boardVersions,
+    maxVersion,
+    setRefreshHistory,
+  ]);
 
   useEffect(() => {
     function valueLabelFormat(value: number) {
@@ -90,9 +143,21 @@ export default function BoardHistory({
         return;
       }
       if (typeof newValue == 'number') {
-        changeBoard(boards[newValue - 1]?.version);
+        // If changed to a past version
+        if (newValue <= boards?.length) {
+          changeBoard(boards[newValue - 1]?.version);
+
+          setIsFuture(false);
+        } else {
+          // If changed to a future version
+          changeBoard(boards[boards.length - 1]?.version);
+          setIsFuture(true);
+          // setCards()
+        }
       } else {
+        // if invalid version
         changeBoard(boards[0]?.version);
+        setIsFuture(false);
       }
     };
 
@@ -100,9 +165,9 @@ export default function BoardHistory({
       setSlider(
         <Slider
           aria-label="Restricted values"
-          defaultValue={maxVersion - minVersion + 1}
+          defaultValue={boards ? boards?.length : 0}
           min={1}
-          max={maxVersion - minVersion + 1} //{boards ? (minVersion - boards[boards?.length - 1]?.version) : 0}
+          max={boardVersions.length} //{boards ? (minVersion - boards[boards?.length - 1]?.version) : 0}
           valueLabelFormat={valueLabelFormat}
           step={null}
           valueLabelDisplay="auto"
@@ -111,7 +176,7 @@ export default function BoardHistory({
         />,
       );
     }
-  }, [boardVersions, changeBoard, maxVersion, minVersion]);
+  }, [boardVersions, changeBoard]);
   const darkModeContext = React.useContext(DarkModeContext);
   if (!darkModeContext)
     throw new Error('Profile must be used within a DarkModeProvider');
@@ -147,6 +212,15 @@ export default function BoardHistory({
               changes.
             </p>
             <div className="w-[80%] pt-6">{slider}</div>
+            <BoardFuture
+              {...{
+                isFuture,
+                board,
+                presentBoardData,
+                setRefreshCards,
+                setCards,
+              }}
+            />
           </div>
           <div className="w-full flex items-center justify-center px-4">
             <div className="w-1/3 items-center justify-center" />

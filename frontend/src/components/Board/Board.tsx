@@ -18,6 +18,7 @@ const InnerBoard: React.FC = () => {
     useBoard(board_id);
   const [board, setBoard] = useState<Board>();
   const [boards, setBoards] = useState<any>();
+  const [cards, setCards] = useState<Card[]>([]);
   const [boardData, setBoardData] = useState<BoardData | null>(null);
   const [refreshHistory, setRefreshHistory] = useState(false);
   const [refreshCards, setRefreshCards] = useState(false);
@@ -94,11 +95,16 @@ const InnerBoard: React.FC = () => {
                 </div>
 
                 <BoardHistory
-                  boards={boards}
-                  board={board}
-                  changeBoard={changeBoard}
-                  refreshHistory={refreshHistory}
-                  setRefreshHistory={setRefreshHistory}
+                  {...{
+                    boards,
+                    board,
+                    changeBoard,
+                    refreshHistory,
+                    setRefreshHistory,
+                    boardData,
+                    setRefreshCards,
+                    setCards,
+                  }}
                 ></BoardHistory>
               </div>
             </div>
@@ -109,7 +115,14 @@ const InnerBoard: React.FC = () => {
               style={{ backgroundColor: darkMode ? '#dcdde1' : 'white' }}
             >
               <TaskBoard
-                {...{ board, setBoardData, refreshCards, setRefreshCards }}
+                {...{
+                  board,
+                  cards,
+                  setCards,
+                  setBoardData,
+                  refreshCards,
+                  setRefreshCards,
+                }}
               />
             </div>
           </div>

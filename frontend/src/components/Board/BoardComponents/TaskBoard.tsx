@@ -9,6 +9,8 @@ import { Board } from 'schema-v2';
 
 interface IBoardProp {
   board: Board;
+  cards: Card[];
+  setCards: React.Dispatch<React.SetStateAction<Card[]>>;
   refreshCards: boolean;
   setRefreshCards: React.Dispatch<React.SetStateAction<boolean>>;
   setBoardData: (val: BoardData | null) => void;
@@ -16,6 +18,8 @@ interface IBoardProp {
 
 export function TaskBoard({
   board,
+  cards,
+  setCards,
   setBoardData,
   refreshCards,
   setRefreshCards,
@@ -23,7 +27,7 @@ export function TaskBoard({
   // Get Columns/Cards from Supabase
   const supabase = useClient();
   const [columns, setColumns] = useState<Column[] | undefined | null>(null);
-  const [cards, setCards] = useState<Card[]>([]);
+
   const user = useUser();
 
   // Get Columns
