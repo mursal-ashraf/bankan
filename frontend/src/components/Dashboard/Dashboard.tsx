@@ -15,6 +15,8 @@ import { useNavigate } from 'react-router-dom';
 import { Routes } from '@/Router/AppRouter';
 import { keywordFilter } from '@/utils/common-utils';
 import { useTypedSupabaseQuery } from '@/hooks/utils';
+import { DarkModeContext } from '../common/navbar/DarkModeContext';
+import React from 'react';
 
 interface BoardCardProps {
   id: string;
@@ -95,9 +97,13 @@ const BoardContainer: React.FC = () => {
       refetch();
     });
   };
+  const darkModeContext = React.useContext(DarkModeContext);
+  if (!darkModeContext) throw new Error("Profile must be used within a DarkModeProvider");
 
+  const { darkMode } = darkModeContext;
   return (
-    <div className="relative flex flex-col mx-5 my-10 py-3 rounded-xl bg-white w-2/3 items-center">
+    <div className="relative flex flex-col mx-5 my-10 py-3 rounded-xl bg-white w-2/3 items-center"
+      style={{ backgroundColor: darkMode ? '#dcdde1' : 'white' }}>
       <div className="mx-10 my-5 rounded-3xl shadow-md bg-slate-300 w-auto self-start">
         <div className="flex justify-between items-center px-6">
           <Search />
@@ -160,8 +166,12 @@ const BoardContainer: React.FC = () => {
 };
 
 const InnerDashboard: React.FC = () => {
+  const darkModeContext = React.useContext(DarkModeContext);
+  if (!darkModeContext) throw new Error("Profile must be used within a DarkModeProvider");
+
+  const { darkMode } = darkModeContext;
   return (
-    <Tile colour="yellow" height={100}>
+    <Tile style={{ backgroundColor: darkMode ? '#192a56' : '#FFCD29' }} height={100}>
       <BoardContainer />
     </Tile>
   );

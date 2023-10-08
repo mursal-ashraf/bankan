@@ -9,6 +9,8 @@ import { Refresh } from '@mui/icons-material';
 import BoardHistory from './BoardComponents/BoardHistory';
 import { useEffect, useState } from 'react';
 import { SaveVersion } from './BoardComponents/VersionSaveManager';
+import React from 'react';
+import { DarkModeContext } from '../common/navbar/DarkModeContext';
 
 const InnerBoard: React.FC = () => {
   const { board_id } = useParams() as { board_id: string };
@@ -37,14 +39,17 @@ const InnerBoard: React.FC = () => {
     setRefreshCards(true);
     setBoard(newBoard);
   };
+  const darkModeContext = React.useContext(DarkModeContext);
+  if (!darkModeContext) throw new Error("Profile must be used within a DarkModeProvider");
 
+  const { darkMode } = darkModeContext;
   return (
     <>
       {(isLoading || isRefetching) && <LinearProgress color="secondary" />}
       {isError && (
         <LinearProgress variant="determinate" color="error" value={100} />
       )}
-      <Tile colour="yellow" height={93} className="">
+      <Tile style={{ backgroundColor: darkMode ? '#192a56' : '#FFCD29' }} height={93} className="">
         <div className=" inset-0 h-full w-full p-2 flex flex-col items-center">
           <div className="w-full flex flex-col items-center justify-center">
             {isError && (
@@ -58,19 +63,24 @@ const InnerBoard: React.FC = () => {
               </Button>
             )}
           </div>
-          <div className="w-full h-full flex flex-col items-center justify-center">
+          <div className="w-full h-full flex flex-col items-center justify-center"
+          >
             <div className="w-full flex flex-col md:flex-row items-center justify-center">
               <div className="w-full lg:w-1/3" />
               <div className="w-full lg:w-1/3 m-2 flex flex-col items-center justify-center">
-                <p className="text-black text-bold text-4xl font-mono font-bold bg-white m-1 rounded-md px-10">
+                <p className="text-black text-bold text-4xl font-mono font-bold bg-white m-1 rounded-md px-10"
+                  style={{ backgroundColor: darkMode ? '#dcdde1' : 'white' }}
+                >
                   {board?.name}
                 </p>
-                <p className="text-black text-bold text-sm font-mono text-center">
+                <p className="text-black text-bold text-sm font-mono text-center"
+                  style={{ color: darkMode ? 'white' : 'black' }}>
                   V.{board?.version}
                 </p>
               </div>
 
-              <div className="w-full lg:w-1/3 flex items-center justify-center lg:justify-end">
+              <div className="w-full lg:w-1/3 flex items-center justify-center lg:justify-end"
+              >
                 <div className="mr-2">
                   {boardData && (
                     <SaveVersion {...{ boardData, board, refetchBoards }} />
@@ -88,7 +98,8 @@ const InnerBoard: React.FC = () => {
             </div>
 
             <MemberBar />
-            <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full overflow-auto">
+            <div className="bg-white p-2 md:p-6 rounded-md shadow-md w-full h-full overflow-auto"
+              style={{ backgroundColor: darkMode ? '#dcdde1' : 'white' }}>
               <TaskBoard
                 {...{ board, setBoardData, refreshCards, setRefreshCards }}
               />

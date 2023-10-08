@@ -16,6 +16,7 @@ import { UserMetadata } from './userTypes';
 import sendEmailNotification from '../common/SendEmailNotification';
 import { useParams } from 'react-router-dom';
 import useProfile from '@/hooks/useProfile';
+import { DarkModeContext } from '../common/navbar/DarkModeContext';
 
 const InnerProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -26,20 +27,23 @@ const InnerProfile: React.FC = () => {
     useProfile(user_id);
   const isOwnProfile = user_id === user?.id;
   const [profile] = (data || []).slice(-1);
+  const darkModeContext = React.useContext(DarkModeContext);
+  if (!darkModeContext) throw new Error("Profile must be used within a DarkModeProvider");
 
+  const { darkMode } = darkModeContext;
   const defaultFormData: UserMetadata = user
     ? {
-        ...(user.user_metadata as UserMetadata),
-        email: user.email as string,
-      }
+      ...(user.user_metadata as UserMetadata),
+      email: user.email as string,
+    }
     : {
-        name: '',
-        email: '',
-        phone: '',
-        address: '',
-        company: '',
-        expertise: '',
-      };
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
+      company: '',
+      expertise: '',
+    };
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [formData, setFormData] = useState<UserMetadata>(defaultFormData);
@@ -141,19 +145,18 @@ const InnerProfile: React.FC = () => {
       return;
     }
   };
-
   return (
     <div
       className="flex justify-center items-center p-4"
       style={{
-        backgroundColor: '#FFCD29',
+        backgroundColor: darkMode ? '#192a56' : '#FFCD29',
         flexGrow: 1,
         height: '90vh',
       }}
     >
       <div
         className="bg-white p-8 rounded-lg shadow-md flex max-w-5xl w-full overflow-y-auto"
-        style={{ height: '100%' }}
+        style={{ backgroundColor: darkMode ? '#dcdde1' : 'white', height: '100%' }}
       >
         <div className="flex flex-col items-center justify-center w-1/3">
           <div className="w-40 h-40 rounded-full bg-gray-300 flex items-center justify-center mb-6">
@@ -323,8 +326,10 @@ const InnerProfile: React.FC = () => {
 };
 export const Profile: React.FC = () => {
   return (
+
     <ComponentContainer>
       <InnerProfile />
     </ComponentContainer>
+
   );
 };
