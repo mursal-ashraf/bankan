@@ -16,7 +16,12 @@ interface ITaskCardProp {
 export function TaskCard({ item, onEditCardSelect }: ITaskCardProp) {
   return (
     <>
-      <Card className="m-1" sx={{ maxWidth: 345 }}>
+      <Card
+        className={`m-1 ${
+          item.isGhost ? 'opacity-75 outline outline-blue-500' : ''
+        }`}
+        sx={{ maxWidth: 345 }}
+      >
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
             {item.title}

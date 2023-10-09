@@ -30,7 +30,6 @@ export function SaveVersion({
     const { data } = await supabase.from('card').insert(newCards).select();
     return data;
   }
-
   useEffect(() => {
     if (loadingCount >= 3) {
       setIsLoading(false);
@@ -51,11 +50,9 @@ export function SaveVersion({
       .insert([
         {
           id: board?.id,
-          // version: newVersionNumber,
-          created_at: board?.created_at,
+          version: board?.version + 1,
           description: board?.description,
           name: board?.name,
-          saved_date: new Date().toISOString(),
           team_id: board?.team_id,
           user_id: board?.user_id,
         },

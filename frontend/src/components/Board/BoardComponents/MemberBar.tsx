@@ -6,6 +6,7 @@ import { flatten } from 'lodash';
 import { Chip, Stack } from '@mui/material';
 import { DarkModeContext } from '@/components/common/navbar/DarkModeContext';
 import React from 'react';
+import useBoard from '@/hooks/useBoard';
 
 export function MemberBar() {
   const { board_id } = useParams() as { board_id: string };
@@ -13,15 +14,16 @@ export function MemberBar() {
   const { mutate, error } = useTypedSupabaseMutation({
     onSuccess: () => window.location.reload(),
   });
-  const { data, isLoading, isError } = useTypedSupabaseQuery((supabase) =>
-    supabase
-      .from('board')
-      .select(
-        'id, version, name, created_at, saved_date, team_id, team (id, user_team (user_id, member(*))), user_id, member (id, name, email)',
-      )
-      .eq('id', board_id)
-      .order('version', { ascending: true }),
-  );
+  // const { data, isLoading, isError } = useTypedSupabaseQuery((supabase) =>
+  //   supabase
+  //     .from('board')
+  //     .select(
+  //       'id, version, name, created_at, saved_date, team_id, team (id, user_team (user_id, member(*))), user_id, member (id, name, email)',
+  //     )
+  //     .eq('id', board_id)
+  //     .order('version', { ascending: true }),
+  // );
+  const { data, isLoading, isError } = useBoard(board_id);
 
   const team_id = data?.find((board) => board.id === board_id)
     ?.team_id as string;
@@ -43,14 +45,17 @@ export function MemberBar() {
     );
   };
   const darkModeContext = React.useContext(DarkModeContext);
-  if (!darkModeContext) throw new Error("Profile must be used within a DarkModeProvider");
+  if (!darkModeContext)
+    throw new Error('Profile must be used within a DarkModeProvider');
 
   const { darkMode } = darkModeContext;
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading board</div>;
   return (
-    <div className="flex flex-row items-center w-full h-16 bg-white m-4 p-2 rounded-md text-black font-bold"
-      style={{ backgroundColor: darkMode ? '#dcdde1' : 'white' }}>
+    <div
+      className="flex flex-row items-center w-full h-16 bg-white m-4 p-2 rounded-md text-black font-bold"
+      style={{ backgroundColor: darkMode ? '#dcdde1' : 'white' }}
+    >
       {!!error && <div>Error deleting member</div>}
       <Stack direction="row" spacing={1}>
         <Chip

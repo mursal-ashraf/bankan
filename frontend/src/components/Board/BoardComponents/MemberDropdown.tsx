@@ -4,6 +4,7 @@ import { useTypedSupabaseQuery } from '@/hooks/utils';
 import { flatten } from 'lodash';
 import { useParams } from 'react-router-dom';
 import { Card } from 'schema-v2';
+import useBoard from '@/hooks/useBoard';
 
 interface MemberDropdownProps {
   card: Card | null;
@@ -15,17 +16,16 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
   onMemberChange,
 }) => {
   const { board_id } = useParams() as { board_id: string };
-  const { data, isLoading, isError } = useTypedSupabaseQuery(
-    (supabase) =>
-      supabase
-        .from('board')
-        .select(
-          'id, version, name, team_id, team (id, user_team (user_id, member(*))), user_id, member (*)',
-        )
-        .eq('id', board_id)
-        .order('version', { ascending: true }),
-    { enabled: !!onMemberChange },
-  );
+  // const { data, isLoading, isError } = useTypedSupabaseQuery((supabase) =>
+  //   supabase
+  //     .from('board')
+  //     .select(
+  //       'id, version, name, created_at, saved_date, team_id, team (id, user_team (user_id, member(*))), user_id, member (id, name, email)',
+  //     )
+  //     .eq('id', board_id)
+  //     .order('version', { ascending: true }),
+  // );
+  const { data, isLoading, isError } = useBoard(board_id);
 
   const users = flatten(
     data

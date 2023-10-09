@@ -3,13 +3,14 @@ import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { TaskColumn } from './TaskColumn';
 import { useClient } from '@/contexts/AppContext';
 import EditCardModal from './EditCardModal';
-import dayjs from 'dayjs';
 import { useUser } from '@/hooks';
 import { uuidv4 } from '@/utils/common-utils';
 import { Board } from 'schema-v2';
 
 interface IBoardProp {
   board: Board;
+  cards: Card[];
+  setCards: React.Dispatch<React.SetStateAction<Card[]>>;
   refreshCards: boolean;
   setRefreshCards: React.Dispatch<React.SetStateAction<boolean>>;
   setBoardData: (val: BoardData | null) => void;
@@ -17,6 +18,8 @@ interface IBoardProp {
 
 export function TaskBoard({
   board,
+  cards,
+  setCards,
   setBoardData,
   refreshCards,
   setRefreshCards,
@@ -24,7 +27,7 @@ export function TaskBoard({
   // Get Columns/Cards from Supabase
   const supabase = useClient();
   const [columns, setColumns] = useState<Column[] | undefined | null>(null);
-  const [cards, setCards] = useState<Card[]>([]);
+
   const user = useUser();
 
   // Get Columns
@@ -174,7 +177,6 @@ export function TaskBoard({
             title: 'New Card',
             description: 'New Card',
             deadline: null,
-            created_at: new Date().toISOString(),
             index: index,
           },
         ];
