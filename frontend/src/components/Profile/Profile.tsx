@@ -18,7 +18,7 @@ import { useParams } from 'react-router-dom';
 import useProfile from '@/hooks/useProfile';
 import { DarkModeContext } from '../common/navbar/DarkModeContext';
 
-const InnerProfile: React.FC = () => {
+export const InnerProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const client = useClient();
   const user = useUser();
