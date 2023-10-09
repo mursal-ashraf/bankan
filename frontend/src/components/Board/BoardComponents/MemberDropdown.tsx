@@ -33,6 +33,8 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
       ?.team?.user_team?.map((user_team) => user_team.member),
   );
 
+  const owner = data?.find((board) => board.id === board_id)?.member;
+
   const [localUser, setLocalUser] = useState(
     users.find((user) => user?.id === card?.user_assigned),
   );
@@ -43,7 +45,10 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
     return (
       <p>
         Assigned To:{' '}
-        {users.find((user) => user?.id === card?.user_assigned)?.name}
+        {
+          [...users, owner].find((user) => user?.id === card?.user_assigned)
+            ?.name
+        }
       </p>
     );
   return (
@@ -55,11 +60,13 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
         label="Assigned to"
         value={localUser?.id || ''}
         onChange={(e) => {
-          setLocalUser(users.find((user) => user?.id === e.target.value));
+          setLocalUser(
+            [...users, owner].find((user) => user?.id === e.target.value),
+          );
           onMemberChange(e);
         }}
       >
-        {users.map((user) => {
+        {[...users, owner].map((user) => {
           return <MenuItem value={user?.id}>{user?.name}</MenuItem>;
         })}
       </Select>
