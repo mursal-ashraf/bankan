@@ -1,7 +1,7 @@
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useTypedSupabaseMutation, useTypedSupabaseQuery } from '@/hooks/utils';
+import { useTypedSupabaseMutation } from '@/hooks/utils';
 import { flatten } from 'lodash';
 import { Chip, Stack } from '@mui/material';
 import { DarkModeContext } from '@/components/common/navbar/DarkModeContext';
@@ -14,15 +14,6 @@ export function MemberBar() {
   const { mutate, error } = useTypedSupabaseMutation({
     onSuccess: () => window.location.reload(),
   });
-  // const { data, isLoading, isError } = useTypedSupabaseQuery((supabase) =>
-  //   supabase
-  //     .from('board')
-  //     .select(
-  //       'id, version, name, created_at, saved_date, team_id, team (id, user_team (user_id, member(*))), user_id, member (id, name, email)',
-  //     )
-  //     .eq('id', board_id)
-  //     .order('version', { ascending: true }),
-  // );
   const { data, isLoading, isError } = useBoard(board_id);
 
   const team_id = data?.find((board) => board.id === board_id)

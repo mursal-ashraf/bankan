@@ -43,5 +43,5 @@ export const WithUsersAndBoard =
         </Alert>
       );
 
-    return <Component users={data || []} board={(boardData || [])[0]} />;
+    return <Component users={data || []} board={(boardData || [])[0] as any} />;
   };

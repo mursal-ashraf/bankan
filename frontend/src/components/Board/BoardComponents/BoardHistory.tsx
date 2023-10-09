@@ -1,5 +1,4 @@
 import { DarkModeContext } from '@/components/common/navbar/DarkModeContext';
-import { uuidv4 } from '@/utils/common-utils';
 import HistoryIcon from '@mui/icons-material/History';
 import { Drawer, Slider } from '@mui/material';
 import dayjs from 'dayjs';

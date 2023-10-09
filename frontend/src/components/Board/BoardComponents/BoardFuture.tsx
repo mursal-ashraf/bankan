@@ -13,7 +13,6 @@ export default function BoardFuture({
   isFuture,
   board,
   presentBoardData,
-  setRefreshCards,
   setCards,
 }: IFutureProp) {
   const [futureCards, setFutureCards] = React.useState<Card[]>([]);

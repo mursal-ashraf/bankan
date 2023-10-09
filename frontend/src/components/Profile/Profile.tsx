@@ -28,22 +28,23 @@ const InnerProfile: React.FC = () => {
   const isOwnProfile = user_id === user?.id;
   const [profile] = (data || []).slice(-1);
   const darkModeContext = React.useContext(DarkModeContext);
-  if (!darkModeContext) throw new Error("Profile must be used within a DarkModeProvider");
+  if (!darkModeContext)
+    throw new Error('Profile must be used within a DarkModeProvider');
 
   const { darkMode } = darkModeContext;
   const defaultFormData: UserMetadata = user
     ? {
-      ...(user.user_metadata as UserMetadata),
-      email: user.email as string,
-    }
+        ...(user.user_metadata as UserMetadata),
+        email: user.email as string,
+      }
     : {
-      name: '',
-      email: '',
-      phone: '',
-      address: '',
-      company: '',
-      expertise: '',
-    };
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        company: '',
+        description: '',
+      };
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [formData, setFormData] = useState<UserMetadata>(defaultFormData);
@@ -114,7 +115,7 @@ const InnerProfile: React.FC = () => {
         email: formData.email,
         address: formData.address,
         phone: formData.phone,
-        expertise: formData.expertise,
+        description: formData.description,
         company: formData.company,
       })
       .eq('id', user_id);
@@ -156,7 +157,10 @@ const InnerProfile: React.FC = () => {
     >
       <div
         className="bg-white p-8 rounded-lg shadow-md flex max-w-5xl w-full overflow-y-auto"
-        style={{ backgroundColor: darkMode ? '#dcdde1' : 'white', height: '100%' }}
+        style={{
+          backgroundColor: darkMode ? '#dcdde1' : 'white',
+          height: '100%',
+        }}
       >
         <div className="flex flex-col items-center justify-center w-1/3">
           <div className="w-40 h-40 rounded-full bg-gray-300 flex items-center justify-center mb-6">
@@ -284,7 +288,7 @@ const InnerProfile: React.FC = () => {
           <label className="text-2xl font-bold text-black">Expertise</label>
           <TextField
             name="expertise"
-            value={formData.expertise}
+            value={formData.description}
             onChange={handleInputChange}
             label="Expertise"
             variant="filled"
@@ -326,10 +330,8 @@ const InnerProfile: React.FC = () => {
 };
 export const Profile: React.FC = () => {
   return (
-
     <ComponentContainer>
       <InnerProfile />
     </ComponentContainer>
-
   );
 };

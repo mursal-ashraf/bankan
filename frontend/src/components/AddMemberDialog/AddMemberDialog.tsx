@@ -19,14 +19,14 @@ import { Navigate } from 'react-router-dom';
 
 interface AddMemberDialog {
   users: Member[];
-  board: Board;
+  board?: Board;
 }
 
 export const AddMemberDialog: React.FC<AddMemberDialog> = ({
   users,
   board,
 }) => {
-  const team_id = board.team_id as string;
+  const team_id = board?.team_id as string;
   const [searchInput, setSearchInput] = useState<string>('');
   const [selectedUsers, setSelectedUsers] = useState<Member[]>([]);
   const {
@@ -44,7 +44,7 @@ export const AddMemberDialog: React.FC<AddMemberDialog> = ({
     );
   };
 
-  if (isSuccess) return <Navigate to={`/Board/${board.id}`} />;
+  if (isSuccess) return <Navigate to={`/Board/${board?.id}`} />;
 
   return (
     <Dialog open>
