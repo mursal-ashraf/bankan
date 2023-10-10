@@ -12,7 +12,7 @@ const InnerSignup: React.FC = () => {
     <AuthDialog
       title="Signup"
       submitText="Sign up"
-      submitRoute={Routes.Profile}
+      submitRoute={Routes.Home}
       alternateText="Login instead"
       alternateRoute={Routes.Login}
       finishHandler={signup}
