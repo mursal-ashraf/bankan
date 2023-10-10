@@ -14,7 +14,7 @@ const WithLoader = ({
   error,
   refetch,
 }: WithLoaderProps) => {
-  if (isLoading) return <LinearProgress color="secondary" />;
+  if (isLoading) return <LinearProgress color="secondary" data-testid="loading-component" />;
 
   if (error)
     return (

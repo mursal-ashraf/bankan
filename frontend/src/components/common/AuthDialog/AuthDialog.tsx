@@ -85,10 +85,12 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
           onChange={onEmailChange}
         />
         <TextField
+          data-testid="password-input"
           label="Password"
           type="password"
           variant="standard"
           margin="normal"
+          role='textbox'
           fullWidth
           required
           onChange={onPasswordChange}

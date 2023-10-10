@@ -63,9 +63,7 @@ export const AddMemberDialog: React.FC<AddMemberDialog> = ({
           onChange={(e) => setSearchInput(e.target.value)}
           fullWidth
         />
-        {/* show a scrollable list of users */}
-
-        <List>
+        <List data-testid="not-selected-users">
           {users
             .filter((user) => user.email?.includes(searchInput))
             .map((user) => {
@@ -82,7 +80,7 @@ export const AddMemberDialog: React.FC<AddMemberDialog> = ({
         </List>
         <Typography>Selected users</Typography>
 
-        <List>
+        <List data-testid="selected-users">
           {selectedUsers.map((user) => {
             return (
               <ListItemButton

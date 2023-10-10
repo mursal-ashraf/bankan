@@ -2,9 +2,9 @@ import { Box, CircularProgress, Modal } from '@mui/material';
 import React from 'react';
 
 export const LoadingModal: React.FC = () => (
-  <Modal open>
+  <Modal open data-testid="loading-modal">
     <Box>
-      <CircularProgress />
+      <CircularProgress data-testid="circular-progress" />
     </Box>
   </Modal>
 );

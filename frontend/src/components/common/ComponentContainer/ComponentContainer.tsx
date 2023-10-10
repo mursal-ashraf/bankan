@@ -11,9 +11,9 @@ export const ComponentContainer: React.FC<ComponentContainerProps> = ({
 }) => {
   return (
     <>
-      <NavBar />
+      <NavBar data-testid="navbar" />
       {children}
-      <Footer />
+      <Footer data-testid="footer" />
     </>
   );
 };
