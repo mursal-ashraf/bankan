@@ -43,7 +43,7 @@ export const InnerProfile: React.FC = () => {
         phone: '',
         address: '',
         company: '',
-        description: '',
+        expertise: '',
       };
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
@@ -115,7 +115,7 @@ export const InnerProfile: React.FC = () => {
         email: formData.email,
         address: formData.address,
         phone: formData.phone,
-        description: formData.description,
+        expertise: formData.expertise,
         company: formData.company,
       })
       .eq('id', user_id);
@@ -288,7 +288,7 @@ export const InnerProfile: React.FC = () => {
           <label className="text-2xl font-bold text-black">Expertise</label>
           <TextField
             name="expertise"
-            value={formData.description}
+            value={formData.expertise}
             onChange={handleInputChange}
             label="Expertise"
             variant="filled"

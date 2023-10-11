@@ -4,5 +4,5 @@ export type UserMetadata = {
   phone: string;
   address: string;
   company: string;
-  description: string;
+  expertise: string;
 };
