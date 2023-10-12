@@ -64,7 +64,7 @@ export function TaskBoard({
       }
       getCards(columns).then((res) => {
         const card_list: Card[] | null = res;
-        if (card_list && (card_list.length >= cards.length || refreshCards)) {
+        if (card_list && (card_list.length > cards.length || refreshCards)) {
           setCards(card_list);
           setRefreshCards(false);
         }
@@ -85,7 +85,7 @@ export function TaskBoard({
         return c.id == card.id;
       });
       if (index >= 0) {
-        old_cards = old_cards.splice(index, 1);
+        old_cards.splice(index, 1);
       }
       return [...old_cards];
     });
