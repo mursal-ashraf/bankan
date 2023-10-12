@@ -111,6 +111,7 @@ export function SaveVersion({
         });
         return res;
       });
+      window.location.reload();
       return res;
     });
   }
