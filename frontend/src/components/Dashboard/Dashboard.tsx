@@ -184,6 +184,7 @@ const BoardContainer: React.FC = () => {
               onClick: elementOnDelete,
               actionModal:
                 'Are you sure you want to delete this Bankan board? This action cannot be undone!',
+              condition: (e?: BoardCardProps) => e?.userId === user?.id,
             }}
           />
         </WithLoader>
