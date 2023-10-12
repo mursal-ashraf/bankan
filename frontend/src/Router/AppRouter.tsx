@@ -11,6 +11,7 @@ import Signup from '@/components/Signup';
 import Login from '@/components/Login';
 import AddMemberDialog from '@/components/AddMemberDialog';
 import RouteProtector from './RouteProtector';
+import NotFound from './NotFound';
 
 export enum Routes {
   Home = '/',
@@ -20,6 +21,7 @@ export enum Routes {
   AddMemberToBoard = '/Board/member/:board_id',
   Login = '/Login',
   Signup = '/Signup',
+  NotFound = '*',
 }
 
 export const AppRoutes: RouteObject[] = [
@@ -57,6 +59,10 @@ export const AppRoutes: RouteObject[] = [
         <AddMemberDialog />
       </RouteProtector>
     ),
+  },
+  {
+    path: Routes.NotFound,
+    element: <NotFound />,
   },
 ];
 
