@@ -10,6 +10,7 @@ import Board from '@/components/Board';
 import Signup from '@/components/Signup';
 import Login from '@/components/Login';
 import AddMemberDialog from '@/components/AddMemberDialog';
+import RouteProtector from './RouteProtector';
 
 export enum Routes {
   Home = '/',
@@ -23,12 +24,40 @@ export enum Routes {
 
 export const AppRoutes: RouteObject[] = [
   { path: Routes.Home, element: <Home /> },
-  { path: Routes.Dashboard, element: <Dashboard /> },
-  { path: Routes.Profile, element: <Profile /> },
-  { path: Routes.Board, element: <Board /> },
+  {
+    path: Routes.Dashboard,
+    element: (
+      <RouteProtector>
+        <Dashboard />
+      </RouteProtector>
+    ),
+  },
+  {
+    path: Routes.Profile,
+    element: (
+      <RouteProtector>
+        <Profile />
+      </RouteProtector>
+    ),
+  },
+  {
+    path: Routes.Board,
+    element: (
+      <RouteProtector>
+        <Board />
+      </RouteProtector>
+    ),
+  },
   { path: Routes.Signup, element: <Signup /> },
   { path: Routes.Login, element: <Login /> },
-  { path: Routes.AddMemberToBoard, element: <AddMemberDialog /> },
+  {
+    path: Routes.AddMemberToBoard,
+    element: (
+      <RouteProtector>
+        <AddMemberDialog />
+      </RouteProtector>
+    ),
+  },
 ];
 
 const router = createBrowserRouter(AppRoutes);
