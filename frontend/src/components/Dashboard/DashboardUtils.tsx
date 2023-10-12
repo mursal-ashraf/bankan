@@ -10,6 +10,8 @@ import { useFormik } from 'formik';
 import { FormSpacer } from '../common/Utils';
 import { useTypedSupabaseMutation } from '@/hooks/utils';
 import { useUser } from '@/hooks';
+import { isNilOrEmpty } from '@/utils/common-utils';
+import { useState } from 'react';
 
 interface CreateNewBoardProps {
   onClose: () => void;
@@ -19,6 +21,7 @@ interface CreateNewBoardProps {
 export const CreateNewBoard = ({ onClose, refetch }: CreateNewBoardProps) => {
   const user = useUser();
   const user_id = user?.id as string;
+  const [validationErr, setValidationErr] = useState(false);
 
   const { mutate, isLoading, isError, isSuccess } = useTypedSupabaseMutation();
 
@@ -28,6 +31,12 @@ export const CreateNewBoard = ({ onClose, refetch }: CreateNewBoardProps) => {
       description: '',
     },
     onSubmit: (values) => {
+      if (isNilOrEmpty(values.name) || isNilOrEmpty(values.description)) {
+        setValidationErr(true);
+        return;
+      }
+
+      setValidationErr(false);
       mutate((supabase) =>
         supabase.from('board').insert([{ ...values, user_id }]),
       );
@@ -48,7 +57,14 @@ export const CreateNewBoard = ({ onClose, refetch }: CreateNewBoardProps) => {
         Please enter a name and description for your new board.
       </DialogContentText>
       <FormSpacer />
-      {isError ? (
+      {validationErr ? (
+        <>
+          <Alert severity="error">
+            Please ensure all relevant fields are filled in.
+          </Alert>
+          <FormSpacer />
+        </>
+      ) : isError ? (
         <>
           <Alert severity="error">That didn't work... try again later.</Alert>
           <FormSpacer />

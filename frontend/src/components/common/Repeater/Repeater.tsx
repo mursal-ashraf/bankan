@@ -31,6 +31,7 @@ interface RepeaterProps<T> {
     colour: GeneralColour;
     onClick?: (item: T) => void;
     actionModal?: string;
+    condition?: (e?: T) => boolean;
   };
 }
 /**
@@ -78,17 +79,19 @@ export function Repeater<T>({
       {feedList.map((item, idx) => (
         <div key={idx} className="flex w-full my-3 justify-center">
           <div className="relative w-11/12">
-            <CornerIcon colour={ActionIcon?.colour || 'blue'}>
-              <IconButton
-                onClick={() => {
-                  ActionIcon?.actionModal
-                    ? setModalWithItem(item)
-                    : ActionIcon?.onClick && ActionIcon.onClick(item);
-                }}
-              >
-                {ActionIcon?.icon}
-              </IconButton>
-            </CornerIcon>
+            {(!ActionIcon?.condition || ActionIcon.condition(item)) && (
+              <CornerIcon colour={ActionIcon?.colour || 'blue'}>
+                <IconButton
+                  onClick={() => {
+                    ActionIcon?.actionModal
+                      ? setModalWithItem(item)
+                      : ActionIcon?.onClick && ActionIcon.onClick(item);
+                  }}
+                >
+                  {ActionIcon?.icon}
+                </IconButton>
+              </CornerIcon>
+            )}
             <Component {...(item as T & JSX.IntrinsicAttributes)} />
           </div>
         </div>

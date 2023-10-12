@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 
 export const ColourLookup: { [key in GeneralColour]: string } = {
   yellow: '#FFCD29',
@@ -50,3 +50,5 @@ export function uuidv4() {
 //keyword match
 export const keywordFilter = (keyword: string) => (isMatch: string) =>
   isEmpty(keyword) || !!isMatch.match(keyword);
+
+export const isNilOrEmpty = (value: any) => isNil(value) || isEmpty(value);
